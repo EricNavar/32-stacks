@@ -14,6 +14,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/rules" element={<GameRules />} />
         <Route path="/play" element={<PlayScreen />} />
+        <Route path="/server-test" >
+        <Route path=":id" element={<PlayScreen />} element={<PlayScreen/>}/>
+        </Route>
       </Routes>
     </BrowserRouter>
   );
