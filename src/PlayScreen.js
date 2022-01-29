@@ -75,11 +75,11 @@ const RightPlayerHandContainer = styled.div`
 `
 
 const RightPlayerUsername = styled.p`
-  right: 0;
+  right: 16px;
 `
 
 const LeftPlayerUsername = styled.p`
-  left: 0;
+  left: 16px;
 `
 
 const TopPlayerUsername = styled.p`
@@ -137,7 +137,11 @@ function PlayScreen() {
       </RightPlayerHandContainer>
       <HandContainer style={{left:`calc(50% - ${myHandOffset}px`}}>
         <div style={{width:'max-content'}}>
-          {hand.map((card,index) => <Card key={index} color={card.c} value={card.v}/>)}
+          {hand.map((card,index) => 
+            <button onClick={()=>{console.log("click")}} className="clickableCard">
+              <Card key={index} color={card.c} value={card.v}/>
+            </button>
+          )}
         </div>
       </HandContainer>
       <Center>
