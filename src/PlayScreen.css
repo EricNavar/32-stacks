@@ -2,9 +2,22 @@
     border-radius: 6px;
     border-style: solid;
     display: inline-flex;
-    width: 60px;
-    height: 85px;
+    width: 64px;
+    height: 90px;
     box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
     margin-left: -20px;
-    height: 85px;
+    box-sizing: border-box;
+}
+
+.username {
+    margin: 0;
+    font-weight: bold;
+    font-size: 1.4rem;
+    color: white;
+    top: calc(50% - 150px);
+    position: absolute;
+}
+
+.pile {
+    box-shadow: rgba(255, 0, 0, 0.4) 5px 5px, rgba(255, 255, 0, 0.3) 10px 10px, rgba(0, 255, 0, 0.2) 15px 15px, rgba(0, 0, 255, 0.1) 20px 20px, rgba(255, 255, 255, 0.05) 25px 25px;
 }
