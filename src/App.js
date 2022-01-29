@@ -3,9 +3,9 @@ import {
   Route,
   BrowserRouter
 } from "react-router-dom";
-import Home from 'Home.js';
-import GameRules from 'GameRules.js';
-import PlayScreen from 'PlayScreen.js';
+import {Home} from './Home.js';
+import {GameRules} from './GameRules.js';
+import {PlayScreen} from './PlayScreen.js';
 
 function App() {
   return (
