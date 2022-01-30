@@ -26,3 +26,20 @@
     border: 0;
     background: none;
 }
+
+.placeCards {
+    position: absolute;
+    border-radius: 6px;
+    border-style: solid;
+    display: inline-flex;
+    height: 30px;
+    width: 120px;
+    background-color: transparent;
+    color: white;
+    margin-left: -20px; /* fix later? */
+    justify-content: center;
+    align-items: center;
+    bottom: 140px;
+    left: calc(50% - 60px);
+
+}

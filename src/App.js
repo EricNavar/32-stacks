@@ -6,17 +6,19 @@ import {
 import {Home} from './Home.js';
 import {GameRules} from './GameRules.js';
 import {PlayScreen} from './PlayScreen.js';
+import {ServerTest} from './ServerTest.js';
+import { useState } from 'react';
 
 function App() {
+  const [name, setName] = useState("sus");
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home setName={setName}/>} />
         <Route path="/rules" element={<GameRules />} />
         <Route path="/play" element={<PlayScreen />} />
-        <Route path="/server-test" >
-        <Route path=":id" element={<PlayScreen />} element={<PlayScreen/>}/>
-        </Route>
+        <Route path="/play/:room" element={<PlayScreen name={name}/>} />
+        <Route path="/server-test/:room" element={<ServerTest />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components'
 import { yourCards, otherPlayers } from './sampleData.js';
 import './PlayScreen.css';
@@ -7,11 +7,34 @@ import { ColorPicker } from './ColorPicker';
 import { EndingModal } from './EndingModal';
 import { LobbyModal } from './LobbyModal.js';
 
+import io from 'socket.io-client';
+import { useParams, useNavigate } from "react-router-dom";
+
+const ENDPOINT = "http://localhost:5000";
+let socket;
+
 const PlayScreenMain = styled.main`
   justify-content:center;
   display: grid;
   background-color: #222;
   height: 100vh;
+`
+
+// Drop cards here
+const CardDropper = styled.div`
+  position: absolute;
+  bottom: 200px;
+  left: calc(50% - 32px);
+  border-style: solid;
+  height:
+  border-color: black;
+  background-color: black;
+`
+
+const PlaceCards = styled.div`
+  position: absolute;
+  bottom: 120:
+
 `
 
 const Center = styled.div`
@@ -41,7 +64,7 @@ const HandContainer = styled.div`
   border-radius: 8px;
   position: absolute;
   bottom: 2px;
-  height: 140px;
+  height: 90px;
   padding-top: 12px;
   padding-bottom: 12px;
   padding-right: 12px;
@@ -111,15 +134,64 @@ function Card(props) {
   );
 }
 
-function PlayScreen() {
+function PlayScreen(props) {
   const myId = 2;
   const [players, setPlayers] = React.useState(otherPlayers);
   const otherPlayerIds = players.filter(player => player.id !== myId).map(player => player.playerId);
   const topPlayerId = otherPlayerIds[0];
   const leftPlayerId = otherPlayerIds[1];
   const rightPlayerId = otherPlayerIds[2];
+  
+  const [gameObject, setGameObject] = useState();
+  useEffect(() => {
+    console.log(gameObject)
+  }, [gameObject])
 
-  console.log(otherPlayerIds);
+  //Socket.io spam sorry guys --------------------------------------------------------------------
+  const { room } = useParams();
+  const navigate = useNavigate();
+
+  //Initial Socket Connection
+  useEffect(() => {
+    const connectionOptions =  {
+      "forceNew" : true,
+      "reconnectionAttempts": "Infinity", 
+      "timeout" : 10000,                  
+      "transports" : ["websocket"]
+    }
+    socket = io.connect(ENDPOINT, connectionOptions)
+
+    socket.emit('join', {room: room, name: props.name}, (error) => {
+      if (error) {
+        console.log("error")
+        navigate('/');
+      }
+      else {
+        console.log("Successfully connected to room")
+      }
+    })
+
+    //On disconnect
+    return () => {
+      socket.emit('leave')
+      socket.off()
+    }
+  }, [])
+
+  //Receiving Messages from Socket Server
+  useEffect(() => {
+    socket.on("gameObjectUpdate", (gameObject) => {
+      setGameObject(gameObject)
+    })
+
+    socket.on("initialGameObject", (gameObject) => {
+      setGameObject(gameObject)
+    })
+  })
+
+  //End of Socket.io spam ----------------------------------------------------
+
+  const yourUserName = props.name;
 
   const [hand, setHand] = React.useState(yourCards);
 
@@ -155,6 +227,12 @@ function PlayScreen() {
           {Array.apply(null, { length: players[rightPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} className="card"/>)}
         </div>
       </RightPlayerHandContainer>
+      
+      <CardDropper className='card'></CardDropper>
+      <PlaceCards className='placeCards'>
+        Place Cards!
+      </PlaceCards>
+
       <HandContainer style={{left:`calc(50% - ${myHandOffset}px`}}>
         <div style={{width:'max-content'}}>
           {hand.map((card,index) => 
