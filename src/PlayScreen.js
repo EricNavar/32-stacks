@@ -12,6 +12,23 @@ const PlayScreenMain = styled.main`
   height: 100vh;
 `
 
+// Drop cards here
+const CardDropper = styled.div`
+  position: absolute;
+  bottom: 200px;
+  left: calc(50% - 32px);
+  border-style: solid;
+  height:
+  border-color: black;
+  background-color: black;
+`
+
+const PlaceCards = styled.div`
+  position: absolute;
+  bottom: 120:
+
+`
+
 const Center = styled.div`
   position: absolute;
   bottom: 50%;
@@ -39,7 +56,7 @@ const HandContainer = styled.div`
   border-radius: 8px;
   position: absolute;
   bottom: 2px;
-  height: 140px;
+  height: 90px;
   padding-top: 12px;
   padding-bottom: 12px;
   padding-right: 12px;
@@ -127,7 +144,7 @@ function PlayScreen() {
       <LeftPlayerHandContainer>
         <div style={{display:'max-content', transform: 'rotate(90deg)'}}>
           {Array.apply(null, { length: topPlayerCardCount }).map(card => <HiddenCard className="card"/>)}
-        </div>
+        </div>``
       </LeftPlayerHandContainer>
       <RightPlayerUsername className='username'>{rightPlayerName}</RightPlayerUsername>
       <RightPlayerHandContainer>
@@ -135,6 +152,12 @@ function PlayScreen() {
           {Array.apply(null, { length: rightPlayerCardCount }).map(card => <HiddenCard className="card"/>)}
         </div>
       </RightPlayerHandContainer>
+      
+      <CardDropper className='card'></CardDropper>
+      <PlaceCards className='placeCards'>
+        Place Cards!
+      </PlaceCards>
+
       <HandContainer style={{left:`calc(50% - ${myHandOffset}px`}}>
         <div style={{width:'max-content'}}>
           {hand.map((card,index) => 
