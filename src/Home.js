@@ -34,9 +34,6 @@ function Home(props) {
         <p></p>
 
         <div>
-          <label for="name">Create a username:</label>
-          <input type="text" id="name" name="name" required minlength="4" maxlength="8" size="10"/>
-          <button>set</button>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid*/}
             <a href={`/play/${generateRoomCode()}`}>Create a new game!</a>
         </div>
