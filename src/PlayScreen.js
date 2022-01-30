@@ -88,6 +88,18 @@ const TopPlayerUsername = styled.p`
   width: 100px;
 `
 
+const CallUnoButton = styled.button`
+  padding: 12px;
+  border: 0;
+  background-color: #2949e6;
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  color: white;
+  border-radius: 8px;
+  font-size: 1.2rem;
+`
+
 function Card(props) {
   const {color, value} = props
   return (
@@ -148,6 +160,9 @@ function PlayScreen() {
         <Card color={lastColor} value={lastValue}/>
         <HiddenCard className="card pile" style={{marginLeft: 8}}/>
       </Center>
+      <CallUnoButton>
+        CALL UNO
+      </CallUnoButton>
     </PlayScreenMain>
   );
 }
