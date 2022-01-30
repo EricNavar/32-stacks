@@ -1,4 +1,4 @@
-const yourCards = [
+export const yourCards = [
   {
     c:"red",
     v:"9"
@@ -17,4 +17,25 @@ const yourCards = [
   }
 ]
 
-export { yourCards };
+const otherPlayers = [
+  {
+    name: "greg",
+    cardCount: 9,
+    playerId: 1
+  },
+  {
+    name: "greg's mom",
+    cardCount: 9,
+    playerId: 2
+  },
+  {
+    name: "greg's dad",
+    cardCount: 9,
+    playerId: 3
+  },
+  {
+    name: "greg's other mom",
+    cardCount: 9,
+    playerId: 4
+  }
+]
