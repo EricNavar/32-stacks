@@ -42,8 +42,8 @@ const ServerTest = () => {
 
   //Receiving Messages from Server
   useEffect(() => {
-    socket.on("gameStateUpdate", (gameState) => {
-      setClicks(gameState.clicks)
+    socket.on("gameObjectUpdate", (gameObject) => {
+      setClicks(gameObject.clicks)
     })
 
     socket.on("")

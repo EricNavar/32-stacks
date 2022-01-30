@@ -15,10 +15,9 @@ const io = socketIO(httpServer)
 
 const playerList = []
 
-const addPlayer = async (id, name, room, number) => {
+const addPlayer = (id, name, room, number) => {
     const player = {id, name, room, number}
     playerList.push(player)
-    console.log(playerList)
     return player
 }
 
@@ -48,11 +47,30 @@ io.on('connection', socket => {
             return callback("Full")
         }
         else {
-        console.log(`Player joined room: ${payload.room}`)
-            addPlayer(socket.id, payload.name, payload.room, players.length + 1).then(
-                socket.join(payload.room),
-                io.to(payload.room).emit('roomData', {room: payload.room, players: players})
-            )
+            console.log(`Player joined room: ${payload.room}`)
+            addPlayer(socket.id, payload.name, payload.room, players.length + 1)
+            socket.join(payload.room)
+            const currentPlayers = getPlayersInRoom(payload.room)
+            console.log("Hi")
+            console.log(currentPlayers)
+            console.log(currentPlayers[0])
+            let initialPlayerList = []
+            for (i = 0; i < currentPlayers.length; i++) {
+                let newPlayer = {
+                    name: currentPlayers[i].name,
+                    cardCount: 7,
+                    number: currentPlayers[i].number
+                }
+                initialPlayerList.push(newPlayer)
+            }
+            io.to(payload.room).emit('initialGameObject', {
+                turn: 1,
+                direction: false,
+                lastCardPlayed: 'empty',
+                playerList: initialPlayerList,
+                winner: 0,
+                gameStart: false
+            })
             return callback()
         }
     })
@@ -65,11 +83,10 @@ io.on('connection', socket => {
         }
     })
 
-    socket.on('updateGame', (gameState) => {
-        console.log(`Received ${gameState.clicks}`)
+    socket.on('updateGame', (gameObject) => {
         const player = getPlayer(socket.id)
         if (player) {
-            io.to(player.room).emit('gameStateUpdate', gameState)
+            io.to(player.room).emit('gameObjectUpdate', gameObject)
         }
     })
 })

@@ -132,6 +132,10 @@ function Card(props) {
 }
 
 function PlayScreen(props) {
+  const [gameObject, setGameObject] = useState();
+  useEffect(() => {
+    console.log(gameObject)
+  }, [gameObject])
   const players = 4;
 
   //Socket.io spam sorry guys --------------------------------------------------------------------
@@ -167,11 +171,13 @@ function PlayScreen(props) {
 
   //Receiving Messages from Socket Server
   useEffect(() => {
-    socket.on("gameStateUpdate", (gameState) => {
-      //update game object with new object
+    socket.on("gameObjectUpdate", (gameObject) => {
+      setGameObject(gameObject)
     })
 
-    // socket.on("playerJoined", )
+    socket.on("initialGameObject", (gameObject) => {
+      setGameObject(gameObject)
+    })
   })
 
   //End of Socket.io spam ----------------------------------------------------
