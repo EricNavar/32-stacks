@@ -1,5 +1,5 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import Logo from './assets/logo.png';
 import Background from './assets/background.png';
 
@@ -13,12 +13,9 @@ const generateRoomCode = () => {
 }
 
 function Home(props) {
-  const navigate = useNavigate();
 
-  const testOnClick = () => {
-    const roomCode = generateRoomCode();
-    navigate(`/server-test/${roomCode}`)
-  }
+  const [roomCode, setRoomCode] = useState("");
+  const [name, setName] = useState("");
   
   return (
     <div id="parent">  
@@ -38,18 +35,18 @@ function Home(props) {
 
         <div>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid*/}
-            <a href="#">Create a new game!</a>
+            <a href={`/play/${generateRoomCode()}`}>Create a new game!</a>
         </div>
 
         <p>
-          <a style={{fontSize:"24px"}} href="https://www.youtube.com/watch?v=a3Z7zEc7AXQ">or</a>
+          <a style={{fontSize:"24px"}} href="https://www.youtube.com/watch?v=a3Z7zEc7AXQ" target="_blank">or</a>
         </p>
 
         <div>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid*/}
-            <a href="#">Join an existing game!</a>
+            <a href={`/play/${roomCode}`}>Join an existing game!</a>
           <p></p>
-          <input type="text" id="link" name="link" placeholder="Enter link here" size="10"/>
+          <input type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())}/>
         </div>
 
         <div id="child2">

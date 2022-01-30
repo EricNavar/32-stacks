@@ -15,6 +15,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/rules" element={<GameRules />} />
         <Route path="/play" element={<PlayScreen />} />
+        <Route path="/play/:room" element={<PlayScreen />} />
         <Route path="/server-test/:room" element={<ServerTest />} />
       </Routes>
     </BrowserRouter>
