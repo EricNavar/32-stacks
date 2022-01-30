@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { yourCards } from './sampleData.js';
 import './PlayScreen.css';
 import Logo from './assets/logo.png';
+import { useLocation } from 'react-router-dom';
 
 const PlayScreenMain = styled.main`
   justify-content:center;
@@ -109,7 +110,7 @@ function Card(props) {
   );
 }
 
-function PlayScreen() {
+function PlayScreen(props) {
   const players = 4;
 
   const yourUserName = "greg";

@@ -13,7 +13,8 @@ const Title = styled.h1`
   font-weight: bold;
 `
 
-function GameRules() {
+function GameRules(props) {
+  console.log(props.name)
   return (
     <GameRulesMain>
       <Title>
