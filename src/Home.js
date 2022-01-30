@@ -1,6 +1,23 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function Home() {
+const generateRoomCode = () => {
+  let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+  let result = "";
+  for (let i = 0; i < 6; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length))
+  }
+  return result;
+}
+
+function Home(props) {
+  const navigate = useNavigate();
+
+  const testOnClick = () => {
+    const roomCode = generateRoomCode();
+    navigate(`/server-test/${roomCode}`)
+  }
+  
   return (
     <div>
       <h1>32Stacks</h1>
@@ -16,6 +33,7 @@ function Home() {
         </p>
         <div>
           <button>Join a game</button>
+          <button onClick={testOnClick}>Click me!</button>
         </div>
       </div>
     </div>
