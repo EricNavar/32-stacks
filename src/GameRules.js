@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const GameRulesMain = styled.main`
   margin: 2.5rem;

@@ -1,6 +1,7 @@
 import React from 'react';
 import Logo from './assets/logo.png';
 import Background from './assets/background.png';
+import { otherPlayers } from './sampleData.js';
 
 function Home() {
   return (
@@ -39,7 +40,6 @@ function Home() {
           <a style={{fontSize:"24px"}} href="rules">Game Rules!</a>
         </div>
       </div>
-
 
     </div>
   );

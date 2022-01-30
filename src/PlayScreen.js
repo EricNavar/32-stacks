@@ -1,9 +1,11 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import styled from 'styled-components'
-import { yourCards } from './sampleData.js';
+import { yourCards, otherPlayers } from './sampleData.js';
 import './PlayScreen.css';
 import Logo from './assets/logo.png';
+import { ColorPicker } from './ColorPicker';
+import { EndingModal } from './EndingModal';
+import { LobbyModal } from './LobbyModal.js';
 
 const PlayScreenMain = styled.main`
   justify-content:center;
@@ -110,47 +112,53 @@ function Card(props) {
 }
 
 function PlayScreen() {
-  const players = 4;
+  const myId = 2;
+  const [players, setPlayers] = React.useState(otherPlayers);
+  const otherPlayerIds = players.filter(player => player.id !== myId).map(player => player.playerId);
+  const topPlayerId = otherPlayerIds[0];
+  const leftPlayerId = otherPlayerIds[1];
+  const rightPlayerId = otherPlayerIds[2];
 
-  const yourUserName = "greg";
-  const topPlayerName = "eric"
-  const leftPlayerName = "mommy"
-  const rightPlayerName = "daddy"
+  console.log(otherPlayerIds);
 
   const [hand, setHand] = React.useState(yourCards);
-  const [topPlayerCardCount, setTopPlayerCardCount] = React.useState(5);
-  const [leftPlayerCardCount, setLeftPlayerCardCount] = React.useState(5);
-  const [rightPlayerCardCount, setRightPlayerCardCount] = React.useState(5);
 
   const [lastColor, setLastColor] = React.useState("red");
   const [lastValue, setLastValue] = React.useState("1");
 
+  const [colorPickerOpen, setColorPickerOpen] = React.useState(false);
+  const [nextColor, setNextColor] = React.useState("red");
+
+  const [endingModalOpen, setEndingModalOpen] = React.useState(false);
+  const [lobbyModalOpen, setLobbyModalOpen] = React.useState(false);
+
   const myHandOffset = (hand.length * 70) / 2;
 
   return (
+    <>
     <PlayScreenMain>
       <TopPlayerHandContainer>
         <div style={{display:'max-content'}}>
-          {Array.apply(null, { length: topPlayerCardCount }).map(card => <HiddenCard className="card"/>)}
+          {Array.apply(null, { length: players[topPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} className="card"/>)}
         </div>
       </TopPlayerHandContainer>
-      <TopPlayerUsername className='username'>{topPlayerName}</TopPlayerUsername>
-      <LeftPlayerUsername className='username'>{leftPlayerName}</LeftPlayerUsername>
+      <TopPlayerUsername className='username'>{players[topPlayerId].name}</TopPlayerUsername>
+      <LeftPlayerUsername className='username'>{players[leftPlayerId].name}</LeftPlayerUsername>
       <LeftPlayerHandContainer>
         <div style={{display:'max-content', transform: 'rotate(90deg)'}}>
-          {Array.apply(null, { length: topPlayerCardCount }).map(card => <HiddenCard className="card"/>)}
+          {Array.apply(null, { length: players[leftPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} className="card"/>)}
         </div>
       </LeftPlayerHandContainer>
-      <RightPlayerUsername className='username'>{rightPlayerName}</RightPlayerUsername>
+      <RightPlayerUsername className='username'>{players[rightPlayerId].name}</RightPlayerUsername>
       <RightPlayerHandContainer>
         <div style={{display:'max-content', transform: 'rotate(-90deg)'}}>
-          {Array.apply(null, { length: rightPlayerCardCount }).map(card => <HiddenCard className="card"/>)}
+          {Array.apply(null, { length: players[rightPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} className="card"/>)}
         </div>
       </RightPlayerHandContainer>
       <HandContainer style={{left:`calc(50% - ${myHandOffset}px`}}>
         <div style={{width:'max-content'}}>
           {hand.map((card,index) => 
-            <button onClick={()=>{console.log("click")}} className="clickableCard">
+            <button key={index} onClick={()=>{console.log("click")}} className="clickableCard">
               <Card key={index} color={card.c} value={card.v}/>
             </button>
           )}
@@ -164,6 +172,11 @@ function PlayScreen() {
         CALL UNO
       </CallUnoButton>
     </PlayScreenMain>
+    <ColorPicker open={colorPickerOpen} setNextColor={setNextColor} setColorPickerOpen={setColorPickerOpen} />
+    <EndingModal open={colorPickerOpen} />
+    <LobbyModal open={lobbyModalOpen} players={players} isHost={true} />
+    <button onClick={e=>setLobbyModalOpen(!lobbyModalOpen)}>click me</button>
+    </>
   );
 }
 
