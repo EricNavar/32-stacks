@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import styled from 'styled-components'
 import { yourCards } from './sampleData.js';
@@ -11,10 +12,11 @@ const PlayScreenMain = styled.main`
   height: 100vh;
 `
 
-const LastCardContainer = styled.div`
+const Center = styled.div`
   position: absolute;
   bottom: 50%;
-  left: calc(50% - 20px);
+  left: calc(50% - 58px);
+  display: flex;
 `
 
 const CardStyledComponent = styled.div`
@@ -64,38 +66,52 @@ const HiddenCard = styled.div`
 const LeftPlayerHandContainer = styled.div`
   position: absolute;
   top: calc(50% - 40px);
-  transform: rotate(90deg);
 `
 
 const RightPlayerHandContainer = styled.div`
   position: absolute;
   top: calc(50% - 40px);
   right: 0;
-  transform: rotate(-90deg);
+`
+
+const RightPlayerUsername = styled.p`
+  right: 16px;
+`
+
+const LeftPlayerUsername = styled.p`
+  left: 16px;
+`
+
+const TopPlayerUsername = styled.p`
+  top: 100px;
+  left: calc(50% - 50px);
+  width: 100px;
 `
 
 function Card(props) {
-  console.log(props);
-  const color = props.color;
-  const value = props.value;
+  const {color, value} = props
   return (
-    <CardStyledComponent color={color} className="card">
+    <CardStyledComponent color={color} className="card" >
       <CardText>{value}</CardText>
     </CardStyledComponent>
   );
 }
 
 function PlayScreen() {
+  const players = 4;
+
   const yourUserName = "greg";
   const topPlayerName = "eric"
+  const leftPlayerName = "mommy"
+  const rightPlayerName = "daddy"
+
+  const [hand, setHand] = React.useState(yourCards);
   const [topPlayerCardCount, setTopPlayerCardCount] = React.useState(5);
   const [leftPlayerCardCount, setLeftPlayerCardCount] = React.useState(5);
   const [rightPlayerCardCount, setRightPlayerCardCount] = React.useState(5);
-  //what cards you have in your hand
-  const [hand, setHand] = React.useState(yourCards);
+
   const [lastColor, setLastColor] = React.useState("red");
   const [lastValue, setLastValue] = React.useState("1");
-  const players = 4;
 
   const myHandOffset = (hand.length * 70) / 2;
 
@@ -106,24 +122,32 @@ function PlayScreen() {
           {Array.apply(null, { length: topPlayerCardCount }).map(card => <HiddenCard className="card"/>)}
         </div>
       </TopPlayerHandContainer>
+      <TopPlayerUsername className='username'>{topPlayerName}</TopPlayerUsername>
+      <LeftPlayerUsername className='username'>{leftPlayerName}</LeftPlayerUsername>
       <LeftPlayerHandContainer>
-        <div style={{display:'max-content'}}>
+        <div style={{display:'max-content', transform: 'rotate(90deg)'}}>
           {Array.apply(null, { length: topPlayerCardCount }).map(card => <HiddenCard className="card"/>)}
         </div>
       </LeftPlayerHandContainer>
+      <RightPlayerUsername className='username'>{rightPlayerName}</RightPlayerUsername>
       <RightPlayerHandContainer>
-        <div style={{display:'max-content'}}>
-          {Array.apply(null, { length: topPlayerCardCount }).map(card => <HiddenCard className="card"/>)}
+        <div style={{display:'max-content', transform: 'rotate(-90deg)'}}>
+          {Array.apply(null, { length: rightPlayerCardCount }).map(card => <HiddenCard className="card"/>)}
         </div>
       </RightPlayerHandContainer>
-      <LastCardContainer>
-        <Card color={lastColor} value={lastValue} />
-      </LastCardContainer>
       <HandContainer style={{left:`calc(50% - ${myHandOffset}px`}}>
         <div style={{width:'max-content'}}>
-          {hand.map((card,index) => <Card key={index} color={card.c} value={card.v}/>)}
+          {hand.map((card,index) => 
+            <button onClick={()=>{console.log("click")}} className="clickableCard">
+              <Card key={index} color={card.c} value={card.v}/>
+            </button>
+          )}
         </div>
       </HandContainer>
+      <Center>
+        <Card color={lastColor} value={lastValue}/>
+        <HiddenCard className="card pile" style={{marginLeft: 8}}/>
+      </Center>
     </PlayScreenMain>
   );
 }
