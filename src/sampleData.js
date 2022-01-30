@@ -1,19 +1,23 @@
 export const yourCards = [
   {
     c:"red",
-    v:"9"
+    v:"9",
+    gray: false
   },
   {
     c:"blue",
-    v:"1"
+    v:"1",
+    gray: false
   },
   {
     c:"green",
-    v:"2"
+    v:"2",
+    gray: true
   },
   {
     c:"yellow",
-    v:"7"
+    v:"7",
+    gray: true
   }
 ]
 
@@ -37,5 +41,13 @@ export const otherPlayers = [
     name: "greg's other mom",
     cardCount: 9,
     playerId: 4
+  }
+]
+
+export const inPlayTemp = [
+  {
+    c:"yellow",
+    v:"8",
+    gray:false
   }
 ]

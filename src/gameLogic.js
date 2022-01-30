@@ -1,3 +1,37 @@
+// Adds card to temporary stack of cards to be played
+export function placeCard(card, hand, inPlay, setInPlay, setTopOfStack, lastCardPlayed) {
+  console.log("fuck1");
+  inPlay.push(card);
+  setInPlay(inPlay);
+  setTopOfStack(card);
+  console.log("2: " + inPlay[inPlay.length - 1].v);
+  hand.pop(card); // do we need to get this by index?
+  checkHand(hand, lastCardPlayed, inPlay);
+}
+
+// Checks player's entire hand and grays out nonplayable cards
+function checkHand(hand, lastCardPlayed, inPlay) {
+  for (let i = 0; i < hand.length; i++) {
+    if (!cardCheck(hand[i], lastCardPlayed, inPlay)) {
+      // gray out the card
+      hand[i].gray = true;
+    }
+    else {
+      hand[i].gray = false;
+    }
+  }
+}
+
+// Drops one card at a time
+function cardCheck(toConsider, lastCardPlayed, inPlay) {
+  if (inPlay.length === 0) {
+    return isValidFirstCard(toConsider, lastCardPlayed);
+  }
+  else {
+    return isValidAdditionalCard(toConsider, inPlay[inPlay.length - 1], "none");
+  }  
+}
+
 const isSpecialCard = (card) => {
   const specialCards = ["2+", "4+", "wildcard", "🚫", "↩️"];
   for (let i=0; i<specialCards; i++)
@@ -73,9 +107,10 @@ export const addCardToPlayer = (players, playerId, addCount) => {
     if (player.id === playerId) {
       player.cardCount = player.cardCount + addCount;
     }
+    /* wtf eric? (eric said to delete)
     if (selfId === player.id) {
       addCardSelf();
-    }
+    } */
     return player;
   });
 }
@@ -137,3 +172,5 @@ export const sortCards = (cards) => {
   cards.sort(compareByValue);
   return cards;
 }
+
+

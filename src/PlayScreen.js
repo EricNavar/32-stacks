@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components'
-import { yourCards, otherPlayers } from './sampleData.js';
+import { inPlayTemp } from './sampleData.js';
 import './PlayScreen.css';
 import Logo from './assets/logo.png';
+import {placeCard} from './gameLogic';
+import { yourCards, otherPlayers } from './sampleData.js';
 import { ColorPicker } from './ColorPicker';
 import { EndingModal } from './EndingModal';
 import { LobbyModal } from './LobbyModal.js';
@@ -31,10 +33,9 @@ const CardDropper = styled.div`
   background-color: black;
 `
 
-const PlaceCards = styled.div`
+const PlaceCards = styled.button`
   position: absolute;
   bottom: 120:
-
 `
 
 const Center = styled.div`
@@ -50,6 +51,15 @@ const CardStyledComponent = styled.div`
   border-color: ${props => props.color};
   color: black;
   background-color: white;
+`
+
+const CardButtonStyledComponent = styled.button`
+  padding: 12px;
+  border-style: solid;
+  border-color: ${props => props.color};
+  color: black;
+  background-color: white;
+  position: relative;
 `
 
 const CardText = styled.p`
@@ -124,6 +134,15 @@ const CallUnoButton = styled.button`
   border-radius: 8px;
   font-size: 1.2rem;
 `
+const BlackBox = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: ${props => props.gray ? "50%" : "0%"};
+  background-color: black;
+  top: 0;
+  left: 0;
+`
 
 function Card(props) {
   const {color, value} = props
@@ -131,6 +150,16 @@ function Card(props) {
     <CardStyledComponent color={color} className="card" >
       <CardText>{value}</CardText>
     </CardStyledComponent>
+  );
+}
+
+function CardButton(props) {
+  const {color, value, gray} = props;
+  return (
+    <CardButtonStyledComponent onClick={props.onClick} color={color}  className="card" disabled={gray}>
+      <CardText>{value}</CardText>
+      <BlackBox gray={gray}></BlackBox>
+    </CardButtonStyledComponent>
   );
 }
 
@@ -194,9 +223,18 @@ function PlayScreen(props) {
   const yourUserName = props.name;
 
   const [hand, setHand] = React.useState(yourCards);
+  const [inPlay, setInPlay] = React.useState(inPlayTemp);
+  const [topPlayerCardCount, setTopPlayerCardCount] = React.useState(5);
+  const [leftPlayerCardCount, setLeftPlayerCardCount] = React.useState(5);
+  const [rightPlayerCardCount, setRightPlayerCardCount] = React.useState(5);
+  const [topOfStack, setTopOfStack] = React.useState(null);
 
-  const [lastColor, setLastColor] = React.useState("red");
-  const [lastValue, setLastValue] = React.useState("1");
+
+  const [lastCardPlayed, setLastCardPlayed] = React.useState({
+    c:"red",
+    v:'3',
+    gray:false
+  });
 
   const [colorPickerOpen, setColorPickerOpen] = React.useState(false);
   const [nextColor, setNextColor] = React.useState("red");
@@ -205,6 +243,7 @@ function PlayScreen(props) {
   const [lobbyModalOpen, setLobbyModalOpen] = React.useState(false);
 
   const myHandOffset = (hand.length * 70) / 2;
+
 
   return (
     <>
@@ -228,22 +267,27 @@ function PlayScreen(props) {
         </div>
       </RightPlayerHandContainer>
       
-      <CardDropper className='card'></CardDropper>
-      <PlaceCards className='placeCards'>
+      <CardDropper className='card'>
+        <div style={{width:'max-content'}}>
+          {topOfStack &&
+            <CardButton onClick={()=>{console.log("click")}} color={topOfStack.c} value={topOfStack.v} gray={topOfStack.gray}/>
+          }
+        </div>
+      </CardDropper>
+      <PlaceCards className='placeCards' disabled>
         Place Cards!
       </PlaceCards>
 
       <HandContainer style={{left:`calc(50% - ${myHandOffset}px`}}>
         <div style={{width:'max-content'}}>
-          {hand.map((card,index) => 
-            <button key={index} onClick={()=>{console.log("click")}} className="clickableCard">
-              <Card key={index} color={card.c} value={card.v}/>
-            </button>
+          {hand.map((card,index) => {
+            return <CardButton id={`card-button-${index}`} key={index} onClick={e=>placeCard(card, hand, inPlay, setInPlay, setTopOfStack, lastCardPlayed)} color={card.c} value={card.v} gray={card.gray}/>
+          }
           )}
         </div>
       </HandContainer>
       <Center>
-        <Card color={lastColor} value={lastValue}/>
+        <Card color={setLastCardPlayed.c} value={setLastCardPlayed.v}/>
         <HiddenCard className="card pile" style={{marginLeft: 8}}/>
       </Center>
       <CallUnoButton>
