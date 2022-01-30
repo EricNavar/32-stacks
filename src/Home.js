@@ -1,7 +1,9 @@
-import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import Logo from './assets/logo.png';
 import Background from './assets/background.png';
+import { otherPlayers } from './sampleData.js';
+
+import { Link } from 'react-router-dom';
 
 const generateRoomCode = () => {
   let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -15,8 +17,8 @@ const generateRoomCode = () => {
 function Home(props) {
 
   const [roomCode, setRoomCode] = useState("");
-  const [name, setName] = useState("");
-  
+
+
   return (
     <div id="parent">  
 
@@ -27,15 +29,14 @@ function Home(props) {
         
         {/* Username input */}
         <div id="child1">
-          <label style={{textSize:"large"}} for="name">Set nickname: </label>
-          <input style={{width:"200px"}} type="text" id="name" name="name" required minlength="1" maxlength="15" size="10"/>
+          <label style={{textSize:"large"}} for="name">Set name: </label>
+          <input style={{width:"200px"}} onChange={(e) => props.setName(e.target.value)} type="text" id="name" name="name" required minlength="1" maxlength="15" size="10"/>
         </div>
 
         <p></p>
 
         <div>
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid*/}
-            <a href={`/play/${generateRoomCode()}`}>Create a new game!</a>
+            <Link to={`/play/${generateRoomCode()}`}>Create a new game!</Link>
         </div>
 
         <p>
@@ -43,8 +44,7 @@ function Home(props) {
         </p>
 
         <div>
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid*/}
-            <a href={`/play/${roomCode}`}>Join an existing game!</a>
+            <Link to={`/play/${roomCode}`}>Join an existing game!</Link>
           <p></p>
           <input type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())}/>
         </div>
@@ -53,7 +53,6 @@ function Home(props) {
           <a style={{fontSize:"24px"}} href="rules">Game Rules!</a>
         </div>
       </div>
-
 
     </div>
   );

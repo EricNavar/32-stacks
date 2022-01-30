@@ -1,11 +1,19 @@
-/* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components'
-import { yourCards } from './sampleData.js';
 import { inPlayTemp } from './sampleData.js';
 import './PlayScreen.css';
 import Logo from './assets/logo.png';
 import {placeCard} from './gameLogic';
+import { yourCards, otherPlayers } from './sampleData.js';
+import { ColorPicker } from './ColorPicker';
+import { EndingModal } from './EndingModal';
+import { LobbyModal } from './LobbyModal.js';
+
+import io from 'socket.io-client';
+import { useParams, useNavigate } from "react-router-dom";
+
+const ENDPOINT = "http://localhost:5000";
+let socket;
 
 const PlayScreenMain = styled.main`
   justify-content:center;
@@ -155,13 +163,64 @@ function CardButton(props) {
   );
 }
 
-function PlayScreen() {
-  const players = 4;
+function PlayScreen(props) {
+  const myId = 2;
+  const [players, setPlayers] = React.useState(otherPlayers);
+  const otherPlayerIds = players.filter(player => player.id !== myId).map(player => player.playerId);
+  const topPlayerId = otherPlayerIds[0];
+  const leftPlayerId = otherPlayerIds[1];
+  const rightPlayerId = otherPlayerIds[2];
+  
+  const [gameObject, setGameObject] = useState();
+  useEffect(() => {
+    console.log(gameObject)
+  }, [gameObject])
 
-  const yourUserName = "greg";
-  const topPlayerName = "eric"
-  const leftPlayerName = "mommy"
-  const rightPlayerName = "daddy"
+  //Socket.io spam sorry guys --------------------------------------------------------------------
+  const { room } = useParams();
+  const navigate = useNavigate();
+
+  //Initial Socket Connection
+  useEffect(() => {
+    const connectionOptions =  {
+      "forceNew" : true,
+      "reconnectionAttempts": "Infinity", 
+      "timeout" : 10000,                  
+      "transports" : ["websocket"]
+    }
+    socket = io.connect(ENDPOINT, connectionOptions)
+
+    socket.emit('join', {room: room, name: props.name}, (error) => {
+      if (error) {
+        console.log("error")
+        navigate('/');
+      }
+      else {
+        console.log("Successfully connected to room")
+      }
+    })
+
+    //On disconnect
+    return () => {
+      socket.emit('leave')
+      socket.off()
+    }
+  }, [])
+
+  //Receiving Messages from Socket Server
+  useEffect(() => {
+    socket.on("gameObjectUpdate", (gameObject) => {
+      setGameObject(gameObject)
+    })
+
+    socket.on("initialGameObject", (gameObject) => {
+      setGameObject(gameObject)
+    })
+  })
+
+  //End of Socket.io spam ----------------------------------------------------
+
+  const yourUserName = props.name;
 
   const [hand, setHand] = React.useState(yourCards);
   const [inPlay, setInPlay] = React.useState(inPlayTemp);
@@ -177,27 +236,34 @@ function PlayScreen() {
     gray:false
   });
 
+  const [colorPickerOpen, setColorPickerOpen] = React.useState(false);
+  const [nextColor, setNextColor] = React.useState("red");
+
+  const [endingModalOpen, setEndingModalOpen] = React.useState(false);
+  const [lobbyModalOpen, setLobbyModalOpen] = React.useState(false);
+
   const myHandOffset = (hand.length * 70) / 2;
 
 
   return (
+    <>
     <PlayScreenMain>
       <TopPlayerHandContainer>
         <div style={{display:'max-content'}}>
-          {Array.apply(null, { length: topPlayerCardCount }).map(card => <HiddenCard className="card"/>)}
+          {Array.apply(null, { length: players[topPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} className="card"/>)}
         </div>
       </TopPlayerHandContainer>
-      <TopPlayerUsername className='username'>{topPlayerName}</TopPlayerUsername>
-      <LeftPlayerUsername className='username'>{leftPlayerName}</LeftPlayerUsername>
+      <TopPlayerUsername className='username'>{players[topPlayerId].name}</TopPlayerUsername>
+      <LeftPlayerUsername className='username'>{players[leftPlayerId].name}</LeftPlayerUsername>
       <LeftPlayerHandContainer>
-        <div style={{display:'max-  content', transform: 'rotate(90deg)'}}>
-          {Array.apply(null, { length: topPlayerCardCount }).map(card => <HiddenCard className="card"/>)}
-        </div>``
+        <div style={{display:'max-content', transform: 'rotate(90deg)'}}>
+          {Array.apply(null, { length: players[leftPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} className="card"/>)}
+        </div>
       </LeftPlayerHandContainer>
-      <RightPlayerUsername className='username'>{rightPlayerName}</RightPlayerUsername>
+      <RightPlayerUsername className='username'>{players[rightPlayerId].name}</RightPlayerUsername>
       <RightPlayerHandContainer>
         <div style={{display:'max-content', transform: 'rotate(-90deg)'}}>
-          {Array.apply(null, { length: rightPlayerCardCount }).map(card => <HiddenCard className="card"/>)}
+          {Array.apply(null, { length: players[rightPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} className="card"/>)}
         </div>
       </RightPlayerHandContainer>
       
@@ -215,8 +281,6 @@ function PlayScreen() {
       <HandContainer style={{left:`calc(50% - ${myHandOffset}px`}}>
         <div style={{width:'max-content'}}>
           {hand.map((card,index) => {
-            console.log(index);
-            console.log(placeCard)
             return <CardButton id={`card-button-${index}`} key={index} onClick={e=>placeCard(card, hand, inPlay, setInPlay, setTopOfStack, lastCardPlayed)} color={card.c} value={card.v} gray={card.gray}/>
           }
           )}
@@ -230,6 +294,11 @@ function PlayScreen() {
         CALL UNO
       </CallUnoButton>
     </PlayScreenMain>
+    <ColorPicker open={colorPickerOpen} setNextColor={setNextColor} setColorPickerOpen={setColorPickerOpen} />
+    <EndingModal open={colorPickerOpen} />
+    <LobbyModal open={lobbyModalOpen} players={players} isHost={true} />
+    <button onClick={e=>setLobbyModalOpen(!lobbyModalOpen)}>click me</button>
+    </>
   );
 }
 

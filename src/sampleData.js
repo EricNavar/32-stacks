@@ -21,7 +21,7 @@ export const yourCards = [
   }
 ]
 
-const otherPlayers = [
+export const otherPlayers = [
   {
     name: "greg",
     cardCount: 9,
