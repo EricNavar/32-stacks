@@ -1,10 +1,14 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components'
 import { yourCards } from './sampleData.js';
 import './PlayScreen.css';
 import Logo from './assets/logo.png';
-import { useLocation } from 'react-router-dom';
+import io from 'socket.io-client';
+import { useParams, useNavigate } from "react-router-dom";
+
+const ENDPOINT = "http://localhost:5000";
+let socket;
 
 const PlayScreenMain = styled.main`
   justify-content:center;
@@ -130,7 +134,49 @@ function Card(props) {
 function PlayScreen(props) {
   const players = 4;
 
-  const yourUserName = "greg";
+  //Socket.io spam sorry guys --------------------------------------------------------------------
+  const { room } = useParams();
+  const navigate = useNavigate();
+
+  //Initial Socket Connection
+  useEffect(() => {
+    const connectionOptions =  {
+      "forceNew" : true,
+      "reconnectionAttempts": "Infinity", 
+      "timeout" : 10000,                  
+      "transports" : ["websocket"]
+    }
+    socket = io.connect(ENDPOINT, connectionOptions)
+
+    socket.emit('join', {room: room, name: props.name}, (error) => {
+      if (error) {
+        console.log("error")
+        navigate('/');
+      }
+      else {
+        console.log("Successfully connected to room")
+      }
+    })
+
+    //On disconnect
+    return () => {
+      socket.emit('leave')
+      socket.off()
+    }
+  }, [])
+
+  //Receiving Messages from Socket Server
+  useEffect(() => {
+    socket.on("gameStateUpdate", (gameState) => {
+      //update game object with new object
+    })
+
+    // socket.on("playerJoined", )
+  })
+
+  //End of Socket.io spam ----------------------------------------------------
+
+  const yourUserName = props.name;
   const topPlayerName = "eric"
   const leftPlayerName = "mommy"
   const rightPlayerName = "daddy"

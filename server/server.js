@@ -15,9 +15,10 @@ const io = socketIO(httpServer)
 
 const playerList = []
 
-const addPlayer = async (id, name, room) => {
-    const player = {id, name, room}
+const addPlayer = async (id, name, room, number) => {
+    const player = {id, name, room, number}
     playerList.push(player)
+    console.log(playerList)
     return player
 }
 
@@ -27,7 +28,8 @@ const getPlayer = (id) => {
 
 const removePlayer = (id) => {
     const index = playerList.findIndex(player => player.id === id)
-    return playerList.splice(index, 1)[0]
+    // return playerList.splice(index, 1)[0]
+    return true;
 }
 
 const getPlayersInRoom = (room) => {
@@ -43,11 +45,11 @@ io.on('connection', socket => {
         const players = getPlayersInRoom(payload.room)
         if (players.length === 4) {
             console.log("Full")
-            return callback("Room is Full!")
+            return callback("Full")
         }
         else {
         console.log(`Player joined room: ${payload.room}`)
-            addPlayer(socket.id, payload.name, payload.room).then(
+            addPlayer(socket.id, payload.name, payload.room, players.length + 1).then(
                 socket.join(payload.room),
                 io.to(payload.room).emit('roomData', {room: payload.room, players: players})
             )

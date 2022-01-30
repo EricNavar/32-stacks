@@ -53,14 +53,7 @@ const ServerTest = () => {
 
   const clickFunction = () => {
     socket.emit('updateGame', ({clicks: clickCount + 1}))
-    // setClicks(clickCount + 1)
   }
-
-  useEffect(() => {
-    if (clickCount != 0) {
-      socket.emit('updateGame', ({clicks: clickCount}))
-    }
-  }, [clickCount])
 
   return (
     <div>
