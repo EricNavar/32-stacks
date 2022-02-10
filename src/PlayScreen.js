@@ -3,11 +3,11 @@ import styled from 'styled-components'
 import { inPlayTemp } from './sampleData.js';
 import './PlayScreen.css';
 import Logo from './assets/logo.png';
-import {placeCard} from './gameLogic';
+import {placeCard} from './logic/gameLogic';
 import { yourCards, otherPlayers } from './sampleData.js';
-import { ColorPicker } from './ColorPicker';
-import { EndingModal } from './EndingModal';
-import { LobbyModal } from './LobbyModal.js';
+import { ColorPicker } from './modals/ColorPicker';
+import { EndingModal } from './modals/EndingModal';
+import { LobbyModal } from './modals/LobbyModal.js';
 
 import io from 'socket.io-client';
 import { useParams, useNavigate } from "react-router-dom";
@@ -22,20 +22,22 @@ const PlayScreenMain = styled.main`
   height: 100vh;
 `
 
-// Drop cards here
-const CardDropper = styled.div`
-  position: absolute;
-  bottom: 200px;
-  left: calc(50% - 32px);
-  border-style: solid;
-  height:
-  border-color: black;
-  background-color: black;
-`
-
 const PlaceCards = styled.button`
   position: absolute;
-  bottom: 120:
+  bottom: 120;
+  position: absolute;
+  border-radius: 6px;
+  border-style: solid;
+  display: inline-flex;
+  height: 30px;
+  width: 180px;
+  background-color: transparent;
+  color: white;
+  margin-left: -20px; /* fix later? */
+  justify-content: center;
+  align-items: center;
+  bottom: 140px;
+  left: calc(50% - 90px);
 `
 
 const Center = styled.div`
@@ -45,7 +47,40 @@ const Center = styled.div`
   display: flex;
 `
 
-const CardStyledComponent = styled.div`
+const StyledCard = styled.div`
+  border-radius: 6px;
+  border-style: solid;
+  display: inline-flex;
+  width: 64px;
+  height: 90px;
+  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+  margin-left: -20px;
+  box-sizing: border-box;
+`
+
+const StyledCardButton = styled.button`
+  border-radius: 6px;
+  border-style: solid;
+  display: inline-flex;
+  width: 64px;
+  height: 90px;
+  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+  margin-left: -20px;
+  box-sizing: border-box;
+`
+
+// Drop cards here
+const CardDropper = styled(StyledCard)`
+  position: absolute;
+  bottom: 200px;
+  left: calc(50% - 32px);
+  border-style: solid;
+  height:
+  border-color: black;
+  background-color: black;
+`
+
+const CardComponent = styled(StyledCard)`
   padding: 12px;
   border-style: solid;
   border-color: ${props => props.color};
@@ -53,7 +88,7 @@ const CardStyledComponent = styled.div`
   background-color: white;
 `
 
-const CardButtonStyledComponent = styled.button`
+const CardButtonStyledComponent = styled(StyledCardButton)`
   padding: 12px;
   border-style: solid;
   border-color: ${props => props.color};
@@ -89,7 +124,7 @@ const TopPlayerHandContainer = styled.div`
   justify-content: center;
 `
 
-const HiddenCard = styled.div`
+const HiddenCard = styled(StyledCard)`
   border-color: white;
   background-color: black;
   background-image: url(${Logo});
@@ -109,15 +144,24 @@ const RightPlayerHandContainer = styled.div`
   right: 0;
 `
 
-const RightPlayerUsername = styled.p`
+const Username = styled.p`
+  margin: 0;
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: white;
+  top: calc(50% - 150px);
+  position: absolute;
+`
+
+const RightPlayerUsername = styled(Username)`
   right: 16px;
 `
 
-const LeftPlayerUsername = styled.p`
+const LeftPlayerUsername = styled(Username)`
   left: 16px;
 `
 
-const TopPlayerUsername = styled.p`
+const TopPlayerUsername = styled(Username)`
   top: 100px;
   left: calc(50% - 50px);
   width: 100px;
@@ -144,19 +188,27 @@ const BlackBox = styled.div`
   left: 0;
 `
 
+const Pile = styled(StyledCard)`
+  box-shadow: rgba(255, 0, 0, 0.4) 5px 5px, rgba(255, 255, 0, 0.3) 10px 10px, rgba(0, 255, 0, 0.2) 15px 15px, rgba(0, 0, 255, 0.1) 20px 20px, rgba(255, 255, 255, 0.05) 25px 25px;
+`
+
+const DrawPile = styled(Pile)`
+  margin-left: 8px;
+`
+
 function Card(props) {
   const {color, value} = props
   return (
-    <CardStyledComponent color={color} className="card" >
+    <CardComponent color={color} >
       <CardText>{value}</CardText>
-    </CardStyledComponent>
+    </CardComponent>
   );
 }
 
 function CardButton(props) {
   const {color, value, gray} = props;
   return (
-    <CardButtonStyledComponent onClick={props.onClick} color={color}  className="card" disabled={gray}>
+    <CardButtonStyledComponent onClick={props.onClick} color={color} disabled={gray}>
       <CardText>{value}</CardText>
       <BlackBox gray={gray}></BlackBox>
     </CardButtonStyledComponent>
@@ -247,57 +299,56 @@ function PlayScreen(props) {
 
   return (
     <>
-    <PlayScreenMain>
-      <TopPlayerHandContainer>
-        <div style={{display:'max-content'}}>
-          {Array.apply(null, { length: players[topPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} className="card"/>)}
-        </div>
-      </TopPlayerHandContainer>
-      <TopPlayerUsername className='username'>{players[topPlayerId].name}</TopPlayerUsername>
-      <LeftPlayerUsername className='username'>{players[leftPlayerId].name}</LeftPlayerUsername>
-      <LeftPlayerHandContainer>
-        <div style={{display:'max-content', transform: 'rotate(90deg)'}}>
-          {Array.apply(null, { length: players[leftPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} className="card"/>)}
-        </div>
-      </LeftPlayerHandContainer>
-      <RightPlayerUsername className='username'>{players[rightPlayerId].name}</RightPlayerUsername>
-      <RightPlayerHandContainer>
-        <div style={{display:'max-content', transform: 'rotate(-90deg)'}}>
-          {Array.apply(null, { length: players[rightPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} className="card"/>)}
-        </div>
-      </RightPlayerHandContainer>
-      
-      <CardDropper className='card'>
-        <div style={{width:'max-content'}}>
-          {topOfStack &&
-            <CardButton onClick={()=>{console.log("click")}} color={topOfStack.c} value={topOfStack.v} gray={topOfStack.gray}/>
-          }
-        </div>
-      </CardDropper>
-      <PlaceCards className='placeCards' disabled>
-        Place Cards!
-      </PlaceCards>
+      <PlayScreenMain>
+        <TopPlayerHandContainer>
+          <div style={{display:'max-content'}}>
+            {Array.apply(null, { length: players[topPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} />)}
+          </div>
+        </TopPlayerHandContainer>
+        <TopPlayerUsername >{players[topPlayerId].name}</TopPlayerUsername>
+        <LeftPlayerUsername >{players[leftPlayerId].name}</LeftPlayerUsername>
+        <LeftPlayerHandContainer>
+          <div style={{display:'max-content', transform: 'rotate(90deg)'}}>
+            {Array.apply(null, { length: players[leftPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} />)}
+          </div>
+        </LeftPlayerHandContainer>
+        <RightPlayerUsername >{players[rightPlayerId].name}</RightPlayerUsername>
+        <RightPlayerHandContainer>
+          <div style={{display:'max-content', transform: 'rotate(-90deg)'}}>
+            {Array.apply(null, { length: players[rightPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} />)}
+          </div>
+        </RightPlayerHandContainer>
+        
+        <CardDropper>
+          <div style={{width:'max-content'}}>
+            {topOfStack &&
+              <CardButton onClick={()=>{console.log("click")}} color={topOfStack.c} value={topOfStack.v} gray={topOfStack.gray}/>
+            }
+          </div>
+        </CardDropper>
+        <PlaceCards disabled>
+          Place Cards!
+        </PlaceCards>
 
-      <HandContainer style={{left:`calc(50% - ${myHandOffset}px`}}>
-        <div style={{width:'max-content'}}>
-          {hand.map((card,index) => {
-            return <CardButton id={`card-button-${index}`} key={index} onClick={e=>placeCard(card, hand, inPlay, setInPlay, setTopOfStack, lastCardPlayed)} color={card.c} value={card.v} gray={card.gray}/>
-          }
-          )}
-        </div>
-      </HandContainer>
-      <Center>
-        <Card color={setLastCardPlayed.c} value={setLastCardPlayed.v}/>
-        <HiddenCard className="card pile" style={{marginLeft: 8}}/>
-      </Center>
-      <CallUnoButton>
-        CALL UNO
-      </CallUnoButton>
-    </PlayScreenMain>
-    <ColorPicker open={colorPickerOpen} setNextColor={setNextColor} setColorPickerOpen={setColorPickerOpen} />
-    <EndingModal open={colorPickerOpen} />
-    <LobbyModal open={lobbyModalOpen} players={players} isHost={true} />
-    <button onClick={e=>setLobbyModalOpen(!lobbyModalOpen)}>click me</button>
+        <HandContainer style={{left:`calc(50% - ${myHandOffset}px`}}>
+          <div style={{width:'max-content'}}>
+            {hand.map((card,index) => {
+              return <CardButton id={`card-button-${index}`} key={index} onClick={e=>placeCard(card, hand, inPlay, setInPlay, setTopOfStack, lastCardPlayed)} color={card.c} value={card.v} gray={card.gray}/>
+            }
+            )}
+          </div>
+        </HandContainer>
+        <Center>
+          <Card id="discard-pile"color={setLastCardPlayed.c} value={setLastCardPlayed.v}/>
+          <DrawPile id="draw-pile"/>
+        </Center>
+        <CallUnoButton>
+          CALL UNO
+        </CallUnoButton>
+      </PlayScreenMain>
+      <ColorPicker open={colorPickerOpen} setNextColor={setNextColor} setColorPickerOpen={setColorPickerOpen} />
+      <EndingModal open={colorPickerOpen} />
+      <LobbyModal open={lobbyModalOpen} players={players} isHost={true} />
     </>
   );
 }
