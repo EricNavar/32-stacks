@@ -1,16 +1,17 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components'
+import PropTypes from 'prop-types';
+import io from 'socket.io-client';
+import { useParams, useNavigate } from "react-router-dom";
+//import local stuff later
 import { inPlayTemp } from './sampleData.js';
-import './PlayScreen.css';
-import Logo from './assets/logo.png';
 import {placeCard} from './logic/gameLogic';
 import { yourCards, otherPlayers } from './sampleData.js';
 import { ColorPicker } from './modals/ColorPicker';
 import { EndingModal } from './modals/EndingModal';
 import { LobbyModal } from './modals/LobbyModal.js';
-
-import io from 'socket.io-client';
-import { useParams, useNavigate } from "react-router-dom";
+import Logo from './assets/logo.png';
 
 const ENDPOINT = "http://localhost:5000";
 let socket;
@@ -204,6 +205,10 @@ function Card(props) {
     </CardComponent>
   );
 }
+Card.propTypes = {
+  color: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired
+}
 
 function CardButton(props) {
   const {color, value, gray} = props;
@@ -213,6 +218,12 @@ function CardButton(props) {
       <BlackBox gray={gray}></BlackBox>
     </CardButtonStyledComponent>
   );
+}
+CardButton.propTypes = {
+  color: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  gray: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired
 }
 
 function PlayScreen(props) {
@@ -334,8 +345,7 @@ function PlayScreen(props) {
           <div style={{width:'max-content'}}>
             {hand.map((card,index) => {
               return <CardButton id={`card-button-${index}`} key={index} onClick={e=>placeCard(card, hand, inPlay, setInPlay, setTopOfStack, lastCardPlayed)} color={card.c} value={card.v} gray={card.gray}/>
-            }
-            )}
+            })}
           </div>
         </HandContainer>
         <Center>
@@ -351,6 +361,9 @@ function PlayScreen(props) {
       <LobbyModal open={lobbyModalOpen} players={players} isHost={true} />
     </>
   );
+}
+PlayScreen.propTypes = {
+  name: PropTypes.string.isRequired,
 }
 
 export { PlayScreen }

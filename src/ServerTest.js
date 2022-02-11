@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, {useState, useEffect} from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import io from 'socket.io-client';

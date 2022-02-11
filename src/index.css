@@ -51,8 +51,8 @@ input {
   padding-top: 20px;
 }
 
-#child2 {
-  padding-top: calc(100vh - 500px);
+.gameRulesLink {
+  padding-top: calc(100vh - 550px);
 }
 
 
