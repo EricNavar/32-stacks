@@ -59,6 +59,7 @@ export function ColorPicker(props) {
   }
 }
 ColorPicker.propTypes = {
+  open: PropTypes.bool.isRequired,
   setNextColor: PropTypes.func.isRequired,
   setColorPickerOpen: PropTypes.func.isRequired
 }
