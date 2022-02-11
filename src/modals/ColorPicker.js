@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Modal = styled.div`
   border-radius: 8px;
@@ -49,11 +50,15 @@ export function ColorPicker(props) {
         <Title>
           Pick a color
         </Title>
-        {colors.map(color => <ColorButton key={color} color={color} onClick={e=>onClick(color)}></ColorButton>)}
+        {colors.map(color => <ColorButton key={color} color={color} onClick={()=>onClick(color)}></ColorButton>)}
       </Modal>
     );
   }
   else {
     return <></>;
   }
+}
+ColorPicker.propTypes = {
+  setNextColor: PropTypes.func.isRequired,
+  setColorPickerOpen: PropTypes.func.isRequired
 }

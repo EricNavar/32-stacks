@@ -28,7 +28,7 @@ function Home(props) {
         {/* Username input */}
         <div id="child1">
           <label style={{textSize:"large"}} htmlFor="name">Set name: </label>
-          <input style={{width:"200px"}} onChange={(e) => props.setName(e.target.value)} type="text" id="name" name="name" required minlength="1" maxlength="15" size="10"/>
+          <input style={{width:"200px"}} onChange={(e) => props.setName(e.target.value)} type="text" id="name" name="name" required minLength="1" maxLength="15" size="10"/>
         </div>
 
         <br/>

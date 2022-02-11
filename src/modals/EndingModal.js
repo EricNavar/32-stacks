@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Modal = styled.div`
   border-radius: 8px;
@@ -49,4 +50,7 @@ export function EndingModal(props) {
   else {
     return <></>;
   }
+}
+EndingModal.propTypes = {
+  open: PropTypes.bool.isRequired,
 }

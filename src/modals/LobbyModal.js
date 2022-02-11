@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Modal = styled.div`
   border-radius: 8px;
@@ -56,7 +57,7 @@ export function LobbyModal(props) {
     return (
       <Modal>
         <Title>
-          {players[0].name}'s lobby
+          {players[0].name}&apos;s lobby
         </Title>
         {players.map(player => 
           <PlayerCardWrapper>
@@ -74,4 +75,8 @@ export function LobbyModal(props) {
   else {
     return <></>;
   }
+}
+LobbyModal.propTypes = {
+  isHost: PropTypes.bool.isRequired,
+  players: PropTypes.object.isRequired
 }
