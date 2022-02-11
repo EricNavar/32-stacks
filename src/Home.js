@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import Logo from './assets/logo.png';
-import Background from './assets/background.png';
-import { otherPlayers } from './sampleData.js';
-
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import Logo from './assets/logo.png';
 
 const generateRoomCode = () => {
   let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -22,40 +20,54 @@ function Home(props) {
   return (
     <div id="parent">  
 
-      <img id="logo" src={Logo} alt=""/> 
+      <img id="logo" src={Logo} alt="logo"/> 
 
       <p><i>This is literally the best card game that there is.</i></p>
       <div style={{margin:"2.5rem"}}>
         
         {/* Username input */}
         <div id="child1">
-          <label style={{textSize:"large"}} for="name">Set name: </label>
+          <label style={{textSize:"large"}} htmlFor="name">Set name: </label>
           <input style={{width:"200px"}} onChange={(e) => props.setName(e.target.value)} type="text" id="name" name="name" required minlength="1" maxlength="15" size="10"/>
         </div>
 
-        <p></p>
+        <br/>
 
         <div>
             <Link to={`/play/${generateRoomCode()}`}>Create a new game!</Link>
         </div>
 
         <p>
-          <a style={{fontSize:"24px"}} href="https://www.youtube.com/watch?v=a3Z7zEc7AXQ" target="_blank">or</a>
+          <a
+            style={{fontSize:"24px"}}
+            href="https://www.youtube.com/watch?v=a3Z7zEc7AXQ"
+            rel="noreferrer" 
+            target="_blank"
+            aria-label="rick roll"
+          >
+            or
+          </a>
         </p>
 
         <div>
-            <Link to={`/play/${roomCode}`}>Join an existing game!</Link>
+          <Link to={`/play/${roomCode}`}>Join an existing game!</Link>
           <p></p>
           <input type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())}/>
         </div>
 
-        <div id="child2">
-          <a style={{fontSize:"24px"}} href="rules">Game Rules!</a>
+        <div className="gameRulesLink">
+          <a style={{fontSize:24}} href="/rules">Game Rules!</a>
+        </div>
+        <div >
+          <a style={{fontSize:24}} href="/settings">Settings</a>
         </div>
       </div>
 
     </div>
   );
+}
+Home.propTypes = {
+  setName: PropTypes.string.isRequired
 }
 
 export { Home };
