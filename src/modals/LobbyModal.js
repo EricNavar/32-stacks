@@ -59,8 +59,8 @@ export function LobbyModal(props) {
         <Title>
           {players[0].name}&apos;s lobby
         </Title>
-        {players.map(player => 
-          <PlayerCardWrapper>
+        {players.map((player,index) => 
+          <PlayerCardWrapper key={index}>
             <PlayerCard>
               <p>{player.name}</p>
             </PlayerCard>  
@@ -77,6 +77,7 @@ export function LobbyModal(props) {
   }
 }
 LobbyModal.propTypes = {
+  open: PropTypes.bool.isRequired,
   isHost: PropTypes.bool.isRequired,
   players: PropTypes.object.isRequired
 }
