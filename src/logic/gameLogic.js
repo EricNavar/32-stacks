@@ -1,5 +1,5 @@
 // Adds card to temporary stack of cards to be played
-export function placeCard(card, hand, inPlay, setInPlay, setTopOfStack, lastCardPlayed) {
+export function placeCard(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection) {
   inPlay.push(card);
   setInPlay(inPlay);
   setTopOfStack(card);
@@ -9,21 +9,21 @@ export function placeCard(card, hand, inPlay, setInPlay, setTopOfStack, lastCard
   // If no cards have been placed, consider the last card on the discard pile.
   // Otherwise, the last card in this temporary stack
   const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
-  checkHand(hand, lastCard, inPlay);
-  
+  checkHand(hand, lastCard, inPlay, direction);
 }
 
 // Checks player's entire hand and grays out nonplayable cards
-function checkHand(hand, lastCardPlayed, inPlay) {
+function checkHand(hand, lastCardPlayed, inPlay, direction) {
   for (let i = 0; i < hand.length; i++) {
-    hand[i].gray = !checkSingleCard(hand[i], lastCardPlayed, inPlay);
+    hand[i].gray = !checkSingleCard(hand[i], lastCardPlayed, inPlay, direction)[0];
   }
+  return hand;
 }
 
 export function canPlaceCard(hand, lastCardPlayed, inPlay) {
   let i = 0;
   while (i < hand.length) {
-    if (checkSingleCard(hand[i], lastCardPlayed, inPlay)) {
+    if (checkSingleCard(hand[i], lastCardPlayed, inPlay, "none")[0]) {
       return true
     }
     i++;
@@ -32,17 +32,15 @@ export function canPlaceCard(hand, lastCardPlayed, inPlay) {
 }
 
 // Drops one card at a time
-function checkSingleCard(toConsider, lastCardPlayed, inPlay) {
-  // console.log("checkSingleCard()");
-  // console.log(toConsider);
-  // console.log(lastCardPlayed);
-  // console.log(inPlay);
+function checkSingleCard(toConsider, lastCardPlayed, inPlay, direction) {
   if (inPlay.length === 0) {
-    return isValidFirstCard(toConsider, lastCardPlayed);
+    return [isValidFirstCard(toConsider, lastCardPlayed),"none"];
   }
   else {
-    return isValidAdditionalCard(toConsider, inPlay[inPlay.length - 1], "none");
-  }  
+    const result = isValidAdditionalCard(toConsider, inPlay[inPlay.length - 1], direction);
+    console.log(result);
+    return result;
+  }
 }
 
 const isSpecialCard = (card) => {
@@ -81,7 +79,7 @@ export const isValidAdditionalCard = (toConsider, lastCard, direction) => {
   if (toConsider.v === lastCard.v) {
     return [true, direction];
   }
-  if (isLessThan(toConsider.v, lastCard.v)) {
+  if (isValidDecreasingCard(toConsider.v, lastCard.v)) {
     if (direction === "increasing") {
       return [false, direction];
     }
@@ -89,7 +87,7 @@ export const isValidAdditionalCard = (toConsider, lastCard, direction) => {
       return [true, "increasing"];
     }
   }
-  else if (isGreaterThan(toConsider.v, lastCard.v)) {
+  else if (isValidIncreasingCard(toConsider.v, lastCard.v)) {
     if (direction === "decreasing") {
       return [false, direction];
     }
@@ -106,6 +104,7 @@ export const isValidAdditionalCard = (toConsider, lastCard, direction) => {
   return [false, direction];
 }
 
+//used for sorting
 const isLessThan = (cardA, cardB) => {
   if (!isSpecialCard(cardA) && !isSpecialCard(cardB)) {
     return Number(cardA) < Number(cardB);
@@ -113,6 +112,7 @@ const isLessThan = (cardA, cardB) => {
   return false;
 }
 
+//used for sorting
 const isGreaterThan = (cardA, cardB) => {
   if (!isSpecialCard(cardA) && !isSpecialCard(cardB)) {
     return Number(cardA) > Number(cardB);
@@ -120,15 +120,23 @@ const isGreaterThan = (cardA, cardB) => {
   return false;
 }
 
+// The card being put down must be a special card or be greater than by one or be of the same value
+// TODO
+const isValidIncreasingCard = (card, topOfInPlay) => {
+  return isSpecialCard(card) || card.v === topOfInPlay.v || Number(card) === Number(topOfInPlay) + 1;
+}
+
+// The card being put down must be a special card or be less than by one or be of the same value
+// TODO
+const isValidDecreasingCard = (card, topOfInPlay) => {
+  return isSpecialCard(card) || card.v === topOfInPlay.v || Number(card) === Number(topOfInPlay) - 1;
+}
+
 export const addCardToPlayer = (players, playerId, addCount) => {
   players.map(player => {
     if (player.id === playerId) {
       player.cardCount = player.cardCount + addCount;
     }
-    /* wtf eric? (eric said to delete)
-    if (selfId === player.id) {
-      addCardSelf();
-    } */
     return player;
   });
 }
