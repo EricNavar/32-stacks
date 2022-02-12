@@ -6,7 +6,11 @@ export function placeCard(card, hand, inPlay, setInPlay, setTopOfStack, lastCard
   console.log("2: " + inPlay[inPlay.length - 1].v);
   // remove 1 element at the index of the card
   hand.splice(card,1);
-  checkHand(hand, lastCardPlayed, inPlay);
+  // If no cards have been placed, consider the last card on the discard pile.
+  // Otherwise, the last card in this temporary stack
+  const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
+  checkHand(hand, lastCard, inPlay);
+  
 }
 
 // Checks player's entire hand and grays out nonplayable cards
@@ -29,10 +33,10 @@ export function canPlaceCard(hand, lastCardPlayed, inPlay) {
 
 // Drops one card at a time
 function checkSingleCard(toConsider, lastCardPlayed, inPlay) {
-  console.log("checkSingleCard()");
-  console.log(toConsider);
-  console.log(lastCardPlayed);
-  console.log(inPlay);
+  // console.log("checkSingleCard()");
+  // console.log(toConsider);
+  // console.log(lastCardPlayed);
+  // console.log(inPlay);
   if (inPlay.length === 0) {
     return isValidFirstCard(toConsider, lastCardPlayed);
   }
@@ -67,6 +71,10 @@ export const isValidFirstCard = (toConsider, lastCard) => {
 // returns an array containing first if the additional card is valid, and second, the direction
 // in which it's increasing or decreasing
 export const isValidAdditionalCard = (toConsider, lastCard, direction) => {
+  console.log("isValidAdditionalCard()");
+  console.log(toConsider);
+  console.log(lastCard);
+  console.log(direction);
   if (isSpecialCard(toConsider)) {
     return true;
   }
