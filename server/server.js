@@ -15,8 +15,8 @@ const io = socketIO(httpServer)
 
 const playerList = []
 
-const addPlayer = (id, name, room, number) => {
-    const player = {id, name, room, number}
+const addPlayer = (id, name, room) => {
+    const player = {id, name, room}
     playerList.push(player)
     return player
 }
@@ -54,8 +54,7 @@ io.on('connection', socket => {
             for (i = 0; i < currentPlayers.length; i++) {
                 let newPlayer = {
                     name: currentPlayers[i].name,
-                    cardCount: 7,
-                    number: currentPlayers[i].number
+                    cardCount: 7
                 }
                 initialPlayerList.push(newPlayer)
             }

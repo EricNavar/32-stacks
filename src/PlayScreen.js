@@ -206,8 +206,8 @@ function Card(props) {
   );
 }
 Card.propTypes = {
-  color: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired
+  color: PropTypes.string,
+  value: PropTypes.string
 }
 
 function CardButton(props) {
@@ -236,14 +236,27 @@ function PlayScreen(props) {
   
   const [gameObject, setGameObject] = useState();
   const [gameObjectPlayers, setGameObjectPlayers] = useState();
+  const [host, setHost] = useState(false);
 
   useEffect(() => {
     if (gameObject !== undefined) {
       console.log(gameObject)
-      console.log(gameObject.playerList.map(player => player.name))
       setGameObjectPlayers(gameObject.playerList.map(player => player.name))
+      if (host === false && gameObject.playerList[0].name === props.name) {
+        console.log("I am the host!")
+        setHost(true)
+      }
+      if (lobbyModalOpen && gameObject.gameStart) {
+        setLobbyModalOpen(false)
+      }
     }
   }, [gameObject])
+
+  const startGame = () => {
+    let temp = {...gameObject}
+    temp.gameStart = true
+    setLobbyModalOpen(false)
+  }
 
   //Socket.io --------------------------------------------------------------------
   const { room } = useParams();
@@ -290,6 +303,23 @@ function PlayScreen(props) {
     })
   }, [])
 
+  //Updating Game Object with Game Actions
+  const [lobbyModalOpen, setLobbyModalOpen] = useState(true);
+
+  const updateGame = (newGameObject) => {
+    if (newGameObject !== undefined) {
+      socket.emit('updateGame', newGameObject)
+    }
+  }
+
+  useEffect(() => {
+    if (gameObject !== undefined && host) {
+      let temp = {...gameObject}
+      temp.gameStart = true
+      updateGame(temp)
+    }
+  }, [lobbyModalOpen])
+
   //End of Socket.io ----------------------------------------------------
 
   const yourUserName = props.name;
@@ -312,7 +342,6 @@ function PlayScreen(props) {
   const [nextColor, setNextColor] = React.useState("red");
 
   const [endingModalOpen, setEndingModalOpen] = React.useState(false);
-  const [lobbyModalOpen, setLobbyModalOpen] = React.useState(true);
 
   const myHandOffset = (hand.length * 70) / 2;
 
@@ -377,12 +406,12 @@ function PlayScreen(props) {
       </PlayScreenMain>
       <ColorPicker open={colorPickerOpen} setNextColor={setNextColor} setColorPickerOpen={setColorPickerOpen} />
       <EndingModal open={colorPickerOpen} />
-      <LobbyModal open={lobbyModalOpen} players={gameObjectPlayers} isHost={true} />
+      <LobbyModal open={lobbyModalOpen} players={gameObjectPlayers} isHost={host} startGame={startGame} />
     </>
   );
 }
 PlayScreen.propTypes = {
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
 }
 
 export { PlayScreen }

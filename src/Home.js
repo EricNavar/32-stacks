@@ -67,7 +67,7 @@ function Home(props) {
   );
 }
 Home.propTypes = {
-  setName: PropTypes.string.isRequired
+  setName: PropTypes.func.isRequired
 }
 
 export { Home };
