@@ -1,6 +1,5 @@
 // Adds card to temporary stack of cards to be played
 export function placeCard(card, hand, inPlay, setInPlay, setTopOfStack, lastCardPlayed) {
-  console.log("fuck1");
   inPlay.push(card);
   setInPlay(inPlay);
   setTopOfStack(card);
@@ -22,6 +21,17 @@ function checkHand(hand, lastCardPlayed, inPlay) {
   }
 }
 
+export function canPlaceCard(hand, lastCardPlayed, inPlay) {
+  let i = 0;
+  while (i < hand.length) {
+    if (cardCheck(hand[i], lastCardPlayed, inPlay)) {
+      return true
+    }
+    i++;
+  }
+  return false;
+}
+
 // Drops one card at a time
 function cardCheck(toConsider, lastCardPlayed, inPlay) {
   if (inPlay.length === 0) {
@@ -33,7 +43,7 @@ function cardCheck(toConsider, lastCardPlayed, inPlay) {
 }
 
 const isSpecialCard = (card) => {
-  const specialCards = ["2+", "4+", "wildcard", "🚫", "↩️"];
+  const specialCards = ["Draw 2", "Wild Color Card", "Revervse", "Skip Turn", "↩"];
   for (let i=0; i<specialCards; i++)
   if (card.v === specialCards[i]) {
     return true;
@@ -173,4 +183,68 @@ export const sortCards = (cards) => {
   return cards;
 }
 
+// draws a random card. we're not keeping track of what cards are actually in the deck
+// A UNO deck consists of 108 cards, of which there are 76 Number cards, 24 Action cards and 8 Wild cards.
+export const drawCard = () => {
+  const rand = Math.random() * 27;
+  if (rand < 19) {
+    return chooseRandomNumberCard();
+  }
+  else if (rand < 25) {
+    return chooseRandomActionCard();
+  }
+  else {
+    return chooseRandomWildCard();
+  }
+}
 
+const WildColorCard = {
+  color: "wild",
+  value: "Wild Color"
+}
+
+const WildDraw4Card = {
+  color: "wild",
+  value: "Wild Draw 4"
+}
+
+const chooseRandomNumberCard = () => {
+  return {
+    color: chooseRandomColor(),
+    value: Math.floor(Math.random() * 10)
+  };
+}
+
+const chooseRandomActionCard = () => {
+  const rand = Math.floor(Math.random() * 3);
+  let value = "";
+  if (rand < 1)
+    value = "Draw 2";
+  else if (rand < 2)
+    value = "Reverse";
+  else
+    value = "Skip";
+  return {
+    color: chooseRandomColor(),
+    value: value
+  };
+}
+
+const chooseRandomWildCard = () => {
+  const rand = Math.floor(Math.random() * 2);
+  if (rand < 1)
+    return WildColorCard;
+  else
+    return WildDraw4Card;
+}
+
+const chooseRandomColor = () => {
+  const rand = Math.random() * 4;
+  if (rand < 1)
+    return "red"; 
+  else if (rand < 2)
+    return "green"; 
+  else if (rand < 3)
+    return "blue"; 
+  else return "yellow"; 
+}
