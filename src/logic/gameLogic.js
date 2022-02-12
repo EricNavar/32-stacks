@@ -4,27 +4,22 @@ export function placeCard(card, hand, inPlay, setInPlay, setTopOfStack, lastCard
   setInPlay(inPlay);
   setTopOfStack(card);
   console.log("2: " + inPlay[inPlay.length - 1].v);
-  hand.pop(card); // do we need to get this by index?
+  // remove 1 element at the index of the card
+  hand.splice(card,1);
   checkHand(hand, lastCardPlayed, inPlay);
 }
 
 // Checks player's entire hand and grays out nonplayable cards
 function checkHand(hand, lastCardPlayed, inPlay) {
   for (let i = 0; i < hand.length; i++) {
-    if (!cardCheck(hand[i], lastCardPlayed, inPlay)) {
-      // gray out the card
-      hand[i].gray = true;
-    }
-    else {
-      hand[i].gray = false;
-    }
+    hand[i].gray = !checkSingleCard(hand[i], lastCardPlayed, inPlay);
   }
 }
 
 export function canPlaceCard(hand, lastCardPlayed, inPlay) {
   let i = 0;
   while (i < hand.length) {
-    if (cardCheck(hand[i], lastCardPlayed, inPlay)) {
+    if (checkSingleCard(hand[i], lastCardPlayed, inPlay)) {
       return true
     }
     i++;
@@ -33,7 +28,11 @@ export function canPlaceCard(hand, lastCardPlayed, inPlay) {
 }
 
 // Drops one card at a time
-function cardCheck(toConsider, lastCardPlayed, inPlay) {
+function checkSingleCard(toConsider, lastCardPlayed, inPlay) {
+  console.log("checkSingleCard()");
+  console.log(toConsider);
+  console.log(lastCardPlayed);
+  console.log(inPlay);
   if (inPlay.length === 0) {
     return isValidFirstCard(toConsider, lastCardPlayed);
   }
@@ -54,6 +53,7 @@ const isSpecialCard = (card) => {
 // toConsider is the card whose eligibility is being considered
 // lastCard is the last card that was put down
 export const isValidFirstCard = (toConsider, lastCard) => {
+  console.log("isValidFirstCard(" + toConsider + "," + lastCard + ")");
   if (toConsider.v === lastCard.v || toConsider.c === lastCard.c) {
     return true;
   }
