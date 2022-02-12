@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 import { useParams, useNavigate } from "react-router-dom";
 //import local stuff later
 import { inPlayTemp } from './sampleData.js';
-import {placeCard} from './logic/gameLogic';
+import { placeCard, drawCard, canPlaceCard } from './logic/gameLogic';
 import { yourCards, otherPlayers } from './sampleData.js';
 import { ColorPicker } from './modals/ColorPicker';
 import { EndingModal } from './modals/EndingModal';
@@ -287,11 +287,11 @@ function PlayScreen(props) {
 
   const [hand, setHand] = React.useState(yourCards);
   const [inPlay, setInPlay] = React.useState(inPlayTemp);
-  const [topPlayerCardCount, setTopPlayerCardCount] = React.useState(5);
-  const [leftPlayerCardCount, setLeftPlayerCardCount] = React.useState(5);
-  const [rightPlayerCardCount, setRightPlayerCardCount] = React.useState(5);
   const [topOfStack, setTopOfStack] = React.useState(null);
 
+  // if this player has a card available to put down
+  //who's turn is it? It stores a number 0 through 4, representing the player ID
+  const [turn, setTurn] = React.useState(0);
 
   const [lastCardPlayed, setLastCardPlayed] = React.useState({
     c:"red",
@@ -307,6 +307,14 @@ function PlayScreen(props) {
 
   const myHandOffset = (hand.length * 70) / 2;
 
+  const onClickDrawPile = () => {
+    // you can only draw a card if you have no available cards, it's your turn,
+    // and you haven't placed a first card
+    if (!canPlaceCard(hand, lastCardPlayed, inPlay) || turn !== myId || inPlay.length !== 0) {
+      return;
+    }
+    hand.push(drawCard());
+  }
 
   return (
     <>
@@ -350,7 +358,9 @@ function PlayScreen(props) {
         </HandContainer>
         <Center>
           <Card id="discard-pile"color={setLastCardPlayed.c} value={setLastCardPlayed.v}/>
-          <DrawPile id="draw-pile"/>
+          <button onClick={onClickDrawPile}>
+            <DrawPile id="draw-pile"/>
+          </button>
         </Center>
         <CallUnoButton>
           CALL UNO
