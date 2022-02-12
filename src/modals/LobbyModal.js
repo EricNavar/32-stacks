@@ -53,16 +53,16 @@ const PlayerCardWrapper = styled.div`
 
 export function LobbyModal(props) {
   const {isHost, players} = props;
-  if (props.open) {
+  if (props.open && players !== undefined) {
     return (
       <Modal>
         <Title>
-          {players[0].name}&apos;s lobby
+          {players[0]}&apos;s lobby
         </Title>
         {players.map((player,index) => 
           <PlayerCardWrapper key={index}>
             <PlayerCard>
-              <p>{player.name}</p>
+              <p>{player}</p>
             </PlayerCard>  
           </PlayerCardWrapper>
         )}

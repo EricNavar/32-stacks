@@ -27,8 +27,7 @@ const getPlayer = (id) => {
 
 const removePlayer = (id) => {
     const index = playerList.findIndex(player => player.id === id)
-    // return playerList.splice(index, 1)[0]
-    return true;
+    return playerList.splice(index, 1)[0]
 }
 
 const getPlayersInRoom = (room) => {
@@ -51,9 +50,6 @@ io.on('connection', socket => {
             addPlayer(socket.id, payload.name, payload.room, players.length + 1)
             socket.join(payload.room)
             const currentPlayers = getPlayersInRoom(payload.room)
-            console.log("Hi")
-            console.log(currentPlayers)
-            console.log(currentPlayers[0])
             let initialPlayerList = []
             for (i = 0; i < currentPlayers.length; i++) {
                 let newPlayer = {
@@ -75,12 +71,13 @@ io.on('connection', socket => {
         }
     })
 
-    socket.on('leave', () => {
+    socket.on('disconnect', () => {
         console.log("Player leaving")
-        const removedPlayer = removePlayer(socket.id)
-        if (removedPlayer) {
-            io.to(removedPlayer.room).emit('roomData', {room: removedPlayer.room, players: getPlayersInRoom(removedPlayer.room)})
-        }
+        const player = getPlayer(socket.id)
+        removePlayer(socket.id)
+        io.to(player.room).emit('playerLeft', {
+            leftPlayer: player.name
+        })
     })
 
     socket.on('updateGame', (gameObject) => {

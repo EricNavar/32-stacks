@@ -235,11 +235,17 @@ function PlayScreen(props) {
   const rightPlayerId = otherPlayerIds[2];
   
   const [gameObject, setGameObject] = useState();
+  const [gameObjectPlayers, setGameObjectPlayers] = useState();
+
   useEffect(() => {
-    console.log(gameObject)
+    if (gameObject !== undefined) {
+      console.log(gameObject)
+      console.log(gameObject.playerList.map(player => player.name))
+      setGameObjectPlayers(gameObject.playerList.map(player => player.name))
+    }
   }, [gameObject])
 
-  //Socket.io spam sorry guys --------------------------------------------------------------------
+  //Socket.io --------------------------------------------------------------------
   const { room } = useParams();
   const navigate = useNavigate();
 
@@ -262,26 +268,29 @@ function PlayScreen(props) {
         console.log("Successfully connected to room")
       }
     })
-
-    //On disconnect
-    return () => {
-      socket.emit('leave')
-      socket.off()
-    }
   }, [])
 
   //Receiving Messages from Socket Server
   useEffect(() => {
-    socket.on("gameObjectUpdate", (gameObject) => {
-      setGameObject(gameObject)
+    socket.on("gameObjectUpdate", (newGameObject) => {
+      setGameObject(newGameObject)
     })
 
-    socket.on("initialGameObject", (gameObject) => {
-      setGameObject(gameObject)
+    socket.on("initialGameObject", (newGameObject) => {
+      setGameObject(newGameObject)
     })
-  })
 
-  //End of Socket.io spam ----------------------------------------------------
+    socket.on("playerLeft", (newLobby) => {
+      setGameObject(previousGameObject => {
+        const newGameObject = {...previousGameObject}
+        const newList = previousGameObject.playerList.filter(player => player.name !== newLobby.leftPlayer)
+        newGameObject.playerList = newList
+        return newGameObject
+      })
+    })
+  }, [])
+
+  //End of Socket.io ----------------------------------------------------
 
   const yourUserName = props.name;
 
@@ -303,7 +312,7 @@ function PlayScreen(props) {
   const [nextColor, setNextColor] = React.useState("red");
 
   const [endingModalOpen, setEndingModalOpen] = React.useState(false);
-  const [lobbyModalOpen, setLobbyModalOpen] = React.useState(false);
+  const [lobbyModalOpen, setLobbyModalOpen] = React.useState(true);
 
   const myHandOffset = (hand.length * 70) / 2;
 
@@ -358,7 +367,7 @@ function PlayScreen(props) {
       </PlayScreenMain>
       <ColorPicker open={colorPickerOpen} setNextColor={setNextColor} setColorPickerOpen={setColorPickerOpen} />
       <EndingModal open={colorPickerOpen} />
-      <LobbyModal open={lobbyModalOpen} players={players} isHost={true} />
+      <LobbyModal open={lobbyModalOpen} players={gameObjectPlayers} isHost={true} />
     </>
   );
 }
