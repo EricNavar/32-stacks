@@ -327,6 +327,8 @@ function PlayScreen(props) {
   const [hand, setHand] = React.useState(yourCards);
   const [inPlay, setInPlay] = React.useState(inPlayTemp);
   const [topOfStack, setTopOfStack] = React.useState(null);
+  // in which direction the streak is going. "none", "increasing", "decreasing"
+  const [direction, setDirection] = React.useState("none");
 
   // if this player has a card available to put down
   //who's turn is it? It stores a number 0 through 4, representing the player ID
@@ -390,7 +392,14 @@ function PlayScreen(props) {
         <HandContainer style={{left:`calc(50% - ${myHandOffset}px`}}>
           <div style={{width:'max-content'}}>
             {hand.map((card,index) => {
-              return <CardButton id={`card-button-${index}`} key={index} onClick={e=>placeCard(card, hand, inPlay, setInPlay, setTopOfStack, lastCardPlayed)} color={card.c} value={card.v} gray={card.gray}/>
+              return <CardButton
+                        id={`card-button-${index}`}
+                        key={index}
+                        onClick={e=>placeCard(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection)}
+                        color={card.c}
+                        value={card.v}
+                        gray={card.gray}
+                      />
             })}
           </div>
         </HandContainer>
