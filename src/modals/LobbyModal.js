@@ -66,7 +66,7 @@ export function LobbyModal(props) {
             </PlayerCard>  
           </PlayerCardWrapper>
         )}
-        {isHost && <StartButton>
+        {isHost && <StartButton onClick={() => props.startGame()}>
           START GAME
         </StartButton>}
       </Modal>
@@ -79,5 +79,6 @@ export function LobbyModal(props) {
 LobbyModal.propTypes = {
   open: PropTypes.bool.isRequired,
   isHost: PropTypes.bool.isRequired,
-  players: PropTypes.object.isRequired
+  players: PropTypes.array,
+  startGame: PropTypes.func.isRequired
 }
