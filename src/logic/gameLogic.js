@@ -10,7 +10,7 @@ export function placeCard(card, hand, setHand, inPlay, setInPlay, setTopOfStack,
   // Otherwise, the last card in this temporary stack
   const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
   checkHand(hand, lastCard, inPlay, direction, setDirection);
-
+}
 
 // Checks player's entire hand and grays out nonplayable cards
 function checkHand(hand, lastCardPlayed, inPlay, direction, setDirection) {
