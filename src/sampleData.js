@@ -18,6 +18,11 @@ export const yourCards = [
     c:"yellow",
     v:"7",
     gray: true
+  },
+  {
+    c:"yellow",
+    v:"0",
+    gray: true
   }
 ]
 
