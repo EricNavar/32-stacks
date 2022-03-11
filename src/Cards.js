@@ -9,18 +9,6 @@ const StyledCard = styled.div`
   width: 64px;
   height: 90px;
   box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
-  margin-left: -20px;
-  box-sizing: border-box;
-`;
-
-const StyledCardButton = styled.button`
-  border-radius: 6px;
-  border-style: solid;
-  display: inline-flex;
-  width: 64px;
-  height: 90px;
-  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
-  margin-left: -20px;
   box-sizing: border-box;
 `;
 
@@ -43,18 +31,17 @@ const CardComponent = styled(StyledCard)`
 `;
 
 const CardText = styled.p`
-  font-size: 2rem;
+  font-size: 1rem;
   margin: 0;
 `;
 
-const CardButtonStyledComponent = styled(StyledCardButton)`
-  padding: 12px;
-  border-style: solid;
-  border-color: ${props => props.color};
-  color: black;
-  background-color: white;
+//this is meant to be a button that wraps around a card
+const ButtonWrapper = styled.button`
+  margin: 0;
+  background: transparent;
+  border: 0;
   position: relative;
-`;
+`
 
 function Card(props) {
   const { color, value } = props;
@@ -74,17 +61,17 @@ export { Card };
 function CardButton(props) {
   const { color, value, gray } = props;
   return (
-    <CardButtonStyledComponent onClick={props.onClick} color={color} disabled={gray}>
-      <CardText>{value}</CardText>
+    <ButtonWrapper onClick={props.onClick}>
+      <Card color={color} value={value} />
       <BlackBox gray={gray}></BlackBox>
-    </CardButtonStyledComponent>
+    </ButtonWrapper>
   );
 }
 CardButton.propTypes = {
   color: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   gray: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
 };
 
 export { CardButton };
