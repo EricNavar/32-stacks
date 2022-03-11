@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { MusicPlayer2 } from './MusicPlayer2';
 import Logo from './assets/logo.png';
 
 const generateRoomCode = () => {
@@ -62,7 +63,7 @@ function Home(props) {
           <a style={{fontSize:24}} href="/settings">Settings</a>
         </div>
       </div>
-
+      <MusicPlayer2 url="http://streaming.tdiradio.com:8000/house.mp3"/>
     </div>
   );
 }
