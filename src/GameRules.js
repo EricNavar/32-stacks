@@ -7,11 +7,11 @@ const GameRulesMain = styled.main`
   border-radius: 8px;
   background-color: pink;
   padding: 12px;
-`
+`;
 
 const Title = styled.h1`
   font-weight: bold;
-`
+`;
 
 function GameRules() {
   return (
@@ -37,4 +37,4 @@ function GameRules() {
   );
 }
 
-export { GameRules }
+export { GameRules };

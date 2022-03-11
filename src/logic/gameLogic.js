@@ -25,7 +25,7 @@ export function canPlaceCard(hand, lastCardPlayed, inPlay) {
   let i = 0;
   while (i < hand.length) {
     if (checkSingleCard(hand[i], lastCardPlayed, inPlay, "none")[0]) {
-      return true
+      return true;
     }
     i++;
   }
@@ -45,7 +45,7 @@ function checkSingleCard(toConsider, lastCardPlayed, inPlay, direction) {
 
 const isSpecialCard = (card) => {
   return card.color === 'wild' || card.v === '+2' || card.v === 'reverse' || card.v === 'skip';
-}
+};
 
 // toConsider is the card whose eligibility is being considered
 // lastCard is the last card that was put down
@@ -54,7 +54,7 @@ export const isValidFirstCard = (toConsider, lastCard) => {
     return true;
   }
   return isSpecialCard(toConsider);
-}
+};
 
 // direction denotes the direction that the additional cards are going in
 //   - direction = "increasing" if the user is increasing
@@ -96,7 +96,7 @@ export const isValidAdditionalCard = (toConsider, lastCard, direction) => {
     return [true, direction];
   }
   return [false, direction];
-}
+};
 
 //used for sorting
 const isLessThan = (cardA, cardB) => {
@@ -104,7 +104,7 @@ const isLessThan = (cardA, cardB) => {
     return Number(cardA) < Number(cardB);
   }
   return false;
-}
+};
 
 //used for sorting
 const isGreaterThan = (cardA, cardB) => {
@@ -112,19 +112,19 @@ const isGreaterThan = (cardA, cardB) => {
     return Number(cardA) > Number(cardB);
   }
   return false;
-}
+};
 
 // The card being put down must be a special card or be greater than by one or be of the same value
 // TODO
 const isValidIncreasingCard = (card, topOfInPlay) => {
   return isSpecialCard(card) || card.v === topOfInPlay.v || Number(card.v) === Number(topOfInPlay.v) + 1 || Number(card.v) === Number(topOfInPlay.v) - 9;
-}
+};
 
 // The card being put down must be a special card or be less than by one or be of the same value
 // TODO
 const isValidDecreasingCard = (card, topOfInPlay) => {
   return isSpecialCard(card) || card.v === topOfInPlay.v || Number(card.v) + 1 === Number(topOfInPlay.v) || Number(card.v) + 9 === Number(topOfInPlay.v);
-}
+};
 
 export const addCardToPlayer = (players, playerId, addCount) => {
   players.map(player => {
@@ -133,12 +133,12 @@ export const addCardToPlayer = (players, playerId, addCount) => {
     }
     return player;
   });
-}
+};
 
 export const addCardToMyHand = (hand, card) => {
   hand.push(card);
   return sortCards(hand);
-}
+};
 
 export const subtractCard = (players, playerId, subtractCount) => {
   players.map(player => {
@@ -147,7 +147,7 @@ export const subtractCard = (players, playerId, subtractCount) => {
     }
     return player;
   });
-}
+};
 
 export const isGameOver = (players) => {
   for (let i=0; i<players.length; i++) {
@@ -156,14 +156,14 @@ export const isGameOver = (players) => {
     }
   }
   return false;
-}
+};
 
 export const reset = (players) => {
   return players.map(player => {
     player.cardCount = 0;
     return player;
   });
-}
+};
 
 function compareByColor(cardA, cardB) {
   const colors = ["red", "yellow", "green", "blue"];
@@ -191,7 +191,7 @@ export const sortCards = (cards) => {
   cards.sort(compareByColor);
   cards.sort(compareByValue);
   return cards;
-}
+};
 
 // draws a random card. we're not keeping track of what cards are actually in the deck
 // A UNO deck consists of 108 cards, of which there are 76 Number cards, 24 Action cards and 8 Wild cards.
@@ -206,24 +206,24 @@ export const drawCard = () => {
   else {
     return chooseRandomWildCard();
   }
-}
+};
 
 const WildColorCard = {
   color: "wild",
   value: "Wild Color"
-}
+};
 
 const WildDraw4Card = {
   color: "wild",
   value: "Wild Draw 4"
-}
+};
 
 const chooseRandomNumberCard = () => {
   return {
     color: chooseRandomColor(),
     value: Math.floor(Math.random() * 10)
   };
-}
+};
 
 const chooseRandomActionCard = () => {
   const rand = Math.floor(Math.random() * 3);
@@ -238,7 +238,7 @@ const chooseRandomActionCard = () => {
     color: chooseRandomColor(),
     value: value
   };
-}
+};
 
 const chooseRandomWildCard = () => {
   const rand = Math.floor(Math.random() * 2);
@@ -246,7 +246,7 @@ const chooseRandomWildCard = () => {
     return WildColorCard;
   else
     return WildDraw4Card;
-}
+};
 
 const chooseRandomColor = () => {
   const rand = Math.random() * 4;
@@ -257,4 +257,4 @@ const chooseRandomColor = () => {
   else if (rand < 3)
     return "blue"; 
   else return "yellow"; 
-}
+};

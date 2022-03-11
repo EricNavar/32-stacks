@@ -16,7 +16,7 @@ const Modal = styled.div`
   top: calc(50vh - 213px);
   left: calc(50vw - 223px);
   text-align: center;
-`
+`;
 
 const Title = styled.h2`
   width: 100%;
@@ -24,7 +24,7 @@ const Title = styled.h2`
   textAlign: center;
   margin: 8px;
   color: black;
-`
+`;
 
 const StartButton = styled.button`
   padding: 8px;
@@ -32,7 +32,7 @@ const StartButton = styled.button`
   color: white;
   background-color: blue;
   font-size: 1.5rem;
-`
+`;
 
 const PlayerCard = styled.div`
   box-shadow: rgb(85, 91, 255) 0px 0px 0px 3px, rgb(31, 193, 27) 0px 0px 0px 6px, rgb(255, 217, 19) 0px 0px 0px 9px, rgb(255, 156, 85) 0px 0px 0px 12px, rgb(255, 85, 85) 0px 0px 0px 15px;
@@ -40,7 +40,7 @@ const PlayerCard = styled.div`
   width: 120px;
   height: 60px;
   color: black;
-`
+`;
 
 const PlayerCardWrapper = styled.div`
   display: inline-flex;
@@ -49,7 +49,7 @@ const PlayerCardWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 120px;
-`
+`;
 
 export function LobbyModal(props) {
   const {isHost, players} = props;
@@ -81,4 +81,4 @@ LobbyModal.propTypes = {
   isHost: PropTypes.bool.isRequired,
   players: PropTypes.array,
   startGame: PropTypes.func.isRequired
-}
+};

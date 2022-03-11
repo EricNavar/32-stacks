@@ -24,7 +24,7 @@ export const yourCards = [
     v:"0",
     gray: true
   }
-]
+];
 
 export const otherPlayers = [
   {
@@ -47,7 +47,7 @@ export const otherPlayers = [
     cardCount: 9,
     playerId: 4
   }
-]
+];
 
 export const inPlayTemp = [
   {
@@ -55,4 +55,4 @@ export const inPlayTemp = [
     v:"8",
     gray:false
   }
-]
+];

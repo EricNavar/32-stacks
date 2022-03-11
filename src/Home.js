@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { MusicPlayer2 } from './MusicPlayer2';
 import Logo from './assets/logo.png';
 
 const generateRoomCode = () => {
   let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
   let result = "";
   for (let i = 0; i < 6; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length))
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return result;
-}
+};
 
 function Home(props) {
-
   const [roomCode, setRoomCode] = useState("");
-
 
   return (
     <div id="parent">  
@@ -39,15 +36,7 @@ function Home(props) {
         </div>
 
         <p>
-          <a
-            style={{fontSize:"24px"}}
-            href="https://www.youtube.com/watch?v=a3Z7zEc7AXQ"
-            rel="noreferrer" 
-            target="_blank"
-            aria-label="rick roll"
-          >
-            or
-          </a>
+          or
         </p>
 
         <div>
@@ -63,12 +52,11 @@ function Home(props) {
           <a style={{fontSize:24}} href="/settings">Settings</a>
         </div>
       </div>
-      <MusicPlayer2 url="http://streaming.tdiradio.com:8000/house.mp3"/>
     </div>
   );
 }
 Home.propTypes = {
   setName: PropTypes.func.isRequired
-}
+};
 
 export { Home };

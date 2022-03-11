@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components'
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import io from 'socket.io-client';
 import { useParams, useNavigate } from "react-router-dom";
@@ -11,7 +11,11 @@ import { yourCards, otherPlayers } from './sampleData.js';
 import { ColorPicker } from './modals/ColorPicker';
 import { EndingModal } from './modals/EndingModal';
 import { LobbyModal } from './modals/LobbyModal.js';
+import { MusicPlayer } from './MusicPlayer';
 import Logo from './assets/logo.png';
+import SettingsIcon from './assets/settings-icon';
+import { Card, CardButton } from './Cards';
+import { SettingsModal } from './modals/SettingsModal';
 
 const ENDPOINT = "http://localhost:5000";
 let socket;
@@ -21,7 +25,7 @@ const PlayScreenMain = styled.main`
   display: grid;
   background-color: #222;
   height: 100vh;
-`
+`;
 
 const PlaceCards = styled.button`
   position: absolute;
@@ -39,14 +43,14 @@ const PlaceCards = styled.button`
   align-items: center;
   bottom: 140px;
   left: calc(50% - 90px);
-`
+`;
 
 const Center = styled.div`
   position: absolute;
   bottom: 50%;
   left: calc(50% - 58px);
   display: flex;
-`
+`;
 
 const StyledCard = styled.div`
   border-radius: 6px;
@@ -57,18 +61,7 @@ const StyledCard = styled.div`
   box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
   margin-left: -20px;
   box-sizing: border-box;
-`
-
-const StyledCardButton = styled.button`
-  border-radius: 6px;
-  border-style: solid;
-  display: inline-flex;
-  width: 64px;
-  height: 90px;
-  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
-  margin-left: -20px;
-  box-sizing: border-box;
-`
+`;
 
 // Drop cards here
 const CardDropper = styled(StyledCard)`
@@ -79,29 +72,7 @@ const CardDropper = styled(StyledCard)`
   height:
   border-color: black;
   background-color: black;
-`
-
-const CardComponent = styled(StyledCard)`
-  padding: 12px;
-  border-style: solid;
-  border-color: ${props => props.color};
-  color: black;
-  background-color: white;
-`
-
-const CardButtonStyledComponent = styled(StyledCardButton)`
-  padding: 12px;
-  border-style: solid;
-  border-color: ${props => props.color};
-  color: black;
-  background-color: white;
-  position: relative;
-`
-
-const CardText = styled.p`
-  font-size: 2rem;
-  margin: 0;
-`
+`;
 
 const HandContainer = styled.div`
   border-style: dashed;
@@ -117,13 +88,13 @@ const HandContainer = styled.div`
   padding-left: 32px;
   justify-content: center;
   display: grid;
-`
+`;
 
 const TopPlayerHandContainer = styled.div`
   margin-top: 8px;
   display:grid;
   justify-content: center;
-`
+`;
 
 const HiddenCard = styled(StyledCard)`
   border-color: white;
@@ -132,18 +103,18 @@ const HiddenCard = styled(StyledCard)`
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-`
+`;
 
 const LeftPlayerHandContainer = styled.div`
   position: absolute;
   top: calc(50% - 40px);
-`
+`;
 
 const RightPlayerHandContainer = styled.div`
   position: absolute;
   top: calc(50% - 40px);
   right: 0;
-`
+`;
 
 const Username = styled.p`
   margin: 0;
@@ -152,21 +123,21 @@ const Username = styled.p`
   color: white;
   top: calc(50% - 150px);
   position: absolute;
-`
+`;
 
 const RightPlayerUsername = styled(Username)`
   right: 16px;
-`
+`;
 
 const LeftPlayerUsername = styled(Username)`
   left: 16px;
-`
+`;
 
 const TopPlayerUsername = styled(Username)`
   top: 100px;
   left: calc(50% - 50px);
   width: 100px;
-`
+`;
 
 const CallUnoButton = styled.button`
   padding: 12px;
@@ -178,53 +149,26 @@ const CallUnoButton = styled.button`
   color: white;
   border-radius: 8px;
   font-size: 1.2rem;
-`
-const BlackBox = styled.div`
+`;
+
+const SettingsIconButton = styled.button`
+  background: white;
   position: absolute;
-  width: 100%;
-  height: 100%;
-  opacity: ${props => props.gray ? "50%" : "0%"};
-  background-color: black;
-  top: 0;
-  left: 0;
-`
+  top: 12px;
+  right: 12px;
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  border-style: none;
+`;
 
 const Pile = styled(StyledCard)`
   box-shadow: rgba(255, 0, 0, 0.4) 5px 5px, rgba(255, 255, 0, 0.3) 10px 10px, rgba(0, 255, 0, 0.2) 15px 15px, rgba(0, 0, 255, 0.1) 20px 20px, rgba(255, 255, 255, 0.05) 25px 25px;
-`
+`;
 
 const DrawPile = styled(Pile)`
   margin-left: 8px;
-`
-
-function Card(props) {
-  const {color, value} = props
-  return (
-    <CardComponent color={color} >
-      <CardText>{value}</CardText>
-    </CardComponent>
-  );
-}
-Card.propTypes = {
-  color: PropTypes.string,
-  value: PropTypes.string
-}
-
-function CardButton(props) {
-  const {color, value, gray} = props;
-  return (
-    <CardButtonStyledComponent onClick={props.onClick} color={color} disabled={gray}>
-      <CardText>{value}</CardText>
-      <BlackBox gray={gray}></BlackBox>
-    </CardButtonStyledComponent>
-  );
-}
-CardButton.propTypes = {
-  color: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  gray: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired
-}
+`;
 
 function PlayScreen(props) {
   const myId = 2;
@@ -240,23 +184,23 @@ function PlayScreen(props) {
 
   useEffect(() => {
     if (gameObject !== undefined) {
-      console.log(gameObject)
-      setGameObjectPlayers(gameObject.playerList.map(player => player.name))
+      console.log(gameObject);
+      setGameObjectPlayers(gameObject.playerList.map(player => player.name));
       if (host === false && gameObject.playerList[0].name === props.name) {
-        console.log("I am the host!")
-        setHost(true)
+        console.log("I am the host!");
+        setHost(true);
       }
       if (lobbyModalOpen && gameObject.gameStart) {
-        setLobbyModalOpen(false)
+        setLobbyModalOpen(false);
       }
     }
-  }, [gameObject])
+  }, [gameObject]);
 
   const startGame = () => {
-    let temp = {...gameObject}
-    temp.gameStart = true
-    setLobbyModalOpen(false)
-  }
+    let temp = {...gameObject};
+    temp.gameStart = true;
+    setLobbyModalOpen(false);
+  };
 
   //Socket.io --------------------------------------------------------------------
   const { room } = useParams();
@@ -269,56 +213,56 @@ function PlayScreen(props) {
       "reconnectionAttempts": "Infinity", 
       "timeout" : 10000,                  
       "transports" : ["websocket"]
-    }
-    socket = io.connect(ENDPOINT, connectionOptions)
+    };
+    socket = io.connect(ENDPOINT, connectionOptions);
 
     socket.emit('join', {room: room, name: props.name}, (error) => {
       if (error) {
-        console.log("error")
+        console.log("error");
         navigate('/');
       }
       else {
-        console.log("Successfully connected to room")
+        console.log("Successfully connected to room");
       }
-    })
-  }, [])
+    });
+  }, []);
 
   //Receiving Messages from Socket Server
   useEffect(() => {
     socket.on("gameObjectUpdate", (newGameObject) => {
-      setGameObject(newGameObject)
-    })
+      setGameObject(newGameObject);
+    });
 
     socket.on("initialGameObject", (newGameObject) => {
-      setGameObject(newGameObject)
-    })
+      setGameObject(newGameObject);
+    });
 
     socket.on("playerLeft", (newLobby) => {
       setGameObject(previousGameObject => {
-        const newGameObject = {...previousGameObject}
-        const newList = previousGameObject.playerList.filter(player => player.name !== newLobby.leftPlayer)
-        newGameObject.playerList = newList
-        return newGameObject
-      })
-    })
-  }, [])
+        const newGameObject = {...previousGameObject};
+        const newList = previousGameObject.playerList.filter(player => player.name !== newLobby.leftPlayer);
+        newGameObject.playerList = newList;
+        return newGameObject;
+      });
+    });
+  }, []);
 
   //Updating Game Object with Game Actions
   const [lobbyModalOpen, setLobbyModalOpen] = useState(true);
 
   const updateGame = (newGameObject) => {
     if (newGameObject !== undefined) {
-      socket.emit('updateGame', newGameObject)
+      socket.emit('updateGame', newGameObject);
     }
-  }
+  };
 
   useEffect(() => {
     if (gameObject !== undefined && host) {
-      let temp = {...gameObject}
-      temp.gameStart = true
-      updateGame(temp)
+      let temp = {...gameObject};
+      temp.gameStart = true;
+      updateGame(temp);
     }
-  }, [lobbyModalOpen])
+  }, [lobbyModalOpen]);
 
   //End of Socket.io ----------------------------------------------------
 
@@ -344,6 +288,7 @@ function PlayScreen(props) {
   const [nextColor, setNextColor] = React.useState("red");
 
   const [endingModalOpen, setEndingModalOpen] = React.useState(false);
+  const [settingsModalOpen, setSettingsModalOpen] = React.useState(false);
 
   const myHandOffset = (hand.length * 70) / 2;
 
@@ -354,7 +299,11 @@ function PlayScreen(props) {
       return;
     }
     hand.push(drawCard());
-  }
+  };
+
+  const onClickSettingsButton = () => {
+    setSettingsModalOpen(!settingsModalOpen);
+  };
 
   return (
     <>
@@ -381,7 +330,7 @@ function PlayScreen(props) {
         <CardDropper>
           <div style={{width:'max-content'}}>
             {topOfStack &&
-              <CardButton onClick={()=>{console.log("click")}} color={topOfStack.c} value={topOfStack.v} gray={topOfStack.gray}/>
+              <CardButton onClick={()=>{console.log("click");}} color={topOfStack.c} value={topOfStack.v} gray={topOfStack.gray}/>
             }
           </div>
         </CardDropper>
@@ -399,7 +348,7 @@ function PlayScreen(props) {
                         color={card.c}
                         value={card.v}
                         gray={card.gray}
-                      />
+                      />;
             })}
           </div>
         </HandContainer>
@@ -413,14 +362,18 @@ function PlayScreen(props) {
           CALL UNO
         </CallUnoButton>
       </PlayScreenMain>
+      <SettingsIconButton onClick={onClickSettingsButton}>
+        <SettingsIcon/>
+      </SettingsIconButton>
       <ColorPicker open={colorPickerOpen} setNextColor={setNextColor} setColorPickerOpen={setColorPickerOpen} />
       <EndingModal open={colorPickerOpen} />
       <LobbyModal open={lobbyModalOpen} players={gameObjectPlayers} isHost={host} startGame={startGame} />
+      <SettingsModal open={settingsModalOpen} />
     </>
   );
 }
 PlayScreen.propTypes = {
   name: PropTypes.string,
-}
+};
 
-export { PlayScreen }
+export { PlayScreen };
