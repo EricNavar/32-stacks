@@ -23,6 +23,21 @@ export const yourCards = [
     c:"yellow",
     v:"0",
     gray: true
+  },
+  {
+    c:"yellow",
+    v:"0",
+    gray: true
+  },
+  {
+    c:"wild",
+    v:"Wild Color",
+    gray: false
+  },
+  {
+    c:"wild",
+    v:"Wild Draw 4",
+    gray: false
   }
 ];
 

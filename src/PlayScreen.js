@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 import { useParams, useNavigate } from "react-router-dom";
 //import local stuff later
 import { inPlayTemp } from './sampleData.js';
-import { placeCard, drawCard, canPlaceCard } from './logic/gameLogic';
+import { placeCard, drawCard, canPlaceCard, checkHand } from './logic/gameLogic';
 import { yourCards, otherPlayers } from './sampleData.js';
 import { ColorPicker } from './modals/ColorPicker';
 import { EndingModal } from './modals/EndingModal';
@@ -35,7 +35,6 @@ const PlaceCards = styled.button`
   width: 180px;
   background-color: transparent;
   color: white;
-  margin-left: -20px; /* fix later? */
   justify-content: center;
   align-items: center;
   bottom: 140px;
@@ -56,9 +55,15 @@ const StyledCard = styled.div`
   width: 64px;
   height: 90px;
   box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
-  margin-left: -20px;
   box-sizing: border-box;
 `;
+
+//this is meant to be a button that wraps around a card
+const ButtonWrapper = styled.button`
+  margin: 0;
+  background: transparent;
+  border: 0;
+`
 
 // Drop cards here
 const CardDropper = styled(StyledCard)`
@@ -76,7 +81,6 @@ const HandContainer = styled.div`
   border-width: 2px;
   border-color: green;
   border-radius: 8px;
-  position: absolute;
   bottom: 2px;
   height: 90px;
   padding-top: 12px;
@@ -85,6 +89,9 @@ const HandContainer = styled.div`
   padding-left: 32px;
   justify-content: center;
   display: grid;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
 `;
 
 const TopPlayerHandContainer = styled.div`
@@ -146,14 +153,6 @@ const CallUnoButton = styled.button`
   color: white;
   border-radius: 8px;
   font-size: 1.2rem;
-`;
-
-const Pile = styled(StyledCard)`
-  box-shadow: rgba(255, 0, 0, 0.4) 5px 5px, rgba(255, 255, 0, 0.3) 10px 10px, rgba(0, 255, 0, 0.2) 15px 15px, rgba(0, 0, 255, 0.1) 20px 20px, rgba(255, 255, 255, 0.05) 25px 25px;
-`;
-
-const DrawPile = styled(Pile)`
-  margin-left: 8px;
 `;
 
 function PlayScreen(props) {
@@ -255,7 +254,7 @@ function PlayScreen(props) {
   const yourUserName = props.name;
 
   const [hand, setHand] = React.useState(yourCards);
-  const [inPlay, setInPlay] = React.useState(inPlayTemp);
+  const [inPlay, setInPlay] = React.useState([]);
   const [topOfStack, setTopOfStack] = React.useState(null);
   // in which direction the streak is going. "none", "increasing", "decreasing"
   const [direction, setDirection] = React.useState("none");
@@ -286,7 +285,23 @@ function PlayScreen(props) {
     hand.push(drawCard());
   };
 
-  console.log(props.backgrounds[props.selectedBackground]);
+  const onClickCardButton = (card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection) => {
+    placeCard(card, hand, setHand, inPlay, setInPlay, setTopOfStack);
+    // If no cards have been placed, consider the last card on the discard pile.
+    // Otherwise, the last card in this temporary stack
+    const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
+    checkHand(hand, lastCard, inPlay, direction, setDirection);
+    if (card.c === "wild") {
+      setColorPickerOpen(true);
+    }
+  }
+
+  const onClickPlaceCards= () => {
+    setTopOfStack(inPlay[inPlay.size - 1]);
+    setInPlay([]);
+  };
+
+  console.log(inPlay.length);
 
   return (
     <>
@@ -317,9 +332,11 @@ function PlayScreen(props) {
             }
           </div>
         </CardDropper>
-        <PlaceCards disabled>
-          Place Cards!
-        </PlaceCards>
+        {inPlay.length > 0 &&
+          <PlaceCards onClick={onClickPlaceCards}>
+            Place Cards!
+          </PlaceCards>
+        }
 
         <HandContainer style={{left:`calc(50% - ${myHandOffset}px`}}>
           <div style={{width:'max-content'}}>
@@ -327,7 +344,9 @@ function PlayScreen(props) {
               return <CardButton
                         id={`card-button-${index}`}
                         key={index}
-                        onClick={e=>placeCard(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection)}
+                        onClick={e=>
+                          onClickCardButton(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection)
+                        }
                         color={card.c}
                         value={card.v}
                         gray={card.gray}
@@ -336,17 +355,17 @@ function PlayScreen(props) {
           </div>
         </HandContainer>
         <Center>
-          <Card id="discard-pile"color={setLastCardPlayed.c} value={setLastCardPlayed.v}/>
-          <button onClick={onClickDrawPile}>
-            <DrawPile id="draw-pile"/>
-          </button>
+          <Card id="discard-pile" color={setLastCardPlayed.c} value={setLastCardPlayed.v}/>
+          <CardButton id="draw-pile" onClick={onClickDrawPile} color="wild" gray={false} value="DRAW">
+            Draw
+          </CardButton>
         </Center>
         <CallUnoButton>
           CALL UNO
         </CallUnoButton>
       </PlayScreenMain>
       <ColorPicker open={colorPickerOpen} setNextColor={setNextColor} setColorPickerOpen={setColorPickerOpen} />
-      <EndingModal open={colorPickerOpen} />
+      <EndingModal open={endingModalOpen} />
       <LobbyModal open={lobbyModalOpen} players={gameObjectPlayers} isHost={host} startGame={startGame} />
     </>
   );

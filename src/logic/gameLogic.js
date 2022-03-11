@@ -1,22 +1,20 @@
 // Adds card to temporary stack of cards to be played
-export function placeCard(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection) {
+export function placeCard(card, hand, setHand, inPlay, setInPlay, setTopOfStack) {
   inPlay.push(card);
   setInPlay(inPlay);
   setTopOfStack(card);
   // remove 1 element at the index of the card
   hand.splice(hand.indexOf(card),1);
   setHand(hand);
-  // If no cards have been placed, consider the last card on the discard pile.
-  // Otherwise, the last card in this temporary stack
-  const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
-  checkHand(hand, lastCard, inPlay, direction, setDirection);
 }
 
 // Checks player's entire hand and grays out nonplayable cards
-function checkHand(hand, lastCardPlayed, inPlay, direction, setDirection) {
+export function checkHand(hand, lastCardPlayed, inPlay, direction, setDirection) {
   for (let i = 0; i < hand.length; i++) {
-    hand[i].gray = !checkSingleCard(hand[i], lastCardPlayed, inPlay, direction)[0];
-    setDirection(checkSingleCard(hand[i], lastCardPlayed, inPlay, direction)[1]);
+    const result = checkSingleCard(hand[i], lastCardPlayed, inPlay, direction);
+    const isGray = !result[0];
+    hand[i].gray = isGray;
+    setDirection(result[1]);
   }
   return hand;
 }
@@ -39,12 +37,12 @@ function checkSingleCard(toConsider, lastCardPlayed, inPlay, direction) {
   }
   else {
     const result = isValidAdditionalCard(toConsider, inPlay[inPlay.length - 1], direction);
-    return result;
+    return [result,direction];
   }
 }
 
 const isSpecialCard = (card) => {
-  return card.color === 'wild' || card.v === '+2' || card.v === 'reverse' || card.v === 'skip';
+  return card.c === 'wild' || card.v === '+2' || card.v === 'reverse' || card.v === 'skip';
 };
 
 // toConsider is the card whose eligibility is being considered
