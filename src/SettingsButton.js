@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { PropTypes } from 'prop-types';
 import { SettingsModal } from './modals/SettingsModal';
 import SettingsIcon from './assets/settings-icon';
 
@@ -14,7 +15,7 @@ const SettingsIconButton = styled.button`
   border-style: none;
 `;
 
-function SettingsButton() {
+function SettingsButton(props) {
   const [settingsModalOpen, setSettingsModalOpen] = React.useState(false);
 
   const onClickSettingsButton = () => {
@@ -26,9 +27,13 @@ function SettingsButton() {
       <SettingsIconButton onClick={onClickSettingsButton}>
         <SettingsIcon/>
       </SettingsIconButton>
-      <SettingsModal open={settingsModalOpen}/> 
+      <SettingsModal open={settingsModalOpen} backgrounds={props.backgrounds} setSelectedBackground={props.setSelectedBackground}/> 
     </>
   );
+}
+SettingsButton.propTypes = {
+  backgrounds: PropTypes.object.isRequired,
+  setSelectedBackground: PropTypes.func.isRequired
 }
 
 export { SettingsButton };

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 import io from 'socket.io-client';
 import { useParams, useNavigate } from "react-router-dom";
 //import local stuff later
@@ -13,7 +13,6 @@ import { EndingModal } from './modals/EndingModal';
 import { LobbyModal } from './modals/LobbyModal.js';
 import Logo from './assets/logo.png';
 import { Card, CardButton } from './Cards';
-import { SettingsButton } from './SettingsButton'; 
 
 const ENDPOINT = "http://localhost:5000";
 let socket;
@@ -21,7 +20,7 @@ let socket;
 const PlayScreenMain = styled.main`
   justify-content:center;
   display: grid;
-  background-color: #222;
+  background: url("${props => props.selectedBackground}");
   height: 100vh;
 `;
 
@@ -287,9 +286,11 @@ function PlayScreen(props) {
     hand.push(drawCard());
   };
 
+  console.log(props.backgrounds[props.selectedBackground]);
+
   return (
     <>
-      <PlayScreenMain>
+      <PlayScreenMain selectedBackground={props.backgrounds[props.selectedBackground]}>
         <TopPlayerHandContainer>
           <div style={{display:'max-content'}}>
             {Array.apply(null, { length: players[topPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} />)}
@@ -347,12 +348,13 @@ function PlayScreen(props) {
       <ColorPicker open={colorPickerOpen} setNextColor={setNextColor} setColorPickerOpen={setColorPickerOpen} />
       <EndingModal open={colorPickerOpen} />
       <LobbyModal open={lobbyModalOpen} players={gameObjectPlayers} isHost={host} startGame={startGame} />
-      <SettingsButton />
     </>
   );
 }
 PlayScreen.propTypes = {
   name: PropTypes.string,
+  selectedBackground: PropTypes.string.isRequired,
+  backgrounds: PropTypes.object.isRequired
 };
 
 export { PlayScreen };
