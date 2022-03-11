@@ -16,6 +16,7 @@ const Modal = styled.div`
   position: absolute;
   top: calc(50vh - 213px);
   left: calc(50vw - 223px);
+  color: black;
 `;
 
 const Title = styled.h2`
@@ -27,13 +28,24 @@ const Title = styled.h2`
 `;
 
 export function SettingsModal(props) {
+  const onClick = (backgroundName) => {
+    props.setSelectedBackground(backgroundName);
+  }; 
+
   if (props.open) {
     return (
       <Modal>
         <Title>
           Settings
         </Title>
-        <MusicPlayer url="http://streaming.tdiradio.com:8000/house.mp3"/>
+        <h2>Music</h2>
+        <MusicPlayer url="http://streaming.tdiradio.com:8000/house.mp3" />
+        <h2>
+          Choose a board map
+        </h2>
+        {Object.keys(props.backgrounds).map((backgroundName, index) =>
+          <button key={index} onClick={() => onClick(backgroundName)}>{backgroundName}</button>
+        )}
       </Modal>
     );
   }
@@ -43,6 +55,6 @@ export function SettingsModal(props) {
 }
 SettingsModal.propTypes = {
   open: PropTypes.bool.isRequired,
-  setNextColor: PropTypes.func.isRequired,
-  setColorPickerOpen: PropTypes.func.isRequired
+  backgrounds: PropTypes.object.isRequired,
+  setSelectedBackground: PropTypes.func
 };

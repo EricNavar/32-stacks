@@ -48,9 +48,6 @@ function Home(props) {
         <div className="gameRulesLink">
           <a style={{fontSize:24}} href="/rules">Game Rules!</a>
         </div>
-        <div >
-          <a style={{fontSize:24}} href="/settings">Settings</a>
-        </div>
       </div>
     </div>
   );
