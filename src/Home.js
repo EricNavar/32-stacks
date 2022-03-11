@@ -63,7 +63,7 @@ function Home(props) {
           <a style={{fontSize:24}} href="/settings">Settings</a>
         </div>
       </div>
-      <MusicPlayer2 />
+      <MusicPlayer2 url="http://streaming.tdiradio.com:8000/house.mp3"/>
     </div>
   );
 }
