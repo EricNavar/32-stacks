@@ -11,11 +11,9 @@ import { yourCards, otherPlayers } from './sampleData.js';
 import { ColorPicker } from './modals/ColorPicker';
 import { EndingModal } from './modals/EndingModal';
 import { LobbyModal } from './modals/LobbyModal.js';
-import { MusicPlayer } from './MusicPlayer';
 import Logo from './assets/logo.png';
-import SettingsIcon from './assets/settings-icon';
 import { Card, CardButton } from './Cards';
-import { SettingsModal } from './modals/SettingsModal';
+import { SettingsButton } from './SettingsButton'; 
 
 const ENDPOINT = "http://localhost:5000";
 let socket;
@@ -151,17 +149,6 @@ const CallUnoButton = styled.button`
   font-size: 1.2rem;
 `;
 
-const SettingsIconButton = styled.button`
-  background: white;
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  height: 40px;
-  width: 40px;
-  border-radius: 20px;
-  border-style: none;
-`;
-
 const Pile = styled(StyledCard)`
   box-shadow: rgba(255, 0, 0, 0.4) 5px 5px, rgba(255, 255, 0, 0.3) 10px 10px, rgba(0, 255, 0, 0.2) 15px 15px, rgba(0, 0, 255, 0.1) 20px 20px, rgba(255, 255, 255, 0.05) 25px 25px;
 `;
@@ -288,7 +275,6 @@ function PlayScreen(props) {
   const [nextColor, setNextColor] = React.useState("red");
 
   const [endingModalOpen, setEndingModalOpen] = React.useState(false);
-  const [settingsModalOpen, setSettingsModalOpen] = React.useState(false);
 
   const myHandOffset = (hand.length * 70) / 2;
 
@@ -299,10 +285,6 @@ function PlayScreen(props) {
       return;
     }
     hand.push(drawCard());
-  };
-
-  const onClickSettingsButton = () => {
-    setSettingsModalOpen(!settingsModalOpen);
   };
 
   return (
@@ -362,13 +344,10 @@ function PlayScreen(props) {
           CALL UNO
         </CallUnoButton>
       </PlayScreenMain>
-      <SettingsIconButton onClick={onClickSettingsButton}>
-        <SettingsIcon/>
-      </SettingsIconButton>
       <ColorPicker open={colorPickerOpen} setNextColor={setNextColor} setColorPickerOpen={setColorPickerOpen} />
       <EndingModal open={colorPickerOpen} />
       <LobbyModal open={lobbyModalOpen} players={gameObjectPlayers} isHost={host} startGame={startGame} />
-      <SettingsModal open={settingsModalOpen} />
+      <SettingsButton />
     </>
   );
 }
