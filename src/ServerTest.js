@@ -21,40 +21,40 @@ const ServerTest = () => {
       "reconnectionAttempts": "Infinity", 
       "timeout" : 10000,                  
       "transports" : ["websocket"]
-    }
-    socket = io.connect(ENDPOINT, connectionOptions)
+    };
+    socket = io.connect(ENDPOINT, connectionOptions);
 
     socket.emit('join', {room: room, name: "Rocketman"}, (error) => {
       if (error) {
-        console.log("error")
+        console.log("error");
         navigate('/');
       }
       else {
-        console.log("Successfully connected to socket server")
+        console.log("Successfully connected to socket server");
       }
-    })
+    });
 
     //On tab close
     return () => {
-      socket.emit('leave')
-      socket.off()
-    }
-  }, [])
+      socket.emit('leave');
+      socket.off();
+    };
+  }, []);
 
   //Receiving Messages from Server
   useEffect(() => {
     socket.on("gameObjectUpdate", (gameObject) => {
-      setClicks(gameObject.clicks)
-    })
+      setClicks(gameObject.clicks);
+    });
 
-    socket.on("")
-  })
+    socket.on("");
+  });
 
   const [clickCount, setClicks] = useState(0);
 
   const clickFunction = () => {
-    socket.emit('updateGame', ({clicks: clickCount + 1}))
-  }
+    socket.emit('updateGame', ({clicks: clickCount + 1}));
+  };
 
   return (
     <div>
@@ -63,6 +63,6 @@ const ServerTest = () => {
       <div style={{fontSize: '60px'}}>{clickCount}</div>
     </div>
   );
-}
+};
 
-export { ServerTest }
+export { ServerTest };

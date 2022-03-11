@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
 function SettingsPage() {
   // eslint-disable-next-line no-unused-vars
   const [board, setBoard] = React.useState(0);
   const onClick = (b) => {
     setBoard(b);
-  } 
+  }; 
 
   return (
     <div>
@@ -18,7 +18,7 @@ function SettingsPage() {
       <br/>
       <a href='/'>Return to home</a>
     </div>
-  )
+  );
 }
 
 export { SettingsPage };

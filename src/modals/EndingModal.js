@@ -16,7 +16,7 @@ const Modal = styled.div`
   top: calc(50vh - 213px);
   left: calc(50vw - 223px);
   text-align: center;
-`
+`;
 
 const Title = styled.h2`
   width: 100%;
@@ -24,7 +24,7 @@ const Title = styled.h2`
   textAlign: center;
   margin: 8px;
   color: black;
-`
+`;
 
 const PlayAgainButton = styled.button`
   padding: 8px;
@@ -32,7 +32,7 @@ const PlayAgainButton = styled.button`
   color: white;
   background-color: blue;
   font-size: 1.5rem;
-`
+`;
 
 export function EndingModal(props) {
   if (props.open) {
@@ -53,4 +53,4 @@ export function EndingModal(props) {
 }
 EndingModal.propTypes = {
   open: PropTypes.bool.isRequired,
-}
+};
