@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import Logo from './assets/logo.png';
 
 const generateRoomCode = () => {
@@ -12,13 +13,46 @@ const generateRoomCode = () => {
   return result;
 };
 
+const StyledLink = styled(Link)`
+  color: white;
+  font-size: xx-large;
+  text-decoration: none;
+  &:hover {
+    color: cyan;
+  }
+`
+
+const TextInput = styled.input`
+  background-color: transparent;
+  color: white;
+  font-size: large;
+  outline: 0;
+  border-bottom-color: white;
+  border-bottom-width: 2px;
+  width: 300px;
+  text-align: center;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  margin-bottom: 20px;
+`
+
+const LogoComponent = styled.img`
+  width: 400px;
+  padding-top: 20px;
+`
+
+const GameRulesLinkContainer = styled.div`
+  padding-top: calc(100vh - 550px);
+`
+
 function Home(props) {
   const [roomCode, setRoomCode] = useState("");
 
   return (
     <div id="parent">  
 
-      <img id="logo" src={Logo} alt="logo"/> 
+      <LogoComponent id="logo" src={Logo} alt="logo"/> 
 
       <p><i>This is literally the best card game that there is.</i></p>
       <div style={{margin:"2.5rem"}}>
@@ -26,13 +60,11 @@ function Home(props) {
         {/* Username input */}
         <div id="child1">
           <label style={{textSize:"large"}} htmlFor="name">Set name: </label>
-          <input style={{width:"200px"}} onChange={(e) => props.setName(e.target.value)} type="text" id="name" name="name" required minLength="1" maxLength="15" size="10"/>
+          <TextInput style={{width:"200px"}} onChange={(e) => props.setName(e.target.value)} type="text" id="name" name="name" required minLength="1" maxLength="15" size="10"/>
         </div>
 
-        <br/>
-
         <div>
-            <Link to={`/play/${generateRoomCode()}`}>Create a new game!</Link>
+            <StyledLink to={`/play/${generateRoomCode()}`}>Create a new game!</StyledLink>
         </div>
 
         <p>
@@ -40,14 +72,14 @@ function Home(props) {
         </p>
 
         <div>
-          <Link to={`/play/${roomCode}`}>Join an existing game!</Link>
+          <StyledLink to={`/play/${roomCode}`}>Join an existing game!</StyledLink>
           <p></p>
-          <input type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())}/>
+          <TextInput type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())}/>
         </div>
 
-        <div className="gameRulesLink">
-          <a style={{fontSize:24}} href="/rules">Game Rules!</a>
-        </div>
+        <GameRulesLinkContainer>
+          <StyledLink style={{fontSize:24}} to="/rules">Game Rules!</StyledLink>
+        </GameRulesLinkContainer>
       </div>
     </div>
   );

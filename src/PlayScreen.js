@@ -77,9 +77,7 @@ const CardDropper = styled(StyledCard)`
 `;
 
 const HandContainer = styled.div`
-  border-style: dashed;
   border-width: 2px;
-  border-color: green;
   border-radius: 8px;
   bottom: 2px;
   height: 90px;
@@ -92,6 +90,7 @@ const HandContainer = styled.div`
   margin-left: auto;
   margin-right: auto;
   margin-top: auto;
+  background: rgba(255,255,255,.2);
 `;
 
 const TopPlayerHandContainer = styled.div`
@@ -162,7 +161,7 @@ function PlayScreen(props) {
   const topPlayerId = otherPlayerIds[0];
   const leftPlayerId = otherPlayerIds[1];
   const rightPlayerId = otherPlayerIds[2];
-  
+
   const [gameObject, setGameObject] = useState();
   const [gameObjectPlayers, setGameObjectPlayers] = useState();
   const [host, setHost] = useState(false);
@@ -182,7 +181,7 @@ function PlayScreen(props) {
   }, [gameObject]);
 
   const startGame = () => {
-    let temp = {...gameObject};
+    let temp = { ...gameObject };
     temp.gameStart = true;
     setLobbyModalOpen(false);
   };
@@ -193,15 +192,15 @@ function PlayScreen(props) {
 
   //Initial Socket Connection
   useEffect(() => {
-    const connectionOptions =  {
-      "forceNew" : true,
-      "reconnectionAttempts": "Infinity", 
-      "timeout" : 10000,                  
-      "transports" : ["websocket"]
+    const connectionOptions = {
+      "forceNew": true,
+      "reconnectionAttempts": "Infinity",
+      "timeout": 10000,
+      "transports": ["websocket"]
     };
     socket = io.connect(ENDPOINT, connectionOptions);
 
-    socket.emit('join', {room: room, name: props.name}, (error) => {
+    socket.emit('join', { room: room, name: props.name }, (error) => {
       if (error) {
         console.log("error");
         navigate('/');
@@ -224,7 +223,7 @@ function PlayScreen(props) {
 
     socket.on("playerLeft", (newLobby) => {
       setGameObject(previousGameObject => {
-        const newGameObject = {...previousGameObject};
+        const newGameObject = { ...previousGameObject };
         const newList = previousGameObject.playerList.filter(player => player.name !== newLobby.leftPlayer);
         newGameObject.playerList = newList;
         return newGameObject;
@@ -243,7 +242,7 @@ function PlayScreen(props) {
 
   useEffect(() => {
     if (gameObject !== undefined && host) {
-      let temp = {...gameObject};
+      let temp = { ...gameObject };
       temp.gameStart = true;
       updateGame(temp);
     }
@@ -264,9 +263,9 @@ function PlayScreen(props) {
   const [turn, setTurn] = React.useState(0);
 
   const [lastCardPlayed, setLastCardPlayed] = React.useState({
-    c:"red",
-    v:'3',
-    gray:false
+    c: "red",
+    v: '3',
+    gray: false
   });
 
   const [colorPickerOpen, setColorPickerOpen] = React.useState(false);
@@ -296,7 +295,7 @@ function PlayScreen(props) {
     }
   }
 
-  const onClickPlaceCards= () => {
+  const onClickPlaceCards = () => {
     setTopOfStack(inPlay[inPlay.size - 1]);
     setInPlay([]);
   };
@@ -307,55 +306,57 @@ function PlayScreen(props) {
     <>
       <PlayScreenMain selectedBackground={props.backgrounds[props.selectedBackground]}>
         <TopPlayerHandContainer>
-          <div style={{display:'max-content'}}>
-            {Array.apply(null, { length: players[topPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} />)}
+          <div style={{ display: 'max-content' }}>
+            {Array.apply(null, { length: players[topPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
           </div>
         </TopPlayerHandContainer>
         <TopPlayerUsername >{players[topPlayerId].name}</TopPlayerUsername>
         <LeftPlayerUsername >{players[leftPlayerId].name}</LeftPlayerUsername>
         <LeftPlayerHandContainer>
-          <div style={{display:'max-content', transform: 'rotate(90deg)'}}>
-            {Array.apply(null, { length: players[leftPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} />)}
+          <div style={{ display: 'max-content', transform: 'rotate(90deg)' }}>
+            {Array.apply(null, { length: players[leftPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
           </div>
         </LeftPlayerHandContainer>
         <RightPlayerUsername >{players[rightPlayerId].name}</RightPlayerUsername>
         <RightPlayerHandContainer>
-          <div style={{display:'max-content', transform: 'rotate(-90deg)'}}>
-            {Array.apply(null, { length: players[rightPlayerId].cardCount }).map((card,index) => <HiddenCard key={index} />)}
+          <div style={{ display: 'max-content', transform: 'rotate(-90deg)' }}>
+            {Array.apply(null, { length: players[rightPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
           </div>
         </RightPlayerHandContainer>
-        
-        <CardDropper>
-          <div style={{width:'max-content'}}>
-            {topOfStack &&
-              <CardButton onClick={()=>{console.log("click");}} color={topOfStack.c} value={topOfStack.v} gray={topOfStack.gray}/>
-            }
-          </div>
-        </CardDropper>
+
         {inPlay.length > 0 &&
-          <PlaceCards onClick={onClickPlaceCards}>
-            Place Cards!
-          </PlaceCards>
+          <>
+            <CardDropper>
+              <div style={{ width: 'max-content' }}>
+                {topOfStack &&
+                  <CardButton onClick={() => { console.log("click"); }} color={topOfStack.c} value={topOfStack.v} gray={topOfStack.gray} />
+                }
+              </div>
+            </CardDropper>
+            <PlaceCards onClick={onClickPlaceCards}>
+              Place Cards!
+            </PlaceCards>
+          </>
         }
 
-        <HandContainer style={{left:`calc(50% - ${myHandOffset}px`}}>
-          <div style={{width:'max-content'}}>
-            {hand.map((card,index) => {
+        <HandContainer style={{ left: `calc(50% - ${myHandOffset}px` }}>
+          <div style={{ width: 'max-content' }}>
+            {hand.map((card, index) => {
               return <CardButton
-                        id={`card-button-${index}`}
-                        key={index}
-                        onClick={e=>
-                          onClickCardButton(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection)
-                        }
-                        color={card.c}
-                        value={card.v}
-                        gray={card.gray}
-                      />;
+                id={`card-button-${index}`}
+                key={index}
+                onClick={e =>
+                  onClickCardButton(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection)
+                }
+                color={card.c}
+                value={card.v}
+                gray={card.gray}
+              />;
             })}
           </div>
         </HandContainer>
         <Center>
-          <Card id="discard-pile" color={setLastCardPlayed.c} value={setLastCardPlayed.v}/>
+          <Card id="discard-pile" color={setLastCardPlayed.c} value={setLastCardPlayed.v} />
           <CardButton id="draw-pile" onClick={onClickDrawPile} color="wild" gray={false} value="DRAW">
             Draw
           </CardButton>
