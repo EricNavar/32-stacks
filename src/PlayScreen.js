@@ -194,11 +194,10 @@ function PlayScreen(props) {
   });
   const [hand, setHand] = React.useState(
     inPlayTemp.map(card=>{
-      card.gray = isValidFirstCard(card, lastCardPlayed);
+      card.gray = !isValidFirstCard(card, lastCardPlayed);
       return card;
     })
   );
-  console.log(hand)
   
   const [colorPickerOpen, setColorPickerOpen] = React.useState(false);
   const [endingModalOpen, setEndingModalOpen] = React.useState(false);
@@ -293,7 +292,6 @@ function PlayScreen(props) {
   //check hand when the turn changes
   useEffect(() => {
     setHand(checkHand(hand, lastCardPlayed, inPlay, direction, setDirection));
-    console.log(checkHand(hand, lastCardPlayed, inPlay, direction, setDirection))
   }, [turn]);
 
   const myHandOffset = (hand.length * 70) / 2;
@@ -319,7 +317,6 @@ function PlayScreen(props) {
   }
 
   const onClickPlaceCards = () => {
-
     setTopOfStack(inPlay[inPlay.size - 1]);
     setInPlay([]);
     setTurn((turn+1)%players.length);
@@ -348,7 +345,7 @@ function PlayScreen(props) {
             <CardDropper>
               <div style={{ width: 'max-content' }}>
                 {topOfStack &&
-                  <CardButton onClick={() => { console.log("click"); }} color={topOfStack.c} value={topOfStack.v} gray={topOfStack.gray} />
+                  <CardButton onClick={() => { console.log("click"); }} {...topOfStack} />
                 }
               </div>
             </CardDropper>
@@ -361,9 +358,6 @@ function PlayScreen(props) {
         <HandContainer style={{ left: `calc(50% - ${myHandOffset}px` }}>
           <div style={{ width: 'max-content' }}>
             {hand.map((card, index) => {
-              console.log(hand)
-              console.log(hand[index])
-              console.log(hand[index].gray)
               return <CardButton
                 id={`card-button-${index}`}
                 key={index}

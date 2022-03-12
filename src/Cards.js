@@ -59,9 +59,10 @@ Card.propTypes = {
 export { Card };
 
 function CardButton(props) {
-  const { c, v, gray, disabled } = props;
+  const { c, v, gray, disabled, onClick } = props;
+  console.log(props);
   return (
-    <ButtonWrapper onClick={props.onClick} disabled={disabled}>
+    <ButtonWrapper onClick={onClick} disabled={disabled}>
       <Card color={c} value={v} />
       <BlackBox gray={gray}></BlackBox>
     </ButtonWrapper>
