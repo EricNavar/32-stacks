@@ -62,7 +62,7 @@ export const isValidFirstCard = (toConsider, lastCard) => {
 // in which it's increasing or decreasing
 export const isValidAdditionalCard = (toConsider, lastCard, direction) => {
   if (isSpecialCard(toConsider)) {
-    return true;
+    return false;
   }
   if (toConsider.v === lastCard.v) {
     return [true, direction];
