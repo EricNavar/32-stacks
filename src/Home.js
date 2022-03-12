@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -22,6 +23,18 @@ const StyledLink = styled(Link)`
   }
 `
 
+const StyledLink2 = styled.button`
+  width: 250px;
+  padding: 12px;
+  background-color: #383838;
+  color: white;
+  border-radius: 8px;
+  border-style: none;
+  font-size: 1.4rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  height: fit-content;
+`
+
 const TextInput = styled.input`
   background-color: transparent;
   color: white;
@@ -37,6 +50,24 @@ const TextInput = styled.input`
   margin-bottom: 20px;
 `
 
+const TextInput2 = styled.input`
+  background-color: transparent;
+  color: white;
+  font-size: large;
+  border-bottom-color: white;
+  border-bottom-width: 2px;
+  width: 300px;
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 2px;
+  border-radius: 8px;
+  background: #fff;
+  color: black;
+  border-style:solid;
+  border-color:#000058;
+  width: 200px;
+`
+
 const LogoComponent = styled.img`
   width: 400px;
   padding-top: 20px;
@@ -46,39 +77,54 @@ const GameRulesLinkContainer = styled.div`
   padding-top: calc(100vh - 550px);
 `
 
+const LinksContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+`
+
 function Home(props) {
   const [roomCode, setRoomCode] = useState("");
 
   return (
-    <div id="parent">  
+    <div id="parent">
 
-      <LogoComponent id="logo" src={Logo} alt="logo"/> 
+      <LogoComponent id="logo" src={Logo} alt="logo" />
 
       <p><i>This is literally the best card game that there is.</i></p>
-      <div style={{margin:"2.5rem"}}>
-        
+      <div style={{ margin: "2.5rem" }}>
+
         {/* Username input */}
         <div id="child1">
-          <label style={{textSize:"large"}} htmlFor="name">Set name: </label>
-          <TextInput style={{width:"200px"}} onChange={(e) => props.setName(e.target.value)} type="text" id="name" name="name" required minLength="1" maxLength="15" size="10"/>
+          <label style={{ textSize: "large" }} htmlFor="name">Set name: </label>
+          <TextInput2
+            onChange={(e) => props.setName(e.target.value)}
+            type="text"
+            id="name"
+            name="name"
+            minLength="1"
+            maxLength="15"
+            size="10"
+            placeholder="name"
+          />
         </div>
 
-        <div>
-            <StyledLink to={`/play/${generateRoomCode()}`}>Create a new game!</StyledLink>
-        </div>
+        <LinksContainer>
+          <StyledLink2 to={`/play/${generateRoomCode()}`}>Create a new game!</StyledLink2>
 
-        <p>
-          or
-        </p>
+          <p style={{margin:12}}>
+            or
+          </p>
 
-        <div>
-          <StyledLink to={`/play/${roomCode}`}>Join an existing game!</StyledLink>
-          <p></p>
-          <TextInput type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())}/>
-        </div>
+          <div>
+            <StyledLink2 to={`/play/${roomCode}`}>Join an existing game!</StyledLink2>
+            <p></p>
+            <TextInput type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())} />
+          </div>
+        </LinksContainer>
 
         <GameRulesLinkContainer>
-          <StyledLink style={{fontSize:24}} to="/rules">Game Rules!</StyledLink>
+          <StyledLink style={{ fontSize: 24 }} to="/rules">Game Rules!</StyledLink>
         </GameRulesLinkContainer>
       </div>
     </div>
