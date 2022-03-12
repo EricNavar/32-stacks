@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 import { useParams, useNavigate } from "react-router-dom";
 //import local stuff later
 import { inPlayTemp } from './sampleData.js';
-import { placeCard, drawCard, canPlaceCard, checkHand } from './logic/gameLogic';
+import { placeCard, drawCard, canPlaceCard, checkHand, isValidFirstCard } from './logic/gameLogic';
 import { yourCards, otherPlayers } from './sampleData.js';
 import { ColorPicker } from './modals/ColorPicker';
 import { EndingModal } from './modals/EndingModal';
@@ -86,13 +86,14 @@ const HandContainer = styled.div`
   padding-top: 12px;
   padding-bottom: 12px;
   padding-right: 12px;
-  padding-left: 32px;
+  padding-left: 12px;
   justify-content: center;
   display: grid;
   margin-left: auto;
   margin-right: auto;
   margin-top: auto;
   background: rgba(255,255,255,.2);
+  minWidth: 72px;
 `;
 
 const TopPlayerHandContainer = styled.div`
@@ -166,7 +167,7 @@ const CallUnoButton = styled.button`
 `;
 
 function PlayScreen(props) {
-  const myId = 2;
+  const myId = 0;
   const [players, setPlayers] = React.useState(otherPlayers);
   const otherPlayerIds = players.filter(player => player.id !== myId).map(player => player.playerId);
   const topPlayerId = otherPlayerIds[0];
@@ -176,6 +177,33 @@ function PlayScreen(props) {
   const [gameObject, setGameObject] = useState();
   const [gameObjectPlayers, setGameObjectPlayers] = useState();
   const [host, setHost] = useState(false);
+
+  //inPlay is the stack
+  const [inPlay, setInPlay] = React.useState([]);
+  const [topOfStack, setTopOfStack] = React.useState(null);
+  // in which direction the streak is going. "none", "increasing", "decreasing"
+  const [direction, setDirection] = React.useState("none");
+  
+  // if this player has a card available to put down
+  //who's turn is it? It stores a number 0 through 4, representing the player ID
+  const [turn, setTurn] = React.useState(0);
+  
+  const [lastCardPlayed, setLastCardPlayed] = React.useState({
+    color: "red",
+    value: '3',
+    gray: false
+  });
+  const [hand, setHand] = React.useState(
+    inPlayTemp.map(card=>{
+      card.gray = !isValidFirstCard(card, lastCardPlayed);
+      return card;
+    })
+  );
+  
+  const [colorPickerOpen, setColorPickerOpen] = React.useState(false);
+  const [endingModalOpen, setEndingModalOpen] = React.useState(false);
+  const [nextColor, setNextColor] = React.useState(lastCardPlayed.color);
+
 
   useEffect(() => {
     if (gameObject !== undefined) {
@@ -196,6 +224,7 @@ function PlayScreen(props) {
     temp.gameStart = true;
     setLobbyModalOpen(false);
   };
+
 
   //Socket.io --------------------------------------------------------------------
   const { room } = useParams();
@@ -261,28 +290,10 @@ function PlayScreen(props) {
 
   //End of Socket.io ----------------------------------------------------
 
-  const yourUserName = props.name;
-
-  const [hand, setHand] = React.useState(yourCards);
-  const [inPlay, setInPlay] = React.useState([]);
-  const [topOfStack, setTopOfStack] = React.useState(null);
-  // in which direction the streak is going. "none", "increasing", "decreasing"
-  const [direction, setDirection] = React.useState("none");
-
-  // if this player has a card available to put down
-  //who's turn is it? It stores a number 0 through 4, representing the player ID
-  const [turn, setTurn] = React.useState(0);
-
-  const [lastCardPlayed, setLastCardPlayed] = React.useState({
-    c: "red",
-    v: '3',
-    gray: false
-  });
-
-  const [colorPickerOpen, setColorPickerOpen] = React.useState(false);
-  const [nextColor, setNextColor] = React.useState("red");
-
-  const [endingModalOpen, setEndingModalOpen] = React.useState(false);
+  //check hand when the turn changes
+  useEffect(() => {
+    setHand(checkHand(hand, lastCardPlayed, inPlay, direction, setDirection));
+  }, [turn]);
 
   const myHandOffset = (hand.length * 70) / 2;
 
@@ -300,8 +311,8 @@ function PlayScreen(props) {
     // If no cards have been placed, consider the last card on the discard pile.
     // Otherwise, the last card in this temporary stack
     const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
-    checkHand(hand, lastCard, inPlay, direction, setDirection);
-    if (card.c === "wild") {
+    setHand(checkHand(hand, lastCard, inPlay, direction, setDirection));
+    if (card.color === "wild") {
       setColorPickerOpen(true);
     }
   }
@@ -309,9 +320,8 @@ function PlayScreen(props) {
   const onClickPlaceCards = () => {
     setTopOfStack(inPlay[inPlay.size - 1]);
     setInPlay([]);
+    setTurn((turn+1)%players.length);
   };
-
-  console.log(inPlay.length);
 
   return (
     <>
@@ -336,7 +346,7 @@ function PlayScreen(props) {
             <CardDropper>
               <div style={{ width: 'max-content' }}>
                 {topOfStack &&
-                  <CardButton onClick={() => { console.log("click"); }} color={topOfStack.c} value={topOfStack.v} gray={topOfStack.gray} />
+                  <CardButton onClick={() => { console.log("click"); }} {...topOfStack} />
                 }
               </div>
             </CardDropper>
@@ -352,19 +362,18 @@ function PlayScreen(props) {
               return <CardButton
                 id={`card-button-${index}`}
                 key={index}
-                onClick={e =>
+                onClick={() =>
                   onClickCardButton(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection)
                 }
-                color={card.c}
-                value={card.v}
-                gray={card.gray}
+                {...card}
+                disabled={myId!==turn}
               />;
             })}
           </div>
         </HandContainer>
         <Center>
-          <Card id="discard-pile" color={setLastCardPlayed.c} value={setLastCardPlayed.v} />
-          <CardButton id="draw-pile" onClick={onClickDrawPile} color="wild" gray={false} value="DRAW">
+          <Card id="discard-pile" color={lastCardPlayed.color} value={lastCardPlayed.value} />
+          <CardButton id="draw-pile" onClick={onClickDrawPile} color="wild" gray={false} value="DRAW" disabled={myId!==turn||canPlaceCard}>
             Draw
           </CardButton>
         </Center>
