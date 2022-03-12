@@ -19,7 +19,7 @@ export function checkHand(hand, lastCardPlayed, inPlay, direction, setDirection)
   return hand;
 }
 
-export function canPlaceCard(hand, lastCardPlayed, inPlay) {
+export function calculateCanPlaceCard(hand, lastCardPlayed, inPlay) {
   let i = 0;
   while (i < hand.length) {
     if (checkSingleCard(hand[i], lastCardPlayed, inPlay, "none")[0]) {

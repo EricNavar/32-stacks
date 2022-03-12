@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 import { useParams, useNavigate } from "react-router-dom";
 //import local stuff later
 import { inPlayTemp } from './sampleData.js';
-import { placeCard, drawCard, canPlaceCard, checkHand, isValidFirstCard } from './logic/gameLogic';
+import { placeCard, drawCard, calculateCanPlaceCard, checkHand, isValidFirstCard } from './logic/gameLogic';
 import { yourCards, otherPlayers } from './sampleData.js';
 import { ColorPicker } from './modals/ColorPicker';
 import { EndingModal } from './modals/EndingModal';
@@ -47,7 +47,6 @@ const Center = styled.div`
   position: absolute;
   bottom: 50%;
   left: calc(50% - 58px);
-  display: flex;
 `;
 
 const StyledCard = styled.div`
@@ -170,6 +169,7 @@ function PlayScreen(props) {
   const myId = 0;
   const [players, setPlayers] = React.useState(otherPlayers);
   const otherPlayerIds = players.filter(player => player.id !== myId).map(player => player.playerId);
+  //TODO: fix the next 3 statements
   const topPlayerId = otherPlayerIds[0];
   const leftPlayerId = otherPlayerIds[1];
   const rightPlayerId = otherPlayerIds[2];
@@ -203,6 +203,7 @@ function PlayScreen(props) {
   const [colorPickerOpen, setColorPickerOpen] = React.useState(false);
   const [endingModalOpen, setEndingModalOpen] = React.useState(false);
   const [nextColor, setNextColor] = React.useState(lastCardPlayed.color);
+  const [canPlaceCard, setCanPlaceCard] = React.useState();
 
 
   useEffect(() => {
@@ -224,7 +225,6 @@ function PlayScreen(props) {
     temp.gameStart = true;
     setLobbyModalOpen(false);
   };
-
 
   //Socket.io --------------------------------------------------------------------
   const { room } = useParams();
@@ -372,10 +372,13 @@ function PlayScreen(props) {
           </div>
         </HandContainer>
         <Center>
-          <Card id="discard-pile" color={lastCardPlayed.color} value={lastCardPlayed.value} />
-          <CardButton id="draw-pile" onClick={onClickDrawPile} color="wild" gray={false} value="DRAW" disabled={myId!==turn||canPlaceCard}>
-            Draw
-          </CardButton>
+          <p>Turn: Player {turn}</p>
+          <div style={{display: 'flex'}}>
+            <Card id="discard-pile" color={lastCardPlayed.color} value={lastCardPlayed.value} />
+            <CardButton id="draw-pile" onClick={onClickDrawPile} color="wild" gray={false} value="DRAW" disabled={myId!==turn||canPlaceCard}>
+              Draw
+            </CardButton>
+          </div>
         </Center>
         <CallUnoButton>
           CALL UNO
