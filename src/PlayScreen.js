@@ -21,6 +21,8 @@ const PlayScreenMain = styled.main`
   justify-content:center;
   display: grid;
   background: url("${props => props.selectedBackground}");
+  background-size: cover;
+  background-position: center;
   height: 100vh;
 `;
 
@@ -110,13 +112,22 @@ const HiddenCard = styled(StyledCard)`
 
 const LeftPlayerHandContainer = styled.div`
   position: absolute;
-  top: calc(50% - 40px);
+  top: calc(25%);
+  left: 25px;
+  & > div {
+    transform: rotate(90deg);
+    margin-top: -50px;
+  }
 `;
 
 const RightPlayerHandContainer = styled.div`
   position: absolute;
-  top: calc(50% - 40px);
-  right: 0;
+  top: calc(25%);
+  right: 25px;
+  & > div {
+    transform: rotate(-90deg);
+    margin-top: -50px;
+  }
 `;
 
 const Username = styled.p`
@@ -124,7 +135,7 @@ const Username = styled.p`
   font-weight: bold;
   font-size: 1.4rem;
   color: white;
-  top: calc(50% - 150px);
+  top: calc(15%);
   position: absolute;
 `;
 
@@ -312,16 +323,12 @@ function PlayScreen(props) {
         </TopPlayerHandContainer>
         <TopPlayerUsername >{players[topPlayerId].name}</TopPlayerUsername>
         <LeftPlayerUsername >{players[leftPlayerId].name}</LeftPlayerUsername>
-        <LeftPlayerHandContainer>
-          <div style={{ display: 'max-content', transform: 'rotate(90deg)' }}>
-            {Array.apply(null, { length: players[leftPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
-          </div>
+        <LeftPlayerHandContainer style={{ width: 'min-content' }}>
+          {Array.apply(null, { length: players[leftPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
         </LeftPlayerHandContainer>
         <RightPlayerUsername >{players[rightPlayerId].name}</RightPlayerUsername>
-        <RightPlayerHandContainer>
-          <div style={{ display: 'max-content', transform: 'rotate(-90deg)' }}>
-            {Array.apply(null, { length: players[rightPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
-          </div>
+        <RightPlayerHandContainer style={{ width: 'min-content' }}>
+          {Array.apply(null, { length: players[rightPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
         </RightPlayerHandContainer>
 
         {inPlay.length > 0 &&
@@ -366,7 +373,7 @@ function PlayScreen(props) {
         </CallUnoButton>
       </PlayScreenMain>
       <ColorPicker open={colorPickerOpen} setNextColor={setNextColor} setColorPickerOpen={setColorPickerOpen} />
-      <EndingModal open={endingModalOpen} />
+      <EndingModal open={endingModalOpen} setEndingModalOpen={setEndingModalOpen} />
       <LobbyModal open={lobbyModalOpen} players={gameObjectPlayers} isHost={host} startGame={startGame} />
     </>
   );
