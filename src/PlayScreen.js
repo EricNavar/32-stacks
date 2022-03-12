@@ -93,6 +93,7 @@ const HandContainer = styled.div`
   margin-right: auto;
   margin-top: auto;
   background: rgba(255,255,255,.2);
+  minWidth: 72px;
 `;
 
 const TopPlayerHandContainer = styled.div`
@@ -188,8 +189,8 @@ function PlayScreen(props) {
   const [turn, setTurn] = React.useState(0);
   
   const [lastCardPlayed, setLastCardPlayed] = React.useState({
-    c: "red",
-    v: '3',
+    color: "red",
+    value: '3',
     gray: false
   });
   const [hand, setHand] = React.useState(
@@ -201,7 +202,7 @@ function PlayScreen(props) {
   
   const [colorPickerOpen, setColorPickerOpen] = React.useState(false);
   const [endingModalOpen, setEndingModalOpen] = React.useState(false);
-  const [nextColor, setNextColor] = React.useState(lastCardPlayed.c);
+  const [nextColor, setNextColor] = React.useState(lastCardPlayed.color);
 
 
   useEffect(() => {
@@ -311,7 +312,7 @@ function PlayScreen(props) {
     // Otherwise, the last card in this temporary stack
     const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
     setHand(checkHand(hand, lastCard, inPlay, direction, setDirection));
-    if (card.c === "wild") {
+    if (card.color === "wild") {
       setColorPickerOpen(true);
     }
   }
@@ -371,8 +372,8 @@ function PlayScreen(props) {
           </div>
         </HandContainer>
         <Center>
-          <Card id="discard-pile" color={lastCardPlayed.c} value={lastCardPlayed.v} />
-          <CardButton id="draw-pile" onClick={onClickDrawPile} color="wild" gray={false} value="DRAW" disabled={myId!==turn}>
+          <Card id="discard-pile" color={lastCardPlayed.color} value={lastCardPlayed.value} />
+          <CardButton id="draw-pile" onClick={onClickDrawPile} color="wild" gray={false} value="DRAW" disabled={myId!==turn||canPlaceCard}>
             Draw
           </CardButton>
         </Center>

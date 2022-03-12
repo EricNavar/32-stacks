@@ -42,13 +42,13 @@ function checkSingleCard(toConsider, lastCardPlayed, inPlay, direction) {
 }
 
 const isSpecialCard = (card) => {
-  return card.c === 'wild' || card.v === '+2' || card.v === 'reverse' || card.v === 'skip';
+  return card.color === 'wild' || card.value === '+2' || card.value === 'reverse' || card.value === 'skip';
 };
 
 // toConsider is the card whose eligibility is being considered
 // lastCard is the last card that was put down
 export const isValidFirstCard = (toConsider, lastCard) => {
-  if (toConsider.v === lastCard.v || toConsider.c === lastCard.c) {
+  if (toConsider.value === lastCard.value || toConsider.color === lastCard.color) {
     return true;
   }
   return isSpecialCard(toConsider);
@@ -64,7 +64,7 @@ export const isValidAdditionalCard = (toConsider, lastCard, direction) => {
   if (isSpecialCard(toConsider)) {
     return false;
   }
-  if (toConsider.v === lastCard.v) {
+  if (toConsider.value === lastCard.value) {
     return [true, direction];
   }
   if (isValidDecreasingCard(toConsider, lastCard)) {
@@ -83,10 +83,10 @@ export const isValidAdditionalCard = (toConsider, lastCard, direction) => {
       return [true, "decreasing"];
     }
   }
-  else if (toConsider.v === 9 && lastCard.v === 0 && direction === "increasing") {
+  else if (toConsider.value === 9 && lastCard.value === 0 && direction === "increasing") {
     return [true, direction];
   }
-  else if (toConsider.v === 0 && lastCard.v === 9 && direction === "decreasing") {
+  else if (toConsider.value === 0 && lastCard.value === 9 && direction === "decreasing") {
     return [true, direction];
   }
   return [false, direction];
@@ -111,13 +111,13 @@ const isGreaterThan = (cardA, cardB) => {
 // The card being put down must be a special card or be greater than by one or be of the same value
 // TODO
 const isValidIncreasingCard = (card, topOfInPlay) => {
-  return isSpecialCard(card) || card.v === topOfInPlay.v || Number(card.v) === Number(topOfInPlay.v) + 1 || Number(card.v) === Number(topOfInPlay.v) - 9;
+  return isSpecialCard(card) || card.value === topOfInPlay.value || Number(card.value) === Number(topOfInPlay.value) + 1 || Number(card.value) === Number(topOfInPlay.value) - 9;
 };
 
 // The card being put down must be a special card or be less than by one or be of the same value
 // TODO
 const isValidDecreasingCard = (card, topOfInPlay) => {
-  return isSpecialCard(card) || card.v === topOfInPlay.v || Number(card.v) + 1 === Number(topOfInPlay.v) || Number(card.v) + 9 === Number(topOfInPlay.v);
+  return isSpecialCard(card) || card.value === topOfInPlay.value || Number(card.value) + 1 === Number(topOfInPlay.value) || Number(card.value) + 9 === Number(topOfInPlay.value);
 };
 
 export const addCardToPlayer = (players, playerId, addCount) => {
@@ -161,10 +161,10 @@ export const reset = (players) => {
 
 function compareByColor(cardA, cardB) {
   const colors = ["red", "yellow", "green", "blue"];
-  if (colors.indexOf(cardA.c) < colors.indexOf(cardB.c)) {
+  if (colors.indexOf(cardA.color) < colors.indexOf(cardB.color)) {
     return -1;
   }
-  if (colors.indexOf(cardA.c) > colors.indexOf(cardB.c)) {
+  if (colors.indexOf(cardA.color) > colors.indexOf(cardB.color)) {
     return 1;
   }
   return 0;
