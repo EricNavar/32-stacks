@@ -66,8 +66,8 @@ export const otherPlayers = [
 
 export const inPlayTemp = [
   {
-    c:"yellow",
-    v:"8",
-    gray:false
+    c:"red",
+    gray: true,
+    v:"8"
   }
 ];
