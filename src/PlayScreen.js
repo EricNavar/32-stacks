@@ -5,9 +5,8 @@ import PropTypes, { string } from 'prop-types';
 import io from 'socket.io-client';
 import { useParams, useNavigate } from "react-router-dom";
 //import local stuff later
-import { inPlayTemp } from './sampleData.js';
 import { placeCard, drawCard, calculateCanPlaceCard, checkHand, isValidFirstCard } from './logic/gameLogic';
-import { yourCards, otherPlayers } from './sampleData.js';
+import { yourCards, otherPlayers, inPlayTemp } from './sampleData.js';
 import { ColorPicker } from './modals/ColorPicker';
 import { EndingModal } from './modals/EndingModal';
 import { LobbyModal } from './modals/LobbyModal.js';
@@ -194,7 +193,7 @@ function PlayScreen(props) {
     gray: false
   });
   const [hand, setHand] = React.useState(
-    inPlayTemp.map(card=>{
+    yourCards.map(card=>{
       card.gray = !isValidFirstCard(card, lastCardPlayed);
       return card;
     })
@@ -312,7 +311,7 @@ function PlayScreen(props) {
     // Otherwise, the last card in this temporary stack
     const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
     setHand(checkHand(hand, lastCard, inPlay, direction, setDirection));
-    if (card.color === "wild") {
+    if (card.color === "rainbow") {
       setColorPickerOpen(true);
     }
   }

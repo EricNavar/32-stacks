@@ -42,7 +42,7 @@ function checkSingleCard(toConsider, lastCardPlayed, inPlay, direction) {
 }
 
 const isSpecialCard = (card) => {
-  return card.color === 'wild' || card.value === '+2' || card.value === 'reverse' || card.value === 'skip';
+  return card.color === 'rainbow' || card.value === '+2' || card.value === 'reverse' || card.value === 'skip';
 };
 
 // toConsider is the card whose eligibility is being considered
@@ -203,13 +203,13 @@ export const drawCard = () => {
 };
 
 const WildColorCard = {
-  color: "wild",
-  value: "Wild Color"
+  color: "rainbow",
+  value: "wild"
 };
 
 const WildDraw4Card = {
-  color: "wild",
-  value: "Wild Draw 4"
+  color: "rainbow",
+  value: "draw4"
 };
 
 const chooseRandomNumberCard = () => {

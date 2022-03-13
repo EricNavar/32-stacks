@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const StyledCard = styled.div`
-  border-radius: 6px;
-  border-style: solid;
   display: inline-flex;
   width: 64px;
   height: 90px;
@@ -24,15 +22,8 @@ const BlackBox = styled.div`
 
 const CardComponent = styled(StyledCard)`
   padding: 12px;
-  border-style: solid;
-  border-color: ${props => props.color};
-  color: black;
-  background-color: white;
-`;
-
-const CardText = styled.p`
-  font-size: 1rem;
-  margin: 0;
+  background: url("https://www.github.com/ericnavar/among-us-2-2/blob/master/${props=>`${props.value}_${props.color}`}.png?raw=true");
+  background-size: cover;
 `;
 
 //this is meant to be a button that wraps around a card
@@ -45,11 +36,7 @@ const ButtonWrapper = styled.button`
 
 function Card(props) {
   const { color, value } = props;
-  return (
-    <CardComponent color={color} >
-      <CardText>{value}</CardText>
-    </CardComponent>
-  );
+  return (<CardComponent color={color} value={value}/>);
 }
 Card.propTypes = {
   color: PropTypes.string,
