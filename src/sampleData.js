@@ -30,13 +30,13 @@ export const yourCards = [
     gray: true
   },
   {
-    color:"wild",
-    value:"Wild Color",
+    color:"rainbow",
+    value:"wild",
     gray: false
   },
   {
-    color:"wild",
-    value:"Wild Draw 4",
+    color:"rainbow",
+    value:"draw4",
     gray: false
   }
 ];
