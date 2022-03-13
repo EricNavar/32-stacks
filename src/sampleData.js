@@ -43,22 +43,22 @@ export const yourCards = [
 
 export const otherPlayers = [
   {
-    name: "greg",
+    name: "$hlurb",
     cardCount: 9,
     playerId: 1
   },
   {
-    name: "greg's mom",
+    name: "Alex",
     cardCount: 9,
     playerId: 2
   },
   {
-    name: "greg's dad",
+    name: "Yonas",
     cardCount: 9,
     playerId: 3
   },
   {
-    name: "greg's other mom",
+    name: "Eric",
     cardCount: 9,
     playerId: 4
   }
