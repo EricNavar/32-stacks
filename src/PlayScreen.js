@@ -13,7 +13,7 @@ import { LobbyModal } from './modals/LobbyModal.js';
 import Logo from './assets/logo.png';
 import { Card, CardButton } from './Cards';
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "https://myrpgstats.com";
 let socket;
 
 const PlayScreenMain = styled.main`
@@ -242,7 +242,7 @@ function PlayScreen(props) {
       "forceNew": true,
       "reconnectionAttempts": "Infinity",
       "timeout": 10000,
-      "transports": ["websocket"]
+      "transports": ["websocket"],
     };
     socket = io.connect(ENDPOINT, connectionOptions);
 
