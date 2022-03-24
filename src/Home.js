@@ -14,7 +14,20 @@ const generateRoomCode = () => {
   return result;
 };
 
-const StyledLink = styled(Link)`
+const HomeMain = styled.main`
+  text-align: center;
+  justify-content: center;
+  display: grid;
+  background: rgba(0,0,0,.9);
+  width: min-content;
+  margin: auto;
+  margin-top: auto;
+  border-radius: 8px;
+  margin-top: 50px;
+  box-shadow: blue 0px 0px 0px 2px inset, rgb(0, 0, 0) 10px -10px 0px -3px, rgb(31, 193, 27) 10px -10px, rgb(0, 0, 0) 20px -20px 0px -3px, rgb(255, 217, 19) 20px -20px, rgb(0, 0, 0) 30px -30px 0px -3px, rgb(255, 156, 85) 30px -30px, rgb(0, 0, 0) 40px -40px 0px -3px, rgb(255, 85, 85) 40px -40px
+`
+
+const GamesRuledLink = styled(Link)`
   color: white;
   font-size: xx-large;
   text-decoration: none;
@@ -23,7 +36,7 @@ const StyledLink = styled(Link)`
   }
 `
 
-const StyledLink2 = styled(Link)`
+const CreateNewGame = styled(Link)`
   width: 250px;
   padding: 12px;
   background-color: #383838;
@@ -33,24 +46,29 @@ const StyledLink2 = styled(Link)`
   font-size: 1.4rem;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   height: fit-content;
+  text-decoration: none;
+  &:hover {
+    color: cyan;
+  }
+`
+
+const JoinExistingGame = styled.button`
+  width: 250px;
+  padding: 12px;
+  background-color: #383838;
+  color: white;
+  border-radius: 8px;
+  border-style: none;
+  font-size: 1.4rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  height: fit-content;
+  text-decoration: none;
+  &:hover {
+    color: cyan;
+  }
 `
 
 const TextInput = styled.input`
-  background-color: transparent;
-  color: white;
-  font-size: large;
-  outline: 0;
-  border-bottom-color: white;
-  border-bottom-width: 2px;
-  width: 300px;
-  text-align: center;
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
-  margin-bottom: 20px;
-`
-
-const TextInput2 = styled.input`
   background-color: transparent;
   color: white;
   font-size: large;
@@ -60,7 +78,7 @@ const TextInput2 = styled.input`
   text-align: center;
   margin-bottom: 20px;
   padding: 2px;
-  border-radius: 8px;
+  border-radius: 6px;
   background: #fff;
   color: black;
   border-style:solid;
@@ -71,6 +89,7 @@ const TextInput2 = styled.input`
 const LogoComponent = styled.img`
   width: 400px;
   padding-top: 20px;
+  margin: auto;
 `
 
 const GameRulesLinkContainer = styled.div`
@@ -83,12 +102,23 @@ const LinksContainer = styled.div`
   margin-top: 12px;
 `
 
+const RoomCodeInputContainer = styled.div`
+  height: ${props => props.visible ? "30px" : "0px"};
+  animation: swing 1s ease;
+  transition: height 1s;
+  overflow: hidden;
+`
+
 function Home(props) {
   const [roomCode, setRoomCode] = useState("");
+  const [roomCodeOpen, setRoomCodeOpen] = useState(false);
+
+  const onClickJoin = () => {
+    setRoomCodeOpen(!roomCodeOpen);
+  }
 
   return (
-    <div id="parent">
-
+    <HomeMain id="home">
       <LogoComponent id="logo" src={Logo} alt="logo" />
 
       <p><i>This is literally the best card game that there is.</i></p>
@@ -97,7 +127,7 @@ function Home(props) {
         {/* Username input */}
         <div id="child1">
           <label style={{ textSize: "large" }} htmlFor="name">Set name: </label>
-          <TextInput2
+          <TextInput
             onChange={(e) => props.setName(e.target.value)}
             type="text"
             id="name"
@@ -110,24 +140,28 @@ function Home(props) {
         </div>
 
         <LinksContainer>
-          <StyledLink2 to={`/play/${generateRoomCode()}`}>Create a new game!</StyledLink2>
+          <CreateNewGame to={`/play/${generateRoomCode()}`}>Create a new game!</CreateNewGame>
 
           <p style={{margin:12}}>
             or
           </p>
 
           <div>
-            <StyledLink2 to={`/play/${roomCode}`}>Join an existing game!</StyledLink2>
-            <p></p>
-            <TextInput type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())} />
+            <JoinExistingGame onClick={onClickJoin}>Join an existing game!</JoinExistingGame>
+            <RoomCodeInputContainer visible={roomCodeOpen}>
+              <TextInput type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())} />
+              <Link to={`/play/${roomCode}`}>
+                Submit
+              </Link>
+            </RoomCodeInputContainer>
           </div>
         </LinksContainer>
 
         <GameRulesLinkContainer>
-          <StyledLink style={{ fontSize: 24 }} to="/rules">Game Rules!</StyledLink>
+          <GamesRuledLink style={{ fontSize: 24 }} to="/rules">Game Rules!</GamesRuledLink>
         </GameRulesLinkContainer>
       </div>
-    </div>
+    </HomeMain>
   );
 }
 Home.propTypes = {
