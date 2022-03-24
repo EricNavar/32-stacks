@@ -47,7 +47,6 @@ export { Card };
 
 function CardButton(props) {
   const { color, value, gray, disabled, onClick } = props;
-  console.log(props);
   return (
     <ButtonWrapper onClick={onClick} disabled={disabled}>
       <Card color={color} value={value} />
