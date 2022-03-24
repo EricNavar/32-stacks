@@ -14,7 +14,7 @@ import { Modal } from './modals/Modal.js';
 import Logo from './assets/logo.png';
 import { Card, CardButton } from './Cards';
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "http://ec2-54-91-62-202.compute-1.amazonaws.com:8080";
 let socket;
 
 const PlayScreenMain = styled.main`
@@ -176,7 +176,7 @@ function PlayScreen(props) {
   const rightPlayerId = otherPlayerIds[2];
 
   const [gameObject, setGameObject] = useState();
-  const [gameObjectPlayers, setGameObjectPlayers] = useState();
+  const [gameObjectPlayers, setGameObjectPlayers] = useState([]);
   const [host, setHost] = useState(false);
 
   //inPlay is the stack
@@ -226,6 +226,12 @@ function PlayScreen(props) {
     temp.gameStart = true;
     setLobbyModalOpen(false);
   };
+
+  const setPlayerName = (start) => {
+    const players = gameObjectPlayers.filter(player => player !== props.name)
+    let player = players.length > start ? players[start] : "greg's dad";
+    return player
+  }
 
   //Socket.io --------------------------------------------------------------------
   const { room } = useParams();
@@ -312,7 +318,9 @@ function PlayScreen(props) {
     // If no cards have been placed, consider the last card on the discard pile.
     // Otherwise, the last card in this temporary stack
     const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
-    setHand(checkHand(hand, lastCard, inPlay, direction, setDirection));
+    const checkedHand = checkHand(hand, lastCard, inPlay, direction, setDirection);
+    console.log(checkedHand);
+    setHand(checkedHand);
     if (card.color === "rainbow") {
       setColorPickerOpen(true);
     }
@@ -332,12 +340,13 @@ function PlayScreen(props) {
             {Array.apply(null, { length: players[topPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
           </div>
         </TopPlayerHandContainer>
-        <TopPlayerUsername >{players[topPlayerId].name}</TopPlayerUsername>
-        <LeftPlayerUsername >{players[leftPlayerId].name}</LeftPlayerUsername>
+        <TopPlayerUsername >{setPlayerName(1)}</TopPlayerUsername>
+        {/* <LeftPlayerUsername >{players[leftPlayerId].name}</LeftPlayerUsername> */}
+        <LeftPlayerUsername >{setPlayerName(0)}</LeftPlayerUsername>
         <LeftPlayerHandContainer style={{ width: 'min-content' }}>
           {Array.apply(null, { length: players[leftPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
         </LeftPlayerHandContainer>
-        <RightPlayerUsername >{players[rightPlayerId].name}</RightPlayerUsername>
+        <RightPlayerUsername >{setPlayerName(2)}</RightPlayerUsername>
         <RightPlayerHandContainer style={{ width: 'min-content' }}>
           {Array.apply(null, { length: players[rightPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
         </RightPlayerHandContainer>
@@ -367,7 +376,7 @@ function PlayScreen(props) {
                   onClickCardButton(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection)
                 }
                 {...card}
-                disabled={myId !== turn}
+                myTurn={myId===turn}
               />;
             })}
           </div>

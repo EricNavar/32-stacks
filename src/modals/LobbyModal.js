@@ -38,7 +38,7 @@ const PlayerCardWrapper = styled.div`
 
 export function LobbyModal(props) {
   const {isHost, players} = props;
-  if (players !== undefined) {
+  if (players !== undefined && players[0]) {
     return (
       <Modal>
         <ModalTitle>
