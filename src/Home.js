@@ -14,7 +14,7 @@ const generateRoomCode = () => {
   return result;
 };
 
-const StyledLink = styled(Link)`
+const GamesRuledLink = styled(Link)`
   color: white;
   font-size: xx-large;
   text-decoration: none;
@@ -23,7 +23,7 @@ const StyledLink = styled(Link)`
   }
 `
 
-const StyledLink2 = styled(Link)`
+const CreateNewGame = styled(Link)`
   width: 250px;
   padding: 12px;
   background-color: #383838;
@@ -33,24 +33,29 @@ const StyledLink2 = styled(Link)`
   font-size: 1.4rem;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   height: fit-content;
+  text-decoration: none;
+  &:hover {
+    color: cyan;
+  }
+`
+
+const JoinExistingGame = styled.button`
+  width: 250px;
+  padding: 12px;
+  background-color: #383838;
+  color: white;
+  border-radius: 8px;
+  border-style: none;
+  font-size: 1.4rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  height: fit-content;
+  text-decoration: none;
+  &:hover {
+    color: cyan;
+  }
 `
 
 const TextInput = styled.input`
-  background-color: transparent;
-  color: white;
-  font-size: large;
-  outline: 0;
-  border-bottom-color: white;
-  border-bottom-width: 2px;
-  width: 300px;
-  text-align: center;
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
-  margin-bottom: 20px;
-`
-
-const TextInput2 = styled.input`
   background-color: transparent;
   color: white;
   font-size: large;
@@ -83,8 +88,20 @@ const LinksContainer = styled.div`
   margin-top: 12px;
 `
 
+const RoomCodeInputContainer = styled.div`
+  height: ${props => props.visible ? "30px" : "0px"};
+  animation: swing 1s ease;
+  transition: height 1s;
+  overflow: hidden;
+`
+
 function Home(props) {
   const [roomCode, setRoomCode] = useState("");
+  const [roomCodeOpen, setRoomCodeOpen] = useState(false);
+
+  const onClickJoin = () => {
+    setRoomCodeOpen(!roomCodeOpen);
+  }
 
   return (
     <div id="parent">
@@ -97,7 +114,7 @@ function Home(props) {
         {/* Username input */}
         <div id="child1">
           <label style={{ textSize: "large" }} htmlFor="name">Set name: </label>
-          <TextInput2
+          <TextInput
             onChange={(e) => props.setName(e.target.value)}
             type="text"
             id="name"
@@ -110,21 +127,25 @@ function Home(props) {
         </div>
 
         <LinksContainer>
-          <StyledLink2 to={`/play/${generateRoomCode()}`}>Create a new game!</StyledLink2>
+          <CreateNewGame to={`/play/${generateRoomCode()}`}>Create a new game!</CreateNewGame>
 
           <p style={{margin:12}}>
             or
           </p>
 
           <div>
-            <StyledLink2 to={`/play/${roomCode}`}>Join an existing game!</StyledLink2>
-            <p></p>
-            <TextInput type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())} />
+            <JoinExistingGame onClick={onClickJoin}>Join an existing game!</JoinExistingGame>
+            <RoomCodeInputContainer visible={roomCodeOpen}>
+              <TextInput type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())} />
+              <Link to={`/play/${roomCode}`}>
+                Submit
+              </Link>
+            </RoomCodeInputContainer>
           </div>
         </LinksContainer>
 
         <GameRulesLinkContainer>
-          <StyledLink style={{ fontSize: 24 }} to="/rules">Game Rules!</StyledLink>
+          <GamesRuledLink style={{ fontSize: 24 }} to="/rules">Game Rules!</GamesRuledLink>
         </GameRulesLinkContainer>
       </div>
     </div>
