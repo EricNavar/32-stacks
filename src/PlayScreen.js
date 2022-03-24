@@ -174,7 +174,7 @@ function PlayScreen(props) {
   const rightPlayerId = otherPlayerIds[2];
 
   const [gameObject, setGameObject] = useState();
-  const [gameObjectPlayers, setGameObjectPlayers] = useState();
+  const [gameObjectPlayers, setGameObjectPlayers] = useState([]);
   const [host, setHost] = useState(false);
 
   //inPlay is the stack
@@ -224,6 +224,13 @@ function PlayScreen(props) {
     temp.gameStart = true;
     setLobbyModalOpen(false);
   };
+
+  const setPlayerName = (start) => {
+    const players = gameObjectPlayers.filter(player => player !== props.name)
+    console.log(players)
+    let player = players.length > start ? players[start] : "greg's dad";
+    return player
+  }
 
   //Socket.io --------------------------------------------------------------------
   const { room } = useParams();
@@ -330,12 +337,13 @@ function PlayScreen(props) {
             {Array.apply(null, { length: players[topPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
           </div>
         </TopPlayerHandContainer>
-        <TopPlayerUsername >{players[topPlayerId].name}</TopPlayerUsername>
-        <LeftPlayerUsername >{players[leftPlayerId].name}</LeftPlayerUsername>
+        <TopPlayerUsername >{setPlayerName(1)}</TopPlayerUsername>
+        {/* <LeftPlayerUsername >{players[leftPlayerId].name}</LeftPlayerUsername> */}
+        <LeftPlayerUsername >{setPlayerName(0)}</LeftPlayerUsername>
         <LeftPlayerHandContainer style={{ width: 'min-content' }}>
           {Array.apply(null, { length: players[leftPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
         </LeftPlayerHandContainer>
-        <RightPlayerUsername >{players[rightPlayerId].name}</RightPlayerUsername>
+        <RightPlayerUsername >{setPlayerName(2)}</RightPlayerUsername>
         <RightPlayerHandContainer style={{ width: 'min-content' }}>
           {Array.apply(null, { length: players[rightPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
         </RightPlayerHandContainer>

@@ -54,7 +54,7 @@ io.on('connection', socket => {
             for (i = 0; i < currentPlayers.length; i++) {
                 let newPlayer = {
                     name: currentPlayers[i].name,
-                    cardCount: 7
+                    cardCount: 8
                 };
                 initialPlayerList.push(newPlayer);
             }

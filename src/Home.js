@@ -23,7 +23,7 @@ const StyledLink = styled(Link)`
   }
 `
 
-const StyledLink2 = styled.button`
+const StyledLink2 = styled(Link)`
   width: 250px;
   padding: 12px;
   background-color: #383838;
