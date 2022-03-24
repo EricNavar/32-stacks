@@ -5,7 +5,7 @@ import { MusicPlayer } from '../MusicPlayer';
 
 const Modal = styled.div`
   border-radius: 8px;
-  box-shadow: box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
   background-color: white;
   padding: 12px;
   max-width: 90vh;
