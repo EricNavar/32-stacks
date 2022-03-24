@@ -1,11 +1,9 @@
 const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
-const cors = require('cors');
 
-const PORT = 5000;
+const PORT = 8080;
 const app = express();
-app.use(cors());
 
 const httpServer = http.createServer(app);
 const io = socketIO(httpServer);
@@ -54,7 +52,7 @@ io.on('connection', socket => {
             for (i = 0; i < currentPlayers.length; i++) {
                 let newPlayer = {
                     name: currentPlayers[i].name,
-                    cardCount: 7
+                    cardCount: 8
                 };
                 initialPlayerList.push(newPlayer);
             }
