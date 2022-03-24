@@ -13,7 +13,7 @@ import { LobbyModal } from './modals/LobbyModal.js';
 import Logo from './assets/logo.png';
 import { Card, CardButton } from './Cards';
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "http://ec2-54-91-62-202.compute-1.amazonaws.com:8080";
 let socket;
 
 const PlayScreenMain = styled.main`
