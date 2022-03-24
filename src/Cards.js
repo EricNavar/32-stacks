@@ -14,7 +14,7 @@ const BlackBox = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  opacity: ${props => props.gray ? "50%" : "0%"};
+  opacity: ${props => props.gray ? "75%" : "0%"};
   background-color: black;
   top: 0;
   left: 0;
@@ -46,10 +46,9 @@ Card.propTypes = {
 export { Card };
 
 function CardButton(props) {
-  const { color, value, gray, disabled, onClick } = props;
-  console.log(props);
+  const { color, value, gray, myTurn, onClick } = props;
   return (
-    <ButtonWrapper onClick={onClick} disabled={disabled}>
+    <ButtonWrapper onClick={onClick} disabled={!myTurn || gray}>
       <Card color={color} value={value} />
       <BlackBox gray={gray}></BlackBox>
     </ButtonWrapper>
@@ -60,7 +59,7 @@ CardButton.propTypes = {
   value: PropTypes.string.isRequired,
   gray: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
-  disabled: PropTypes.bool,
+  myTurn: PropTypes.bool,
 };
 
 export { CardButton };

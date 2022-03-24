@@ -227,7 +227,6 @@ function PlayScreen(props) {
 
   const setPlayerName = (start) => {
     const players = gameObjectPlayers.filter(player => player !== props.name)
-    console.log(players)
     let player = players.length > start ? players[start] : "greg's dad";
     return player
   }
@@ -317,7 +316,9 @@ function PlayScreen(props) {
     // If no cards have been placed, consider the last card on the discard pile.
     // Otherwise, the last card in this temporary stack
     const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
-    setHand(checkHand(hand, lastCard, inPlay, direction, setDirection));
+    const checkedHand = checkHand(hand, lastCard, inPlay, direction, setDirection);
+    console.log(checkedHand);
+    setHand(checkedHand);
     if (card.color === "rainbow") {
       setColorPickerOpen(true);
     }
@@ -373,7 +374,7 @@ function PlayScreen(props) {
                   onClickCardButton(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection)
                 }
                 {...card}
-                disabled={myId!==turn}
+                myTurn={myId===turn}
               />;
             })}
           </div>
