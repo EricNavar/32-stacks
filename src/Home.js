@@ -103,7 +103,7 @@ const LinksContainer = styled.div`
 `
 
 const RoomCodeInputContainer = styled.div`
-  height: ${props => props.visible ? "30px" : "0px"};
+  height: ${props => props.visible ? "50px" : "0px"};
   animation: swing 1s ease;
   transition: height 1s;
   overflow: hidden;
@@ -149,10 +149,11 @@ function Home(props) {
           <div>
             <JoinExistingGame onClick={onClickJoin}>Join an existing game!</JoinExistingGame>
             <RoomCodeInputContainer visible={roomCodeOpen}>
-              <TextInput type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())} />
               <Link to={`/play/${roomCode}`}>
                 Submit
               </Link>
+              <TextInput type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())} />
+              <div></div>
             </RoomCodeInputContainer>
           </div>
         </LinksContainer>
