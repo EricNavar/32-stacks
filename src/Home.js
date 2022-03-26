@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Logo from './assets/logo.png';
@@ -103,10 +103,26 @@ const LinksContainer = styled.div`
 `
 
 const RoomCodeInputContainer = styled.div`
-  height: ${props => props.visible ? "50px" : "0px"};
+  height: ${props => props.visible ? "100px" : "0px"};
   animation: swing 1s ease;
   transition: height 1s;
   overflow: hidden;
+`
+
+const SubmitLink = styled(Link)`
+  width: 80px;
+  padding: 5px;
+  background-color: #383838;
+  color: white;
+  border-radius: 8px;
+  border-style: none;
+  font-size: 1.4rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  height: fit-content;
+  text-decoration: none;
+  &:hover {
+    color: cyan;
+  }
 `
 
 function Home(props) {
@@ -149,11 +165,10 @@ function Home(props) {
           <div>
             <JoinExistingGame onClick={onClickJoin}>Join an existing game!</JoinExistingGame>
             <RoomCodeInputContainer visible={roomCodeOpen}>
-              <Link to={`/play/${roomCode}`}>
-                Submit
-              </Link>
               <TextInput type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())} />
-              <div></div>
+              <SubmitLink to={`/play/${roomCode}`}>
+                Submit
+              </SubmitLink>
             </RoomCodeInputContainer>
           </div>
         </LinksContainer>
