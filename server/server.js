@@ -13,8 +13,8 @@ const io = socketIO(httpServer);
 
 const playerList = [];
 
-const addPlayer = (id, name, room) => {
-    const player = {id, name, room};
+const addPlayer = (id, playerID, name, room) => {
+    const player = {id, playerID, name, room};
     playerList.push(player);
     return player;
 };
@@ -45,12 +45,13 @@ io.on('connection', socket => {
         }
         else {
             console.log(`Player joined room: ${payload.room}`);
-            addPlayer(socket.id, payload.name, payload.room, players.length + 1);
+            addPlayer(socket.id, payload.playerID, payload.name, payload.room);
             socket.join(payload.room);
             const currentPlayers = getPlayersInRoom(payload.room);
             let initialPlayerList = [];
             for (i = 0; i < currentPlayers.length; i++) {
                 let newPlayer = {
+                    id: currentPlayers[i].playerID,
                     name: currentPlayers[i].name,
                     cardCount: 8
                 };
@@ -73,7 +74,7 @@ io.on('connection', socket => {
         const player = getPlayer(socket.id);
         removePlayer(socket.id);
         io.to(player.room).emit('playerLeft', {
-            leftPlayer: player.name
+            leftPlayer: player.playerID
         });
     });
 
