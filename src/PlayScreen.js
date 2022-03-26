@@ -14,7 +14,9 @@ import { Modal } from './modals/Modal.js';
 import Logo from './assets/logo.png';
 import { Card, CardButton } from './Cards';
 
-const ENDPOINT = "https://myrpgstats.com";
+// const ENDPOINT = "https://myrpgstats.com";
+const ENDPOINT = "http://localhost:8080";
+
 let socket;
 
 const PlayScreenMain = styled.main`
@@ -167,6 +169,7 @@ const CallUnoButton = styled.button`
 `;
 
 function PlayScreen(props) {
+  const playerID = props.playerID;
   const myId = 0;
   const [players, setPlayers] = React.useState(otherPlayers);
   const otherPlayerIds = players.filter(player => player.id !== myId).map(player => player.playerId);
@@ -247,12 +250,13 @@ function PlayScreen(props) {
     };
     socket = io.connect(ENDPOINT, connectionOptions);
 
-    socket.emit('join', { room: room, name: props.name }, (error) => {
+    socket.emit('join', { room: room, name: props.name, playerID: playerID }, (error) => {
       if (error) {
         console.log("error");
         navigate('/');
       }
       else {
+        console.log(playerID);
         console.log("Successfully connected to room");
       }
     });
@@ -271,7 +275,7 @@ function PlayScreen(props) {
     socket.on("playerLeft", (newLobby) => {
       setGameObject(previousGameObject => {
         const newGameObject = { ...previousGameObject };
-        const newList = previousGameObject.playerList.filter(player => player.name !== newLobby.leftPlayer);
+        const newList = previousGameObject.playerList.filter(player => player.id !== newLobby.leftPlayer);
         newGameObject.playerList = newList;
         return newGameObject;
       });
@@ -287,6 +291,26 @@ function PlayScreen(props) {
     }
   };
 
+  //Check if game object updates
+  useEffect(() => {
+    //Check if game object is undefinded
+    if (gameObject === undefined) {
+      return;
+    }
+    //Check if game is over
+    if (gameObject.winner !== 0) {
+      console.log("Game is over!")
+    }
+    //Check if it is your turn
+    if (gameObject.turn === gameObject.playerList.findIndex(player => playerID === player.id) + 1) {
+      console.log("My turn!")
+    }
+    else {
+      console.log("Not my turn!")
+    }
+  }, [gameObject])
+
+  //When host starts the game by closing the lobby modal
   useEffect(() => {
     if (gameObject !== undefined && host) {
       let temp = { ...gameObject };
@@ -402,6 +426,7 @@ function PlayScreen(props) {
 }
 PlayScreen.propTypes = {
   name: PropTypes.string,
+  playerID: PropTypes.string,
   selectedBackground: PropTypes.string.isRequired,
   backgrounds: PropTypes.object.isRequired
 };
