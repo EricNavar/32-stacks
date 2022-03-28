@@ -207,7 +207,6 @@ function PlayScreen(props) {
 
   useEffect(() => {
     if (gameObject !== undefined) {
-      console.log(gameObject);
       setGameObjectPlayers(gameObject.playerList.map(player => player.name));
       if (host === false && gameObject.playerList[0].name === props.name) {
         console.log("I am the host!");
