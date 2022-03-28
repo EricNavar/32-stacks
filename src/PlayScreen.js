@@ -368,6 +368,9 @@ function PlayScreen(props) {
     if (newGameObject.turn > gameObjectPlayerNames.length) {newGameObject.turn = 1}
     //Sends last card played
     newGameObject.lastCardPlayed = inPlay[0];
+    if (newGameObject.lastCardPlayed.color === 'rainbow') {
+      newGameObject.lastCardPlayed.color = nextColor;
+    }
 
     updateGame(newGameObject);
   };
@@ -421,7 +424,7 @@ function PlayScreen(props) {
           </div>
         </HandContainer>
         <Center>
-          <p>Turn: Player {turn}</p>
+          <p>Turn {turn}: {gameObjectPlayerNames[turn-1]}</p>
           <div style={{ display: 'flex' }}>
             <Card id="discard-pile" color={lastCardPlayed.color} value={lastCardPlayed.value} />
             <CardButton id="draw-pile" onClick={onClickDrawPile} color="wild" gray={false} value="DRAW" disabled={myId !== turn || canPlaceCard}>
@@ -433,7 +436,7 @@ function PlayScreen(props) {
           CALL UNO
         </CallUnoButton>
       </PlayScreenMain>
-      <Modal open={colorPickerOpen} setOpen={setColorPickerOpen} ModalComponent={ColorPicker} />
+      <Modal open={colorPickerOpen} setOpen={setColorPickerOpen} setNextColor={setNextColor} ModalComponent={ColorPicker} />
       <Modal open={endingModalOpen} setOpen={setEndingModalOpen} ModalComponent={EndingModal} />
       <Modal open={lobbyModalOpen} setOpen={setLobbyModalOpen} ModalComponent={LobbyModal} players={gameObjectPlayerNames} isHost={host} startGame={startGame} />
     </>
