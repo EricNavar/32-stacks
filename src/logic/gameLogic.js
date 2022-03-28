@@ -10,13 +10,22 @@ export function placeCard(card, hand, setHand, inPlay, setInPlay, setTopOfStack)
 
 // Checks player's entire hand and grays out nonplayable cards
 export function checkHand(hand, lastCardPlayed, inPlay, direction, setDirection) {
+  let newHand = [];
   for (let i = 0; i < hand.length; i++) {
-    const result = checkSingleCard(hand[i], lastCardPlayed, inPlay, direction);
-    const isGray = !result[0];
-    hand[i].gray = isGray;
-    setDirection(result[1]);
+    //if the last card put down is rainbow, you can't put down any new cards.
+    // rainbow cards are put down solo. They can't be part of a streak.
+    if (inPlay.length > 0 && inPlay[inPlay.length - 1].color === "rainbow") {
+      const toAdd = {color: hand[i].color, value: hand[i].value, gray: true}
+      newHand.push(toAdd);
+    }
+    else {
+      const result = checkSingleCard(hand[i], lastCardPlayed, inPlay, direction);
+      const toAdd = {color: hand[i].color, value: hand[i].value, gray: !result[0]}
+      newHand.push(toAdd);
+      setDirection(result[1]);
+    }
   }
-  return hand;
+  return newHand;
 }
 
 export function calculateCanPlaceCard(hand, lastCardPlayed, inPlay) {
