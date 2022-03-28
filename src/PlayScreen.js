@@ -312,6 +312,10 @@ function PlayScreen(props) {
       setMyTurn(false);
       console.log("Not my turn!")
     }
+    //Check last card played
+    if (gameObject.lastCardPlayed !== "empty") {
+      setLastCardPlayed(gameObject.lastCardPlayed);
+    }
   }, [gameObject])
 
   //When host starts the game by closing the lobby modal
@@ -354,14 +358,18 @@ function PlayScreen(props) {
     }
   }
 
-  //When player places cards
+  //Place card stack, end turn, and update game object
   const onClickPlaceCards = () => {
     setTopOfStack(inPlay[inPlay.size - 1]);
     setInPlay([]);
 
     let newGameObject = { ...gameObject };
+    //Updates turn
     newGameObject.turn += 1;
     if (newGameObject.turn > gameObjectPlayerNames.length) {newGameObject.turn = 1}
+    //Sends last card played
+    newGameObject.lastCardPlayed = inPlay[0];
+
     updateGame(newGameObject);
   };
 
