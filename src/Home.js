@@ -14,6 +14,19 @@ const generateRoomCode = () => {
   return result;
 };
 
+const HomeMain = styled.main`
+  text-align: center;
+  justify-content: center;
+  display: grid;
+  background: rgba(0,0,0,.9);
+  width: min-content;
+  margin: auto;
+  margin-top: auto;
+  border-radius: 8px;
+  margin-top: 50px;
+  box-shadow: blue 0px 0px 0px 2px inset, rgb(0, 0, 0) 10px -10px 0px -3px, rgb(31, 193, 27) 10px -10px, rgb(0, 0, 0) 20px -20px 0px -3px, rgb(255, 217, 19) 20px -20px, rgb(0, 0, 0) 30px -30px 0px -3px, rgb(255, 156, 85) 30px -30px, rgb(0, 0, 0) 40px -40px 0px -3px, rgb(255, 85, 85) 40px -40px
+`
+
 const GamesRuledLink = styled(Link)`
   color: white;
   font-size: xx-large;
@@ -65,7 +78,7 @@ const TextInput = styled.input`
   text-align: center;
   margin-bottom: 20px;
   padding: 2px;
-  border-radius: 8px;
+  border-radius: 6px;
   background: #fff;
   color: black;
   border-style:solid;
@@ -76,6 +89,7 @@ const TextInput = styled.input`
 const LogoComponent = styled.img`
   width: 400px;
   padding-top: 20px;
+  margin: auto;
 `
 
 const GameRulesLinkContainer = styled.div`
@@ -104,8 +118,7 @@ function Home(props) {
   }
 
   return (
-    <div id="parent">
-
+    <HomeMain id="home">
       <LogoComponent id="logo" src={Logo} alt="logo" />
 
       <p><i>This is literally the best card game that there is.</i></p>
@@ -148,7 +161,7 @@ function Home(props) {
           <GamesRuledLink style={{ fontSize: 24 }} to="/rules">Game Rules!</GamesRuledLink>
         </GameRulesLinkContainer>
       </div>
-    </div>
+    </HomeMain>
   );
 }
 Home.propTypes = {
