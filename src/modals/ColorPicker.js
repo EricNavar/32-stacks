@@ -20,7 +20,7 @@ export function ColorPicker(props) {
   const colors = ["red", "green", "blue", "yellow"];
   const onClick = (newColor) => {
     props.setNextColor(newColor);
-    props.setColorPickerOpen(false);
+    props.setOpen(false);
   };
   return (
     <>
@@ -31,5 +31,5 @@ export function ColorPicker(props) {
 }
 ColorPicker.propTypes = {
   setNextColor: PropTypes.func.isRequired,
-  setColorPickerOpen: PropTypes.func.isRequired
+  setOpen: PropTypes.func.isRequired,
 };
