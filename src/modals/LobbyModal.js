@@ -29,7 +29,7 @@ const PlayerCard = styled.div`
 
 const PlayerCardWrapper = styled.div`
   display: inline-flex;
-  width: 50%;
+  width: 50%;   
   height: 50%;
   justify-content: center;
   align-items: center;
@@ -47,7 +47,7 @@ export function LobbyModal(props) {
         {players.map((player,index) => 
           <PlayerCardWrapper key={index}>
             <PlayerCard>
-              <p>{player.name}</p>
+              <p>{player}</p>
             </PlayerCard>  
           </PlayerCardWrapper>
         )}
