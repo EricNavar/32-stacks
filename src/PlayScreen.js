@@ -14,10 +14,10 @@ import { Modal } from './modals/Modal.js';
 import Logo from './assets/logo.png';
 import { Card, CardButton } from './Cards';
 
-const ENDPOINT = "https://myrpgstats.com";
+// const ENDPOINT = "https://myrpgstats.com";
 
 //Development endpoint
-// const ENDPOINT = "http://localhost:8080";
+const ENDPOINT = "http://localhost:8080";
 
 let socket;
 
@@ -304,6 +304,7 @@ function PlayScreen(props) {
       setCenterText(`Winner: ${gameObject.winner[0].name}!`);
     }
     //Check if it is your turn and set turn
+    if (turn === gameObject.turn && gameObject.lastCardPlayed !== 'empty') { setHand(checkHand(hand, gameObject.lastCardPlayed, [], direction, setDirection)); }
     setTurn(gameObject.turn)
     if (gameObject.turn === gameObject.playerList.findIndex(player => playerID === player.id) + 1) {
       setMyTurn(true);
@@ -332,7 +333,7 @@ function PlayScreen(props) {
   useEffect(() => {
     setHand(checkHand(hand, lastCardPlayed, inPlay, direction, setDirection));
     if (gameObject !== undefined && gameObject.winner === 0) {
-      setCenterText(`Player ${turn}'s turn: ${gameObjectPlayerNames[turn-1]}`);
+      setCenterText(`Player ${turn}'s turn: ${gameObjectPlayerNames[turn - 1]}`);
     }
   }, [turn]);
 
@@ -353,7 +354,6 @@ function PlayScreen(props) {
     // Otherwise, the last card in this temporary stack
     const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
     const checkedHand = checkHand(hand, lastCard, inPlay, direction, setDirection);
-    console.log(checkedHand);
     setHand(checkedHand);
     if (card.color === "rainbow") {
       setColorPickerOpen(true);
@@ -363,12 +363,11 @@ function PlayScreen(props) {
   //Place card stack, end turn, and update game object
   const onClickPlaceCards = () => {
     setTopOfStack(inPlay[inPlay.size - 1]);
-    setInPlay([]);
 
     let newGameObject = { ...gameObject };
     //Updates turn
     newGameObject.turn += 1;
-    if (newGameObject.turn > gameObjectPlayerNames.length) {newGameObject.turn = 1}
+    if (newGameObject.turn > gameObjectPlayerNames.length) { newGameObject.turn = 1 }
     //Sends last card played
     newGameObject.lastCardPlayed = inPlay.slice(-1).pop();
     if (newGameObject.lastCardPlayed.color === 'rainbow') {
@@ -379,6 +378,7 @@ function PlayScreen(props) {
       newGameObject.winner = newGameObject.playerList.filter(player => player.id === playerID);
     }
 
+    setInPlay([]);
     updateGame(newGameObject);
   };
 

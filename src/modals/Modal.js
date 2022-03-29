@@ -31,7 +31,6 @@ const ModalPaper = styled.div`
 
 export function Modal(props) {
   const { open, ModalComponent, zIndex, ...otherProps } = props;
-  console.log(props);
   if (open) {
     return (
       <Background zIndex={zIndex}>

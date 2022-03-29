@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import {Button, ModalTitle} from '../commonStyles';
+import { Button, ModalTitle } from '../commonStyles';
 
 const PlayerCard = styled.div`
   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
@@ -23,22 +23,21 @@ const PlayerCardWrapper = styled.div`
 `;
 
 export function LobbyModal(props) {
-  console.log(props);
-  const {isHost, players} = props;
+  const { isHost, players } = props;
   if (players !== undefined && players[0]) {
     return (
       <>
         <ModalTitle>
           {players[0]}&apos;s lobby
         </ModalTitle>
-        {players.map((player,index) => 
+        {players.map((player, index) =>
           <PlayerCardWrapper key={index}>
             <PlayerCard>
               <p>{player}</p>
-            </PlayerCard>  
+            </PlayerCard>
           </PlayerCardWrapper>
         )}
-        {isHost && 
+        {isHost &&
           <div>
             <Button onClick={() => props.startGame()}>
               START GAME
