@@ -14,7 +14,11 @@ import { Modal } from './modals/Modal.js';
 import Logo from './assets/logo.png';
 import { Card, CardButton } from './Cards';
 
-const ENDPOINT = "http://ec2-54-91-62-202.compute-1.amazonaws.com:8080";
+const ENDPOINT = "https://myrpgstats.com";
+
+//Development endpoint
+// const ENDPOINT = "http://localhost:8080";
+
 let socket;
 
 const PlayScreenMain = styled.main`
@@ -167,6 +171,7 @@ const CallUnoButton = styled.button`
 `;
 
 function PlayScreen(props) {
+  const playerID = props.playerID;
   const myId = 0;
   const [players, setPlayers] = React.useState(otherPlayers);
   const otherPlayerIds = players.filter(player => player.id !== myId).map(player => player.playerId);
@@ -176,8 +181,9 @@ function PlayScreen(props) {
   const rightPlayerId = otherPlayerIds[2];
 
   const [gameObject, setGameObject] = useState();
-  const [gameObjectPlayers, setGameObjectPlayers] = useState([]);
+  const [gameObjectPlayerNames, setGameObjectPlayerNames] = useState([]);
   const [host, setHost] = useState(false);
+  const [myTurn, setMyTurn] = useState(false);
 
   //inPlay is the stack
   const [inPlay, setInPlay] = React.useState([]);
@@ -186,7 +192,7 @@ function PlayScreen(props) {
   const [direction, setDirection] = React.useState("none");
 
   // if this player has a card available to put down
-  //who's turn is it? It stores a number 0 through 4, representing the player ID
+  //who's turn is it? It stores a number 1 through 4, representing the player ID and initially starts at 0 until game object is loaded
   const [turn, setTurn] = React.useState(0);
 
   const [lastCardPlayed, setLastCardPlayed] = React.useState({
@@ -209,9 +215,8 @@ function PlayScreen(props) {
 
   useEffect(() => {
     if (gameObject !== undefined) {
-      console.log(gameObject);
-      setGameObjectPlayers(gameObject.playerList.map(player => player.name));
-      if (host === false && gameObject.playerList[0].name === props.name) {
+      setGameObjectPlayerNames(gameObject.playerList.map(player => player.name));
+      if (host === false && gameObject.playerList[0].id === playerID) {
         console.log("I am the host!");
         setHost(true);
       }
@@ -228,7 +233,7 @@ function PlayScreen(props) {
   };
 
   const setPlayerName = (start) => {
-    const players = gameObjectPlayers.filter(player => player !== props.name)
+    const players = gameObjectPlayerNames.filter(player => player !== props.name)
     let player = players.length > start ? players[start] : "greg's dad";
     return player
   }
@@ -243,11 +248,11 @@ function PlayScreen(props) {
       "forceNew": true,
       "reconnectionAttempts": "Infinity",
       "timeout": 10000,
-      "transports": ["websocket"]
+      "transports": ["websocket"],
     };
     socket = io.connect(ENDPOINT, connectionOptions);
 
-    socket.emit('join', { room: room, name: props.name }, (error) => {
+    socket.emit('join', { room: room, name: props.name, playerID: playerID }, (error) => {
       if (error) {
         console.log("error");
         navigate('/');
@@ -271,21 +276,49 @@ function PlayScreen(props) {
     socket.on("playerLeft", (newLobby) => {
       setGameObject(previousGameObject => {
         const newGameObject = { ...previousGameObject };
-        const newList = previousGameObject.playerList.filter(player => player.name !== newLobby.leftPlayer);
+        const newList = previousGameObject.playerList.filter(player => player.id !== newLobby.leftPlayer);
         newGameObject.playerList = newList;
         return newGameObject;
       });
     });
   }, []);
+  //End of Socket.io ----------------------------------------------------
 
   //Updating Game Object with Game Actions
-  const [lobbyModalOpen, setLobbyModalOpen] = useState(true);
-
   const updateGame = (newGameObject) => {
     if (newGameObject !== undefined) {
       socket.emit('updateGame', newGameObject);
     }
   };
+
+  //Check if game object updates
+  useEffect(() => {
+    //Check if game object is undefinded
+    if (gameObject === undefined) {
+      return;
+    }
+    //Check if game is over
+    if (gameObject.winner !== 0) {
+      console.log("Game is over!")
+    }
+    //Check if it is your turn and set turn
+    setTurn(gameObject.turn)
+    if (gameObject.turn === gameObject.playerList.findIndex(player => playerID === player.id) + 1) {
+      setMyTurn(true);
+      console.log("My turn!")
+    }
+    else {
+      setMyTurn(false);
+      console.log("Not my turn!")
+    }
+    //Check last card played
+    if (gameObject.lastCardPlayed !== "empty") {
+      setLastCardPlayed(gameObject.lastCardPlayed);
+    }
+  }, [gameObject])
+
+  //When host starts the game by closing the lobby modal
+  const [lobbyModalOpen, setLobbyModalOpen] = useState(true);
 
   useEffect(() => {
     if (gameObject !== undefined && host) {
@@ -294,8 +327,6 @@ function PlayScreen(props) {
       updateGame(temp);
     }
   }, [lobbyModalOpen]);
-
-  //End of Socket.io ----------------------------------------------------
 
   //check hand when the turn changes
   useEffect(() => {
@@ -326,22 +357,30 @@ function PlayScreen(props) {
     }
   }
 
+  //Place card stack, end turn, and update game object
   const onClickPlaceCards = () => {
     setTopOfStack(inPlay[inPlay.size - 1]);
     setInPlay([]);
-    setTurn((turn + 1) % players.length);
+
+    let newGameObject = { ...gameObject };
+    //Updates turn
+    newGameObject.turn += 1;
+    if (newGameObject.turn > gameObjectPlayerNames.length) {newGameObject.turn = 1}
+    //Sends last card played
+    newGameObject.lastCardPlayed = inPlay[0];
+
+    updateGame(newGameObject);
   };
 
   return (
     <>
       <PlayScreenMain selectedBackground={props.backgrounds[props.selectedBackground]}>
+        <TopPlayerUsername >{setPlayerName(1)}</TopPlayerUsername>
         <TopPlayerHandContainer>
           <div style={{ display: 'max-content' }}>
             {Array.apply(null, { length: players[topPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
           </div>
         </TopPlayerHandContainer>
-        <TopPlayerUsername >{setPlayerName(1)}</TopPlayerUsername>
-        {/* <LeftPlayerUsername >{players[leftPlayerId].name}</LeftPlayerUsername> */}
         <LeftPlayerUsername >{setPlayerName(0)}</LeftPlayerUsername>
         <LeftPlayerHandContainer style={{ width: 'min-content' }}>
           {Array.apply(null, { length: players[leftPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
@@ -376,7 +415,7 @@ function PlayScreen(props) {
                   onClickCardButton(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection)
                 }
                 {...card}
-                myTurn={myId===turn}
+                myTurn={myTurn}
               />;
             })}
           </div>
@@ -396,12 +435,13 @@ function PlayScreen(props) {
       </PlayScreenMain>
       <Modal open={colorPickerOpen} setOpen={setColorPickerOpen} ModalComponent={ColorPicker} />
       <Modal open={endingModalOpen} setOpen={setEndingModalOpen} ModalComponent={EndingModal} />
-      <Modal open={lobbyModalOpen} setOpen={setLobbyModalOpen} ModalComponent={LobbyModal} players={gameObjectPlayers} isHost={host} startGame={startGame} />
+      <Modal open={lobbyModalOpen} setOpen={setLobbyModalOpen} ModalComponent={LobbyModal} players={gameObjectPlayerNames} isHost={host} startGame={startGame} />
     </>
   );
 }
 PlayScreen.propTypes = {
   name: PropTypes.string,
+  playerID: PropTypes.string,
   selectedBackground: PropTypes.string.isRequired,
   backgrounds: PropTypes.object.isRequired
 };

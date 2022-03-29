@@ -15,7 +15,7 @@ const PlayerCard = styled.div`
 
 const PlayerCardWrapper = styled.div`
   display: inline-flex;
-  width: 50%;
+  width: 50%;   
   height: 50%;
   justify-content: center;
   align-items: center;
