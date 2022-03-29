@@ -184,6 +184,7 @@ function PlayScreen(props) {
   const [gameObjectPlayerNames, setGameObjectPlayerNames] = useState([]);
   const [host, setHost] = useState(false);
   const [myTurn, setMyTurn] = useState(false);
+  const [centerText, setCenterText] = useState("");
 
   //inPlay is the stack
   const [inPlay, setInPlay] = React.useState([]);
@@ -301,16 +302,15 @@ function PlayScreen(props) {
     //Check if game is over
     if (gameObject.winner !== 0) {
       console.log("Game is over!")
+      setCenterText(`Winner: ${gameObject.winner[0].name}!`);
     }
     //Check if it is your turn and set turn
     setTurn(gameObject.turn)
     if (gameObject.turn === gameObject.playerList.findIndex(player => playerID === player.id) + 1) {
       setMyTurn(true);
-      console.log("My turn!")
     }
     else {
       setMyTurn(false);
-      console.log("Not my turn!")
     }
     //Check last card played
     if (gameObject.lastCardPlayed !== "empty") {
@@ -332,6 +332,9 @@ function PlayScreen(props) {
   //check hand when the turn changes
   useEffect(() => {
     setHand(checkHand(hand, lastCardPlayed, inPlay, direction, setDirection));
+    if (gameObject !== undefined && gameObject.winner === 0) {
+      setCenterText(`Player ${turn}'s turn: ${gameObjectPlayerNames[turn-1]}`);
+    }
   }, [turn]);
 
   const myHandOffset = (hand.length * 70) / 2;
@@ -368,9 +371,13 @@ function PlayScreen(props) {
     newGameObject.turn += 1;
     if (newGameObject.turn > gameObjectPlayerNames.length) {newGameObject.turn = 1}
     //Sends last card played
-    newGameObject.lastCardPlayed = inPlay[0];
+    newGameObject.lastCardPlayed = inPlay.slice(-1).pop();
     if (newGameObject.lastCardPlayed.color === 'rainbow') {
       newGameObject.lastCardPlayed.color = nextColor;
+    }
+    //Check if no more cards are in player's hand and they win
+    if (hand.length === 0) {
+      newGameObject.winner = newGameObject.playerList.filter(player => player.id === playerID);
     }
 
     updateGame(newGameObject);
@@ -425,7 +432,7 @@ function PlayScreen(props) {
           </div>
         </HandContainer>
         <Center>
-          <p>Turn {turn}: {gameObjectPlayerNames[turn-1]}</p>
+          <p>{centerText}</p>
           <div style={{ display: 'flex' }}>
             <Card id="discard-pile" color={lastCardPlayed.color} value={lastCardPlayed.value} />
             <CardButton id="draw-pile" onClick={onClickDrawPile} color="wild" gray={false} value="DRAW" disabled={myId !== turn || canPlaceCard}>
