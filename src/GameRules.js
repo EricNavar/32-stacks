@@ -1,17 +1,19 @@
 import React from 'react';
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const GameRulesMain = styled.main`
   margin: 2.5rem;
   line-height: 1.5rem;
   border-radius: 8px;
-  background-color: pink;
+  background-color: #6b6b6b;
+  color: white;
   padding: 12px;
-`
+`;
 
 const Title = styled.h1`
   font-weight: bold;
-`
+  text-align: center;
+`;
 
 function GameRules() {
   return (
@@ -37,4 +39,4 @@ function GameRules() {
   );
 }
 
-export { GameRules }
+export { GameRules };

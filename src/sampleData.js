@@ -1,41 +1,73 @@
 export const yourCards = [
   {
-    c:"red",
-    v:"9"
+    color:"red",
+    value:"9",
+    gray: false
   },
   {
-    c:"blue",
-    v:"1"
+    color:"blue",
+    value:"1",
+    gray: false
   },
   {
-    c:"green",
-    v:"2"
+    color:"green",
+    value:"2",
+    gray: true
   },
   {
-    c:"yellow",
-    v:"7"
+    color:"yellow",
+    value:"7",
+    gray: true
+  },
+  {
+    color:"yellow",
+    value:"0",
+    gray: true
+  },
+  {
+    color:"yellow",
+    value:"0",
+    gray: true
+  },
+  {
+    color:"rainbow",
+    value:"wild",
+    gray: false
+  },
+  {
+    color:"rainbow",
+    value:"draw4",
+    gray: false
   }
-]
+];
 
-const otherPlayers = [
+export const otherPlayers = [
   {
-    name: "greg",
+    name: "$hlurb",
     cardCount: 9,
     playerId: 1
   },
   {
-    name: "greg's mom",
+    name: "Alex",
     cardCount: 9,
     playerId: 2
   },
   {
-    name: "greg's dad",
+    name: "Yonas",
     cardCount: 9,
     playerId: 3
   },
   {
-    name: "greg's other mom",
+    name: "Eric",
     cardCount: 9,
     playerId: 4
   }
-]
+];
+
+export const inPlayTemp = [
+  {
+    color:"red",
+    gray: true,
+    value:"8"
+  }
+];

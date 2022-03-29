@@ -1,6 +1,6 @@
 html {
-  background-color: black;
   background-image: url("assets/backgroundTransparent.png");
+  background-color: black;
   background-position: 50%;
   background-size: 1000px;
 }
@@ -11,58 +11,13 @@ body {
   font-family: Rubik;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  
 }
 
 div {
   color: white;
 }
 
-a {
-  color: white;
-  font-size: xx-large;
-  text-decoration: none;
-}
-
-a:hover {
-  color: cyan;
-}
-
-input {
-  background-color: transparent;
-  color: white;
-  font-size: large;
-  outline: 0;
-  border-bottom-color: white;
-  border-bottom-width: 2px;
-  width: 300px;
-  text-align: center;
-  
-
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
-  margin-bottom: 20px;
-}
-
-#logo {
-  width: 400px;
-  padding-top: 20px;
-}
-
-#child2 {
-  padding-top: calc(100vh - 500px);
-}
-
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
-
-button {
-  font-family: 'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-  sans-serif;
 }

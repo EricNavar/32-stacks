@@ -1,38 +1,36 @@
 const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
-const cors = require('cors');
 
-const PORT = 5000;
+const PORT = 8080;
 const app = express();
-app.use(cors())
 
-const httpServer = http.createServer(app)
-const io = socketIO(httpServer)
+const httpServer = http.createServer(app);
+const io = socketIO(httpServer);
 
 //----------------------------------------------------------------------------------
 //Player Fetching Methods
 
-const playerList = []
+const playerList = [];
 
-const addPlayer = async (id, name, room) => {
-    const player = {id, name, room}
-    playerList.push(player)
-    return player
-}
+const addPlayer = (id, playerID, name, room) => {
+    const player = {id, playerID, name, room};
+    playerList.push(player);
+    return player;
+};
 
 const getPlayer = (id) => {
-    return playerList.find(player => player.id === id)
-}
+    return playerList.find(player => player.id === id);
+};
 
 const removePlayer = (id) => {
-    const index = playerList.findIndex(player => player.id === id)
-    return playerList.splice(index, 1)[0]
-}
+    const index = playerList.findIndex(player => player.id === id);
+    return playerList.splice(index, 1)[0];
+};
 
 const getPlayersInRoom = (room) => {
-    return playerList.filter(player => player.room === room)
-}
+    return playerList.filter(player => player.room === room);
+};
 
 //----------------------------------------------------------------------------------
 //Socket Methods
@@ -40,38 +38,54 @@ const getPlayersInRoom = (room) => {
 io.on('connection', socket => {
     socket.on('join', (payload, callback) => {
         //If there are 4 players in room, return error
-        const players = getPlayersInRoom(payload.room)
+        const players = getPlayersInRoom(payload.room);
         if (players.length === 4) {
-            console.log("Full")
-            return callback("Room is Full!")
+            console.log("Full");
+            return callback("Full");
         }
         else {
-        console.log(`Player joined room: ${payload.room}`)
-            addPlayer(socket.id, payload.name, payload.room).then(
-                socket.join(payload.room),
-                io.to(payload.room).emit('roomData', {room: payload.room, players: players})
-            )
-            return callback()
+            console.log(`Player joined room: ${payload.room}`);
+            addPlayer(socket.id, payload.playerID, payload.name, payload.room);
+            socket.join(payload.room);
+            const currentPlayers = getPlayersInRoom(payload.room);
+            let initialPlayerList = [];
+            for (i = 0; i < currentPlayers.length; i++) {
+                let newPlayer = {
+                    id: currentPlayers[i].playerID,
+                    name: currentPlayers[i].name,
+                    cardCount: 8
+                };
+                initialPlayerList.push(newPlayer);
+            }
+            io.to(payload.room).emit('initialGameObject', {
+                turn: 1,
+                direction: false,
+                lastCardPlayed: 'empty',
+                playerList: initialPlayerList,
+                winner: 0,
+                gameStart: false
+            });
+            return callback();
         }
-    })
+    });
 
-    socket.on('leave', () => {
-        console.log("Player leaving")
-        const removedPlayer = removePlayer(socket.id)
-        if (removedPlayer) {
-            io.to(removedPlayer.room).emit('roomData', {room: removedPlayer.room, players: getPlayersInRoom(removedPlayer.room)})
-        }
-    })
+    socket.on('disconnect', () => {
+        console.log("Player leaving");
+        const player = getPlayer(socket.id);
+        removePlayer(socket.id);
+        io.to(player.room).emit('playerLeft', {
+            leftPlayer: player.playerID
+        });
+    });
 
-    socket.on('updateGame', (gameState) => {
-        console.log(`Received ${gameState.clicks}`)
-        const player = getPlayer(socket.id)
+    socket.on('updateGame', (gameObject) => {
+        const player = getPlayer(socket.id);
         if (player) {
-            io.to(player.room).emit('gameStateUpdate', gameState)
+            io.to(player.room).emit('gameObjectUpdate', gameObject);
         }
-    })
-})
+    });
+});
 
 httpServer.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`)
-})
+    console.log(`Listening on port ${PORT}`);
+});
