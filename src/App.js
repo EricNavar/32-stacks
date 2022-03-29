@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Routes,
   Route,
@@ -8,7 +9,21 @@ import {GameRules} from './GameRules.js';
 import {PlayScreen} from './PlayScreen.js';
 import {ServerTest} from './ServerTest.js';
 
+
 function App() {
+
+  // Constructor for game object
+  //
+  const [GameObject, SetGetObject] = React.useState({
+    user:"",
+    hand:[],
+    inPlay:[], // Cards that player is currently placing down
+    players:[],
+    lastCardPlayed: null,
+    currTurn:""
+  });
+
+
   return (
     <BrowserRouter>
       <Routes>
