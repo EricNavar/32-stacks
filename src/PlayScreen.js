@@ -447,7 +447,7 @@ function PlayScreen(props) {
       if (newGameObject.direction) {
         newGameObject.turn -= 1;
         if (newGameObject.turn < 1) { newGameObject.turn = 4 }
-        if (newGameObject.lastCardPlayed.value === 'skip') { newGameObject.turn -= 1; if (newGameObject.turn < 1) { newGameObject.turn = 4 } }
+        if (newGameObject.lastCardPlayed.value === 'skip') { newGameObject.turn -= 1; if (newGameObject.turn < 1) { newGameObject.turn = gameObjectPlayerNames.length } }
       }
       else {
         newGameObject.turn += 1;
