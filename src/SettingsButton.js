@@ -29,9 +29,6 @@ function SettingsButton(props) {
     setSettingsModalOpen(!settingsModalOpen);
   };
 
-  console.log(SettingsModal);
-  console.log(settingsModalOpen);
-
   return (
     <>
       <SettingsIconButton onClick={onClickSettingsButton}>
