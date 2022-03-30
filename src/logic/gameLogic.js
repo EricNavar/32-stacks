@@ -212,7 +212,7 @@ const WildDraw4Card = {
   gray: false
 };
 
-const chooseRandomNumberCard = () => {
+export const chooseRandomNumberCard = () => {
   return {
     color: chooseRandomColor(),
     value: String(Math.floor(Math.random() * 10)),

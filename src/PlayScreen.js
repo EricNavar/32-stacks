@@ -5,7 +5,7 @@ import PropTypes, { string } from 'prop-types';
 import io from 'socket.io-client';
 import { useParams, useNavigate } from "react-router-dom";
 //import local stuff later
-import { placeCard, drawCard, calculateCanPlaceCard, checkHand, isValidFirstCard } from './logic/gameLogic';
+import { placeCard, drawCard, calculateCanPlaceCard, checkHand, isValidFirstCard, chooseRandomNumberCard } from './logic/gameLogic';
 import { yourCards, otherPlayers, inPlayTemp } from './sampleData.js';
 import { ColorPicker } from './modals/ColorPicker';
 import { EndingModal } from './modals/EndingModal';
@@ -231,6 +231,7 @@ function PlayScreen(props) {
   const startGame = () => {
     let temp = { ...gameObject };
     temp.gameStart = true;
+    temp.lastCardPlayed = chooseRandomNumberCard();
     updateGame(temp);
   };
 
@@ -321,7 +322,6 @@ function PlayScreen(props) {
     if (gameObject === undefined) {
       return;
     }
-    console.log(gameObject);
     //Check if game is over
     if (gameObject.winner !== 0) {
       if (gameObject.winner === 'restart') {
@@ -434,23 +434,26 @@ function PlayScreen(props) {
     //Check if no more cards are in player's hand and they win
     if (hand.length === 0) {
       newGameObject.winner = newGameObject.playerList.filter(player => player.id === playerID);
+      newGameObject.direction = false;
+      newGameObject.turn = 1;
+      newGameObject.lastCardPlayed = chooseRandomNumberCard();
     }
     //Check if reverse card
     else {
       if (newGameObject.lastCardPlayed.value === "reverse") {
         newGameObject.direction = !newGameObject.direction;
       }
-    }
-    //Updates turn and check skip
-    if (newGameObject.direction) {
-      newGameObject.turn -= 1;
-      if (newGameObject.turn < 1) { newGameObject.turn = 4 }
-      if (newGameObject.lastCardPlayed.value === 'skip') { newGameObject.turn -= 1; if (newGameObject.turn < 1) { newGameObject.turn = 4 } }
-    }
-    else {
-      newGameObject.turn += 1;
-      if (newGameObject.turn > gameObjectPlayerNames.length) { newGameObject.turn = 1 }
-      if (newGameObject.lastCardPlayed.value === 'skip') { newGameObject.turn += 1; if (newGameObject.turn > gameObjectPlayerNames.length) { newGameObject.turn = 1 } }
+      //Updates turn and check skip
+      if (newGameObject.direction) {
+        newGameObject.turn -= 1;
+        if (newGameObject.turn < 1) { newGameObject.turn = 4 }
+        if (newGameObject.lastCardPlayed.value === 'skip') { newGameObject.turn -= 1; if (newGameObject.turn < 1) { newGameObject.turn = 4 } }
+      }
+      else {
+        newGameObject.turn += 1;
+        if (newGameObject.turn > gameObjectPlayerNames.length) { newGameObject.turn = 1 }
+        if (newGameObject.lastCardPlayed.value === 'skip') { newGameObject.turn += 1; if (newGameObject.turn > gameObjectPlayerNames.length) { newGameObject.turn = 1 } }
+      }
     }
 
     setInPlay([]);
