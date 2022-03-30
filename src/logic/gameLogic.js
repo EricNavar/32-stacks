@@ -54,10 +54,10 @@ const isSpecialCard = (card) => {
 // toConsider is the card whose eligibility is being considered
 // lastCard is the last card that was put down
 export const isValidFirstCard = (toConsider, lastCard) => {
-  if (toConsider.value === lastCard.value || toConsider.color === lastCard.color) {
+  if (toConsider.value === lastCard.value || toConsider.color === lastCard.color || toConsider.color === 'rainbow') {
     return true;
   }
-  return isSpecialCard(toConsider);
+  return false;
 };
 
 // direction denotes the direction that the additional cards are going in

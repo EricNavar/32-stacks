@@ -14,10 +14,10 @@ import { Modal } from './modals/Modal.js';
 import Logo from './assets/logo.png';
 import { Card, CardButton } from './Cards';
 
-const ENDPOINT = "https://myrpgstats.com";
+// const ENDPOINT = "https://myrpgstats.com";
 
 //Development endpoint
-// const ENDPOINT = "http://localhost:8080";
+const ENDPOINT = "http://localhost:8080";
 
 let socket;
 
@@ -223,6 +223,7 @@ function PlayScreen(props) {
       }
       if (lobbyModalOpen && gameObject.gameStart) {
         setLobbyModalOpen(false);
+        randomizeHand();
       }
     }
   }, [gameObject]);
@@ -230,8 +231,24 @@ function PlayScreen(props) {
   const startGame = () => {
     let temp = { ...gameObject };
     temp.gameStart = true;
-    setLobbyModalOpen(false);
+    updateGame(temp);
   };
+
+  const randomizeHand = () => {
+    let newHand = [];
+    for (let i = 0; i < 8; i++) {
+      newHand.push(drawCard());
+    }
+    const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
+    setHand(checkHand(newHand, lastCard, inPlay, direction, setDirection));
+  }
+
+  const restartGame = () => {
+    let temp = { ...gameObject };
+    temp.winner = 'restart';
+    randomizeHand();
+    updateGame(temp);
+  }
 
   const setPlayerName = (start) => {
     const players = gameObjectPlayerNames.filter(player => player !== props.name)
@@ -294,14 +311,25 @@ function PlayScreen(props) {
 
   //Check if game object updates
   useEffect(() => {
+    console.log(gameObject)
     //Check if game object is undefinded
     if (gameObject === undefined) {
       return;
     }
     //Check if game is over
     if (gameObject.winner !== 0) {
-      console.log("Game is over!")
-      setCenterText(`Winner: ${gameObject.winner[0].name}!`);
+      if (gameObject.winner === 'restart') {
+        let temp = { ...gameObject }
+        temp.winner = 0;
+        randomizeHand();
+        setEndingModalOpen(false);
+        updateGame(temp)
+      }
+      else {
+        console.log("Game is over!")
+        setCenterText(`Winner: ${gameObject.winner[0].name}!`);
+        setEndingModalOpen(true);
+      }
     }
     //Check if it is your turn and set turn
     if (turn === gameObject.turn && gameObject.lastCardPlayed !== 'empty') { setHand(checkHand(hand, gameObject.lastCardPlayed, [], direction, setDirection)); }
@@ -447,7 +475,7 @@ function PlayScreen(props) {
         </CallUnoButton>
       </PlayScreenMain>
       <Modal open={colorPickerOpen} setOpen={setColorPickerOpen} setNextColor={setNextColor} ModalComponent={ColorPicker} />
-      <Modal open={endingModalOpen} setOpen={setEndingModalOpen} ModalComponent={EndingModal} />
+      <Modal open={endingModalOpen} setOpen={setEndingModalOpen} ModalComponent={EndingModal} isHost={host} restartGame={restartGame} />
       <Modal open={lobbyModalOpen} setOpen={setLobbyModalOpen} ModalComponent={LobbyModal} players={gameObjectPlayerNames} isHost={host} startGame={startGame} />
     </>
   );
