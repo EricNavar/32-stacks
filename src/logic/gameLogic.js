@@ -27,13 +27,11 @@ export function checkHand(hand, lastCardPlayed, inPlay, direction, setDirection)
   return newHand;
 }
 
-export function calculateCanPlaceCard(hand, lastCardPlayed, inPlay) {
-  let i = 0;
-  while (i < hand.length) {
-    if (checkSingleCard(hand[i], lastCardPlayed, inPlay, "none")[0]) {
+export function calculateCanPlaceCard(hand) {
+  for (let i = 0; i < hand.length; i++) {
+    if (hand[i].gray === false) {
       return true;
     }
-    i++;
   }
   return false;
 }
@@ -206,18 +204,21 @@ export const drawCard = () => {
 
 const WildColorCard = {
   color: "rainbow",
-  value: "wild"
+  value: "wild",
+  gray: false
 };
 
 const WildDraw4Card = {
   color: "rainbow",
-  value: "draw4"
+  value: "draw4",
+  gray: false
 };
 
 const chooseRandomNumberCard = () => {
   return {
     color: chooseRandomColor(),
-    value: Math.floor(Math.random() * 10)
+    value: String(Math.floor(Math.random() * 10)),
+    gray: false
   };
 };
 
@@ -225,14 +226,15 @@ const chooseRandomActionCard = () => {
   const rand = Math.floor(Math.random() * 3);
   let value = "";
   if (rand < 1)
-    value = "Draw 2";
+    value = "draw2";
   else if (rand < 2)
-    value = "Reverse";
+    value = "reverse";
   else
-    value = "Skip";
+    value = "skip";
   return {
     color: chooseRandomColor(),
-    value: value
+    value: value,
+    gray: false
   };
 };
 

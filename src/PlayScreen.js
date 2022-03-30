@@ -342,10 +342,12 @@ function PlayScreen(props) {
   const onClickDrawPile = () => {
     // you can only draw a card if you have no available cards, it's your turn,
     // and you haven't placed a first card
-    if (!canPlaceCard(hand, lastCardPlayed, inPlay) || turn !== myId || inPlay.length !== 0) {
-      return;
+    if (!calculateCanPlaceCard(hand) && inPlay.length === 0) {
+      let newHand = [...hand];
+      newHand.push(drawCard())
+      const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
+      setHand(checkHand(newHand, lastCard, inPlay, direction, setDirection))
     }
-    hand.push(drawCard());
   };
 
   const onClickCardButton = (card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection) => {
@@ -435,7 +437,7 @@ function PlayScreen(props) {
           <p>{centerText}</p>
           <div style={{ display: 'flex' }}>
             <Card id="discard-pile" color={lastCardPlayed.color} value={lastCardPlayed.value} />
-            <CardButton id="draw-pile" onClick={onClickDrawPile} color="wild" gray={false} value="DRAW" disabled={myId !== turn || canPlaceCard}>
+            <CardButton id="draw-pile" onClick={onClickDrawPile} color="rainbow" gray={false} value="wild" myTurn={true}>
               Draw
             </CardButton>
           </div>
