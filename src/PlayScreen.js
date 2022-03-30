@@ -14,10 +14,10 @@ import { Modal } from './modals/Modal.js';
 import Logo from './assets/logo.png';
 import { Card, CardButton } from './Cards';
 
-// const ENDPOINT = "https://myrpgstats.com";
+const ENDPOINT = "https://myrpgstats.com";
 
 //Development endpoint
-const ENDPOINT = "http://localhost:8080";
+// const ENDPOINT = "http://localhost:8080";
 
 let socket;
 
@@ -321,6 +321,7 @@ function PlayScreen(props) {
     if (gameObject === undefined) {
       return;
     }
+    console.log(gameObject);
     //Check if game is over
     if (gameObject.winner !== 0) {
       if (gameObject.winner === 'restart') {
@@ -335,11 +336,21 @@ function PlayScreen(props) {
         setEndingModalOpen(true);
       }
     }
-    //Check if it is your turn and set turn
+    //Check if it is your turn and set turn, then check if draw cards were played
     if (turn === gameObject.turn && gameObject.lastCardPlayed !== 'empty') { setHand(checkHand(hand, gameObject.lastCardPlayed, [], direction)); }
     setTurn(gameObject.turn)
     if (gameObject.turn === gameObject.playerList.findIndex(player => playerID === player.id) + 1) {
       setMyTurn(true);
+      if (gameObject.lastCardPlayed.value === 'draw2') {
+        let newHand = [...hand];
+        newHand.push(drawCard()); newHand.push(drawCard());
+        setHand(checkHand(newHand, gameObject.lastCardPlayed, [], gameObject.direction))
+      }
+      if (gameObject.lastCardPlayed.value === 'draw4') {
+        let newHand = [...hand];
+        newHand.push(drawCard()); newHand.push(drawCard()); newHand.push(drawCard()); newHand.push(drawCard());
+        setHand(checkHand(newHand, gameObject.lastCardPlayed, [], gameObject.direction))
+      }
     }
     else {
       setMyTurn(false);
@@ -415,9 +426,6 @@ function PlayScreen(props) {
     setTopOfStack(inPlay[inPlay.size - 1]);
 
     let newGameObject = { ...gameObject };
-    //Updates turn
-    newGameObject.turn += 1;
-    if (newGameObject.turn > gameObjectPlayerNames.length) { newGameObject.turn = 1 }
     //Sends last card played
     newGameObject.lastCardPlayed = inPlay.slice(-1).pop();
     if (newGameObject.lastCardPlayed.color === 'rainbow') {
@@ -426,6 +434,23 @@ function PlayScreen(props) {
     //Check if no more cards are in player's hand and they win
     if (hand.length === 0) {
       newGameObject.winner = newGameObject.playerList.filter(player => player.id === playerID);
+    }
+    //Check if reverse card
+    else {
+      if (newGameObject.lastCardPlayed.value === "reverse") {
+        newGameObject.direction = !newGameObject.direction;
+      }
+    }
+    //Updates turn and check skip
+    if (newGameObject.direction) {
+      newGameObject.turn -= 1;
+      if (newGameObject.turn < 1) { newGameObject.turn = 4 }
+      if (newGameObject.lastCardPlayed.value === 'skip') { newGameObject.turn -= 1; if (newGameObject.turn < 1) { newGameObject.turn = 4 } }
+    }
+    else {
+      newGameObject.turn += 1;
+      if (newGameObject.turn > gameObjectPlayerNames.length) { newGameObject.turn = 1 }
+      if (newGameObject.lastCardPlayed.value === 'skip') { newGameObject.turn += 1; if (newGameObject.turn > gameObjectPlayerNames.length) { newGameObject.turn = 1 } }
     }
 
     setInPlay([]);
