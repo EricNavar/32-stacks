@@ -375,7 +375,7 @@ function PlayScreen(props) {
   const onClickDrawPile = () => {
     // you can only draw a card if you have no available cards, it's your turn,
     // and you haven't placed a first card
-    if (!calculateCanPlaceCard(hand) && inPlay.length === 0) {
+    if (!calculateCanPlaceCard(hand) && inPlay.length === 0 && myTurn) {
       let newHand = [...hand];
       newHand.push(drawCard())
       const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
