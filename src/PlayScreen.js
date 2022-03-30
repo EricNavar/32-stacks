@@ -201,12 +201,13 @@ function PlayScreen(props) {
     value: '3',
     gray: false
   });
-  const [hand, setHand] = React.useState(
-    yourCards.map(card => {
-      card.gray = !isValidFirstCard(card, lastCardPlayed);
-      return card;
-    })
-  );
+  const [hand, setHand] = React.useState(() => {
+    let newHand = [];
+    for (let i = 0; i < 8; i++) {
+      newHand.push(drawCard());
+    }
+    return checkHand(newHand, lastCardPlayed, inPlay, direction);
+  });
 
   const [colorPickerOpen, setColorPickerOpen] = React.useState(false);
   const [endingModalOpen, setEndingModalOpen] = React.useState(false);
@@ -223,7 +224,6 @@ function PlayScreen(props) {
       }
       if (lobbyModalOpen && gameObject.gameStart) {
         setLobbyModalOpen(false);
-        randomizeHand();
       }
     }
   }, [gameObject]);
@@ -446,7 +446,7 @@ function PlayScreen(props) {
       //Updates turn and check skip
       if (newGameObject.direction) {
         newGameObject.turn -= 1;
-        if (newGameObject.turn < 1) { newGameObject.turn = 4 }
+        if (newGameObject.turn < 1) { newGameObject.turn = newGameObject.turn = gameObjectPlayerNames.length }
         if (newGameObject.lastCardPlayed.value === 'skip') { newGameObject.turn -= 1; if (newGameObject.turn < 1) { newGameObject.turn = gameObjectPlayerNames.length } }
       }
       else {
