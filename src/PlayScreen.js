@@ -379,6 +379,7 @@ function PlayScreen(props) {
     }
 
     setInPlay([]);
+    setDirection("none");
     updateGame(newGameObject);
   };
 
