@@ -14,10 +14,10 @@ import { Modal } from './modals/Modal.js';
 import Logo from './assets/logo.png';
 import { Card, CardButton } from './Cards';
 
-// const ENDPOINT = "https://myrpgstats.com";
+const ENDPOINT = "https://myrpgstats.com";
 
 //Development endpoint
-const ENDPOINT = "http://localhost:8080";
+// const ENDPOINT = "http://localhost:8080";
 
 let socket;
 
