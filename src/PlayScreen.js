@@ -14,10 +14,10 @@ import { Modal } from './modals/Modal.js';
 import Logo from './assets/logo.png';
 import { Card, CardButton } from './Cards';
 
-const ENDPOINT = "https://myrpgstats.com";
+// const ENDPOINT = "https://myrpgstats.com";
 
 //Development endpoint
-// const ENDPOINT = "http://localhost:8080";
+const ENDPOINT = "http://localhost:8080";
 
 let socket;
 
@@ -240,7 +240,7 @@ function PlayScreen(props) {
       newHand.push(drawCard());
     }
     const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
-    setHand(checkHand(newHand, lastCard, inPlay, direction, setDirection));
+    setHand(checkHand(newHand, lastCard, inPlay, direction));
   }
 
   const restartGame = () => {
@@ -317,7 +317,6 @@ function PlayScreen(props) {
 
   //Check if game object updates
   useEffect(() => {
-    console.log(gameObject)
     //Check if game object is undefinded
     if (gameObject === undefined) {
       return;
@@ -337,7 +336,7 @@ function PlayScreen(props) {
       }
     }
     //Check if it is your turn and set turn
-    if (turn === gameObject.turn && gameObject.lastCardPlayed !== 'empty') { setHand(checkHand(hand, gameObject.lastCardPlayed, [], direction, setDirection)); }
+    if (turn === gameObject.turn && gameObject.lastCardPlayed !== 'empty') { setHand(checkHand(hand, gameObject.lastCardPlayed, [], direction)); }
     setTurn(gameObject.turn)
     if (gameObject.turn === gameObject.playerList.findIndex(player => playerID === player.id) + 1) {
       setMyTurn(true);
@@ -364,7 +363,7 @@ function PlayScreen(props) {
 
   //check hand when the turn changes
   useEffect(() => {
-    setHand(checkHand(hand, lastCardPlayed, inPlay, direction, setDirection));
+    setHand(checkHand(hand, lastCardPlayed, inPlay, direction));
     if (gameObject !== undefined && gameObject.winner === 0) {
       setCenterText(`Player ${turn}'s turn: ${gameObjectPlayerNames[turn - 1]}`);
     }
@@ -379,16 +378,32 @@ function PlayScreen(props) {
       let newHand = [...hand];
       newHand.push(drawCard())
       const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
-      setHand(checkHand(newHand, lastCard, inPlay, direction, setDirection))
+      setHand(checkHand(newHand, lastCard, inPlay, direction))
     }
   };
 
-  const onClickCardButton = (card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection) => {
+  const onClickCardButton = (card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction) => {
     placeCard(card, hand, setHand, inPlay, setInPlay, setTopOfStack);
     // If no cards have been placed, consider the last card on the discard pile.
     // Otherwise, the last card in this temporary stack
     const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
-    const checkedHand = checkHand(hand, lastCard, inPlay, direction, setDirection);
+
+    //Check direction if at least one card has been placed
+    if (inPlay.length > 1) {
+      const previousStackCard = inPlay[inPlay.length - 2];
+      let newDirection = direction;
+      if (!isNaN(previousStackCard.value) && !isNaN(card.value) && direction === 'none') {
+        if (Number(previousStackCard.value) < Number(card.value)) {
+          newDirection = "increasing"
+        }
+        if (Number(previousStackCard.value) > Number(card.value)) {
+          newDirection = "decreasing"
+        }
+      }
+      setDirection(newDirection)
+    }
+
+    const checkedHand = checkHand(hand, lastCard, inPlay, direction);
     setHand(checkedHand);
     if (card.color === "rainbow") {
       setColorPickerOpen(true);
@@ -458,7 +473,7 @@ function PlayScreen(props) {
                 id={`card-button-${index}`}
                 key={index}
                 onClick={() =>
-                  onClickCardButton(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection)
+                  onClickCardButton(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction)
                 }
                 {...card}
                 myTurn={myTurn}

@@ -9,7 +9,7 @@ export function placeCard(card, hand, setHand, inPlay, setInPlay, setTopOfStack)
 }
 
 // Checks player's entire hand and grays out nonplayable cards
-export function checkHand(hand, lastCardPlayed, inPlay, direction, setDirection) {
+export function checkHand(hand, lastCardPlayed, inPlay, direction) {
   let newHand = [];
   for (let i = 0; i < hand.length; i++) {
     //if the last card put down is rainbow, you can't put down any new cards.
@@ -19,7 +19,7 @@ export function checkHand(hand, lastCardPlayed, inPlay, direction, setDirection)
       newHand.push(toAdd);
     }
     else {
-      const result = checkSingleCard(hand[i], lastCardPlayed, inPlay, direction, setDirection);
+      const result = checkSingleCard(hand[i], lastCardPlayed, inPlay, direction);
       const toAdd = { color: hand[i].color, value: hand[i].value, gray: !result }
       newHand.push(toAdd);
     }
@@ -37,12 +37,12 @@ export function calculateCanPlaceCard(hand) {
 }
 
 // Drops one card at a time
-function checkSingleCard(toConsider, lastCardPlayed, inPlay, direction, setDirection) {
+function checkSingleCard(toConsider, lastCardPlayed, inPlay, direction) {
   if (inPlay.length === 0) {
     return isValidFirstCard(toConsider, lastCardPlayed);
   }
   else {
-    const result = isValidAdditionalCard(toConsider, inPlay[inPlay.length - 1], direction, setDirection);
+    const result = isValidAdditionalCard(toConsider, inPlay[inPlay.length - 1], direction);
     return result;
   }
 }
@@ -66,7 +66,7 @@ export const isValidFirstCard = (toConsider, lastCard) => {
 //   - direction = "none" if neither
 // returns an array containing first if the additional card is valid, and second, the direction
 // in which it's increasing or decreasing
-export const isValidAdditionalCard = (toConsider, lastCard, direction, setDirection) => {
+export const isValidAdditionalCard = (toConsider, lastCard, direction) => {
   if (isSpecialCard(toConsider)) {
     return false;
   }
@@ -75,17 +75,17 @@ export const isValidAdditionalCard = (toConsider, lastCard, direction, setDirect
   }
   if (isValidDecreasingCard(toConsider, lastCard)) {
     if (direction !== "increasing") {
-      if (direction === "none") {
-        setDirection("decreasing");
-      }
+      // if (direction === "none") {
+      //   setDirection("decreasing");
+      // }
       return true;
     }
   }
   else if (isValidIncreasingCard(toConsider, lastCard)) {
     if (direction !== "decreasing") {
-      if (direction === "none") {
-        setDirection("increasing");
-      }
+      // if (direction === "none") {
+      //   setDirection("increasing");
+      // }
       return true;
     }
   }
@@ -109,15 +109,13 @@ const isGreaterThan = (cardA, cardB) => {
 };
 
 // The card being put down must be a special card or be greater than by one or be of the same value
-// TODO
 const isValidIncreasingCard = (card, topOfInPlay) => {
-  return Number(card.value) === Number(topOfInPlay.value) + 1 || (Number(card.value) === 0 && Number(topOfInPlay.value) === 9);
+  return Number(card.value) === Number(topOfInPlay.value) + 1 || ((Number(card.value) === 0 && Number(topOfInPlay.value) === 9));
 };
 
 // The card being put down must be a special card or be less than by one or be of the same value
-// TODO
 const isValidDecreasingCard = (card, topOfInPlay) => {
-  return Number(card.value) === Number(topOfInPlay.value) - 1 || (Number(card.value) === 9 && Number(topOfInPlay.value) === 0);
+  return Number(card.value) === Number(topOfInPlay.value) - 1 || ((Number(card.value) === 9 && Number(topOfInPlay.value) === 0));
 };
 
 export const addCardToPlayer = (players, playerId, addCount) => {
