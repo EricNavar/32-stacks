@@ -309,6 +309,12 @@ function PlayScreen(props) {
     }
   };
 
+  useEffect(() => {
+    if (!endingModalOpen) {
+      randomizeHand();
+    }
+  }, [endingModalOpen])
+
   //Check if game object updates
   useEffect(() => {
     console.log(gameObject)
@@ -321,7 +327,6 @@ function PlayScreen(props) {
       if (gameObject.winner === 'restart') {
         let temp = { ...gameObject }
         temp.winner = 0;
-        randomizeHand();
         setEndingModalOpen(false);
         updateGame(temp)
       }
