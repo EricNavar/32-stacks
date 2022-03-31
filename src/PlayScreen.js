@@ -245,16 +245,13 @@ function PlayScreen(props) {
   }
 
   const restartGame = () => {
-    let temp = { ...gameObject };
-    temp.winner = 'restart';
+    let newGameObject = { ...gameObject };
+    newGameObject.winner = 'restart';
     randomizeHand();
-    updateGame(temp);
-  }
-
-  const setPlayerName = (start) => {
-    const players = gameObjectPlayerNames.filter(player => player !== props.name)
-    let player = players.length > start ? players[start] : "greg's dad";
-    return player
+    for (let i = 0; i < gameObjectPlayerNames.length; i++) {
+      newGameObject.playerList[i].cardCount = 8;
+    }
+    updateGame(newGameObject);
   }
 
   //Socket.io --------------------------------------------------------------------
@@ -322,12 +319,14 @@ function PlayScreen(props) {
     if (gameObject === undefined) {
       return;
     }
+    console.log(gameObject);
     //Check if game is over
     if (gameObject.winner !== 0) {
       if (gameObject.winner === 'restart') {
         let temp = { ...gameObject }
         temp.winner = 0;
         setEndingModalOpen(false);
+        setCenterText(`Player ${turn}'s turn: ${gameObjectPlayerNames[turn - 1]}`);
         updateGame(temp)
       }
       else {
@@ -343,12 +342,12 @@ function PlayScreen(props) {
       setMyTurn(true);
       if (gameObject.lastCardPlayed.value === 'draw2') {
         let newHand = [...hand];
-        newHand.push(drawCard()); newHand.push(drawCard());
+        for (let i = 0; i < 2; i++) { newHand.push(drawCard()); }
         setHand(checkHand(newHand, gameObject.lastCardPlayed, [], gameObject.direction))
       }
       if (gameObject.lastCardPlayed.value === 'draw4') {
         let newHand = [...hand];
-        newHand.push(drawCard()); newHand.push(drawCard()); newHand.push(drawCard()); newHand.push(drawCard());
+        for (let i = 0; i < 4; i++) { newHand.push(drawCard()); }
         setHand(checkHand(newHand, gameObject.lastCardPlayed, [], gameObject.direction))
       }
     }
@@ -374,10 +373,8 @@ function PlayScreen(props) {
 
   //check hand when the turn changes
   useEffect(() => {
+    setCenterText(`Player ${turn}'s turn: ${gameObjectPlayerNames[turn - 1]}`);
     setHand(checkHand(hand, lastCardPlayed, inPlay, direction));
-    if (gameObject !== undefined && gameObject.winner === 0) {
-      setCenterText(`Player ${turn}'s turn: ${gameObjectPlayerNames[turn - 1]}`);
-    }
   }, [turn]);
 
   const myHandOffset = (hand.length * 70) / 2;
@@ -455,28 +452,75 @@ function PlayScreen(props) {
         if (newGameObject.lastCardPlayed.value === 'skip') { newGameObject.turn += 1; if (newGameObject.turn > gameObjectPlayerNames.length) { newGameObject.turn = 1 } }
       }
     }
+    const thisPlayer = newGameObject.playerList.filter(player => player.id === playerID);
+    const playerIndex = (newGameObject.playerList.indexOf(thisPlayer[0]));
+    newGameObject.playerList[playerIndex].cardCount = hand.length;
+    if (newGameObject.lastCardPlayed.value === 'draw2') {
+      newGameObject.playerList[newGameObject.turn - 1].cardCount += 2;
+    }
+    else if (newGameObject.lastCardPlayed.value === 'draw4') {
+      newGameObject.playerList[newGameObject.turn - 1].cardCount += 4;
+    }
 
     setInPlay([]);
     setDirection("none");
     updateGame(newGameObject);
   };
 
+  const getHandLength = (index) => {
+    if (gameObject === undefined) {
+      return 8;
+    }
+    let otherPlayers = [...gameObject.playerList];
+    while (otherPlayers[0].id !== playerID) {
+      let temp = otherPlayers.shift();
+      otherPlayers.push(temp);
+    }
+    otherPlayers.shift();
+
+    if (otherPlayers.length <= index) {
+      return 0;
+    }
+    else {
+      return otherPlayers[index].cardCount;
+    }
+  }
+
+  const setPlayerName = (index) => {
+    if (gameObject === undefined) {
+      return "";
+    }
+    let otherPlayers = [...gameObject.playerList];
+    while (otherPlayers[0].id !== playerID) {
+      let temp = otherPlayers.shift();
+      otherPlayers.push(temp);
+    }
+    otherPlayers.shift();
+
+    if (otherPlayers.length <= index) {
+      return "";
+    }
+    else {
+      return otherPlayers[index].name;
+    }
+  }
+
   return (
     <>
       <PlayScreenMain selectedBackground={props.backgrounds[props.selectedBackground]}>
-        <TopPlayerUsername >{setPlayerName(1)}</TopPlayerUsername>
+        <TopPlayerUsername hidden={setPlayerName(1) === 0}>{setPlayerName(1)}</TopPlayerUsername>
         <TopPlayerHandContainer>
-          <div style={{ display: 'max-content' }}>
-            {Array.apply(null, { length: players[topPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
+          <div hidden={setPlayerName(1) === 0} style={{ display: 'max-content' }}>
+            {Array.apply(null, { length: getHandLength(1) }).map((card, index) => <HiddenCard key={index} />)}
           </div>
         </TopPlayerHandContainer>
-        <LeftPlayerUsername >{setPlayerName(0)}</LeftPlayerUsername>
-        <LeftPlayerHandContainer style={{ width: 'min-content' }}>
-          {Array.apply(null, { length: players[leftPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
+        <LeftPlayerUsername hidden={setPlayerName(0) === 0}>{setPlayerName(0)}</LeftPlayerUsername>
+        <LeftPlayerHandContainer hidden={setPlayerName(0) === 0} style={{ width: 'min-content' }}>
+          {Array.apply(null, { length: getHandLength(0) }).map((card, index) => <HiddenCard key={index} />)}
         </LeftPlayerHandContainer>
-        <RightPlayerUsername >{setPlayerName(2)}</RightPlayerUsername>
-        <RightPlayerHandContainer style={{ width: 'min-content' }}>
-          {Array.apply(null, { length: players[rightPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
+        <RightPlayerUsername hidden={setPlayerName(2) === 0}>{setPlayerName(2)}</RightPlayerUsername>
+        <RightPlayerHandContainer hidden={setPlayerName(2) === 0} style={{ width: 'min-content' }}>
+          {Array.apply(null, { length: getHandLength(2) }).map((card, index) => <HiddenCard key={index} />)}
         </RightPlayerHandContainer>
 
         {inPlay.length > 0 &&
