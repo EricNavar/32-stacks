@@ -400,10 +400,10 @@ function PlayScreen(props) {
     if (inPlay.length > 1) {
       const previousStackCard = inPlay[inPlay.length - 2];
       if (!isNaN(previousStackCard.value) && !isNaN(card.value) && direction === 'none') {
-        if (Number(previousStackCard.value) < Number(card.value)) {
+        if (Number(previousStackCard.value) < Number(card.value) || (Number(previousStackCard.value) == 9 && Number(card.value) == 0)) {
           newDirection = "increasing"
         }
-        if (Number(previousStackCard.value) > Number(card.value)) {
+        else if (Number(previousStackCard.value) > Number(card.value) || (Number(previousStackCard.value) == 0 && Number(card.value) == 9)) {
           newDirection = "decreasing"
         }
       }
