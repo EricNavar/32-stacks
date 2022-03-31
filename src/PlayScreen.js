@@ -478,6 +478,13 @@ function PlayScreen(props) {
     }
     otherPlayers.shift();
 
+    if (otherPlayers.length === 1) {
+      if (index === 1) {
+        return otherPlayers[0].cardCount;
+      }
+      return 0;
+    }
+
     if (otherPlayers.length <= index) {
       return 0;
     }
@@ -496,6 +503,13 @@ function PlayScreen(props) {
       otherPlayers.push(temp);
     }
     otherPlayers.shift();
+
+    if (otherPlayers.length === 1) {
+      if (index === 1) {
+        return otherPlayers[0].name;
+      }
+      return "";
+    }
 
     if (otherPlayers.length <= index) {
       return "";
