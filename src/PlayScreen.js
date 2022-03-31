@@ -319,7 +319,6 @@ function PlayScreen(props) {
     if (gameObject === undefined) {
       return;
     }
-    console.log(gameObject);
     //Check if game is over
     if (gameObject.winner !== 0) {
       if (gameObject.winner === 'restart') {
@@ -397,9 +396,9 @@ function PlayScreen(props) {
     const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
 
     //Check direction if at least one card has been placed
+    let newDirection = direction;
     if (inPlay.length > 1) {
       const previousStackCard = inPlay[inPlay.length - 2];
-      let newDirection = direction;
       if (!isNaN(previousStackCard.value) && !isNaN(card.value) && direction === 'none') {
         if (Number(previousStackCard.value) < Number(card.value)) {
           newDirection = "increasing"
@@ -411,7 +410,7 @@ function PlayScreen(props) {
       setDirection(newDirection)
     }
 
-    const checkedHand = checkHand(hand, lastCard, inPlay, direction);
+    const checkedHand = checkHand(hand, lastCard, inPlay, newDirection);
     setHand(checkedHand);
     if (card.color === "rainbow") {
       setColorPickerOpen(true);
