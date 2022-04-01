@@ -1,8 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import styled from 'styled-components';
 import { PropTypes } from 'prop-types';
 import { SettingsModal } from './modals/SettingsModal';
 import SettingsIcon from './assets/settings-icon';
+import { Modal } from './modals/Modal';
 
 const SettingsIconButton = styled.button`
   background: white;
@@ -13,7 +15,12 @@ const SettingsIconButton = styled.button`
   width: 40px;
   border-radius: 20px;
   border-style: none;
+  z-index: 300
 `;
+
+function Test() {
+  return <div style={{ color: 'black' }}>HELLO</div>
+}
 
 function SettingsButton(props) {
   const [settingsModalOpen, setSettingsModalOpen] = React.useState(false);
@@ -22,12 +29,15 @@ function SettingsButton(props) {
     setSettingsModalOpen(!settingsModalOpen);
   };
 
+  console.log(SettingsModal);
+  console.log(settingsModalOpen);
+
   return (
     <>
       <SettingsIconButton onClick={onClickSettingsButton}>
-        <SettingsIcon/>
+        <SettingsIcon />
       </SettingsIconButton>
-      <SettingsModal open={settingsModalOpen} backgrounds={props.backgrounds} setSelectedBackground={props.setSelectedBackground}/> 
+      <Modal open={settingsModalOpen} ModalComponent={SettingsModal} zIndex={200} backgrounds={props.backgrounds} setSelectedBackground={props.setSelectedBackground} />
     </>
   );
 }

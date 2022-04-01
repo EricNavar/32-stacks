@@ -4,8 +4,12 @@ import PropTypes from 'prop-types';
 
 const Background = styled.div`
   height: 100vh;
-  width: 100vh;
-  background: rgba(0,0,0,.2);
+  width: 100vw;
+  background: rgba(0,0,0,.5);
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  z-index: ${props => props.zIndex};
 `
 
 const ModalPaper = styled.div`
@@ -26,10 +30,11 @@ const ModalPaper = styled.div`
 `;
 
 export function Modal(props) {
-  const { open, ModalComponent, ...otherProps } = props;
+  const { open, ModalComponent, zIndex, ...otherProps } = props;
+  console.log(props);
   if (open) {
     return (
-      <Background>
+      <Background zIndex={zIndex}>
         <ModalPaper>
           <ModalComponent {...otherProps} />
         </ModalPaper>
@@ -42,5 +47,6 @@ export function Modal(props) {
 }
 Modal.propTypes = {
   open: PropTypes.bool.isRequired,
-  ModalComponent: PropTypes.node.isRequired
+  ModalComponent: PropTypes.node.isRequired,
+  zIndex: PropTypes.number
 };
