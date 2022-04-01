@@ -15,6 +15,10 @@ const GameRulesMain = styled.main`
   margin-top: 3rem;
   margin-left: auto;
   margin-right: auto;
+  font-size: 1.2rem;
+  & li {
+    margin-bottom: 8px;
+  }
 `;
 
 const Title = styled.h1`
