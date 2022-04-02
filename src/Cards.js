@@ -22,7 +22,7 @@ const BlackBox = styled.div`
 
 const CardComponent = styled(StyledCard)`
   padding: 12px;
-  background: url("https://www.github.com/ericnavar/among-us-2-2/blob/master/${props => `${props.value}_${props.color}`}.png?raw=true");
+  background: url("https://www.github.com/ericnavar/among-us-2-2/blob/master/sand/${props => `${props.value}_${props.color}`}.png?raw=true");
   background-size: cover;
 `;
 

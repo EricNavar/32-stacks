@@ -9,7 +9,6 @@ const Background = styled.div`
   position: absolute;
   z-index: 1;
   top: 0;
-  color: red;
   z-index: ${props => props.zIndex};
 `
 
@@ -21,12 +20,11 @@ const ModalPaper = styled.div`
   max-height: 90vw;
   width: 466px;
   height: 466px;
-  z-index: 100;
   position: absolute;
   top: calc(50vh - 213px);
   left: calc(50vw - 223px);
   
-  color: black;
+  color: white;
   text-align: center;
   background: linear-gradient(
     90deg,
@@ -45,18 +43,14 @@ const ModalPaper = styled.div`
 `;
 
 const ModalPaperDiv = styled.div`
-  left: 12px;
-  position: relative;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  border: black;
   border-radius: 24px;
-  box-shadow: 0 0 0 8px black;
   background-color: black;
-  height: 95%;
-  width: 95%;
-  top: 12px;
+  height: 98%;
+  width: 98%;
+  margin: 1%
 `;
 
 export function Modal(props) {
