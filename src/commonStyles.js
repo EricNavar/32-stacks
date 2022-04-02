@@ -7,6 +7,7 @@ export const Button = styled.button`
   background-color: #5b6eb5;
   font-size: 1.5rem;
   border-radius: 4px;
+  height: fit-content;
 `;
 
 export const ModalTitle = styled.h2`
@@ -14,5 +15,5 @@ export const ModalTitle = styled.h2`
   font-weight: bold;
   textAlign: center;
   margin: 8px;
-  color: black;
+  color: white;
 `;

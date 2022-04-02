@@ -63,6 +63,7 @@ const JoinExistingGame = styled.button`
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   height: fit-content;
   text-decoration: none;
+  cursor: pointer;
   &:hover {
     color: cyan;
   }
@@ -158,7 +159,7 @@ function Home(props) {
         <LinksContainer>
           <CreateNewGame to={`/play/${generateRoomCode()}`}>Create a new game!</CreateNewGame>
 
-          <p style={{margin:12}}>
+          <p style={{ margin: 12 }}>
             or
           </p>
 

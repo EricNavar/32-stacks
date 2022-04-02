@@ -17,7 +17,7 @@ const GameRulesMain = styled.main`
   margin-right: auto;
   font-size: 1.2rem;
   & li {
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
 `;
 
@@ -46,7 +46,7 @@ function GameRules() {
           Your streak can overflow and underflow. If you put down 2,1,0, then you can then put down 9 and continue with a decreasing streak. Similarly, another valid streak is 7,8,9,0,1,2...
         </li>
         <li>
-          Multiple 2+ cards cards can be used at once.
+          Multiple Draw-2 cards cards can be used at once.
         </li>
         <li>
           You win by putting down all your cards.
