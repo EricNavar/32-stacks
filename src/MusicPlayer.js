@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const MenuButtons = styled.button`
   width: 94%;
@@ -51,8 +52,8 @@ const useAudio = url => {
   const toggle = () => setPlaying(!playing);
 
   useEffect(() => {
-      playing ? audio.play() : audio.pause();
-    },
+    playing ? audio.play() : audio.pause();
+  },
     [playing]
   );
 
@@ -66,7 +67,6 @@ const useAudio = url => {
   return [playing, toggle];
 };
 
-// eslint-disable-next-line react/prop-types
 const MusicPlayer = ({ url }) => {
   const [playing, toggle] = useAudio(url);
 
@@ -77,5 +77,8 @@ const MusicPlayer = ({ url }) => {
   );
 };
 
+MusicPlayer.propTypes = {
+  url: PropTypes.string.isRequired,
+}
 
-export {MusicPlayer};
+export { MusicPlayer };

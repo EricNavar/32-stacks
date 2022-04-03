@@ -40,17 +40,19 @@ const ModalPaper = styled.div`
     rgba(251, 7, 217, 1) 90%,
     rgba(255, 0, 0, 1) 100%
   );
+  overflow: hidden;
+
 `;
 
 const ModalPaperDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: flex-root;
   border-radius: 24px;
   background-color: black;
   height: 98%;
   width: 98%;
-  margin: 1%
+  margin: 1%;
+  padding: 12px;
+  box-sizing: border-box;
 `;
 
 export function Modal(props) {

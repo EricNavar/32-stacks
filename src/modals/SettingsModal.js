@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { MusicPlayer } from '../MusicPlayer';
+import CoolMusic from '../assets/shockwave_looped.mp3';
 
 const Title = styled.h2`
   width: 100%;
@@ -86,22 +87,20 @@ export function SettingsModal(props) {
         Settings
       </Title>
       <CardMenu>
-        
-          <h2>
-            Change Board Map
-          </h2>
-          {Object.keys(props.backgrounds).map((backgroundName, index) =>
-          <MenuButtons key={index} onClick={() => onClick(backgroundName)}>{backgroundName}</MenuButtons>   
-      )}
-            
+
+        <h2>
+          Change Board Map
+        </h2>
+        {Object.keys(props.backgrounds).map((backgroundName, index) =>
+          <MenuButtons key={index} onClick={() => onClick(backgroundName)}>{backgroundName}</MenuButtons>
+        )}
+
       </CardMenu>
       <CardMenu>
-        
-          <h2>Play Music</h2>
-          <MusicPlayer url="http://streaming.tdiradio.com:8000/house.mp3" />
-        
+        <h2>Play Music</h2>
+        <MusicPlayer url={CoolMusic} />
       </CardMenu>
-     
+
     </>
   );
 }
