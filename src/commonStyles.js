@@ -13,7 +13,8 @@ export const Button = styled.button`
 export const ModalTitle = styled.h2`
   width: 100%;
   font-weight: bold;
-  textAlign: center;
-  margin: 8px;
+  text-align: center;
+  margin: 0;
   color: white;
+  height: fit-content;
 `;

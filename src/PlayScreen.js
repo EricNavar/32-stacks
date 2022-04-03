@@ -1,12 +1,10 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import PropTypes, { string } from 'prop-types';
+import PropTypes from 'prop-types';
 import io from 'socket.io-client';
 import { useParams, useNavigate } from "react-router-dom";
 //import local stuff later
-import { placeCard, drawCard, calculateCanPlaceCard, checkHand, isValidFirstCard, chooseRandomNumberCard } from './logic/gameLogic';
-import { yourCards, otherPlayers, inPlayTemp } from './sampleData.js';
+import { placeCard, drawCard, calculateCanPlaceCard, checkHand, chooseRandomNumberCard } from './logic/gameLogic';
 import { ColorPicker } from './modals/ColorPicker';
 import { EndingModal } from './modals/EndingModal';
 import { LobbyModal } from './modals/LobbyModal.js';
@@ -62,13 +60,6 @@ const StyledCard = styled.div`
   box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
   box-sizing: border-box;
 `;
-
-//this is meant to be a button that wraps around a card
-const ButtonWrapper = styled.button`
-  margin: 0;
-  background: transparent;
-  border: 0;
-`
 
 // Drop cards here
 const CardDropper = styled(StyledCard)`
@@ -158,28 +149,8 @@ const TopPlayerUsername = styled(Username)`
   width: 100px;
 `;
 
-const CallUnoButton = styled.button`
-  padding: 12px;
-  border: 0;
-  background-color: #2949e6;
-  position: absolute;
-  bottom: 8px;
-  left: 8px;
-  color: white;
-  border-radius: 8px;
-  font-size: 1.2rem;
-`;
-
 function PlayScreen(props) {
   const playerID = props.playerID;
-  const myId = 0;
-  const [players, setPlayers] = React.useState(otherPlayers);
-  const otherPlayerIds = players.filter(player => player.id !== myId).map(player => player.playerId);
-  //TODO: fix the next 3 statements
-  const topPlayerId = otherPlayerIds[0];
-  const leftPlayerId = otherPlayerIds[1];
-  const rightPlayerId = otherPlayerIds[2];
-
   const [gameObject, setGameObject] = useState();
   const [gameObjectPlayerNames, setGameObjectPlayerNames] = useState([]);
   const [host, setHost] = useState(false);
@@ -212,8 +183,6 @@ function PlayScreen(props) {
   const [colorPickerOpen, setColorPickerOpen] = React.useState(false);
   const [endingModalOpen, setEndingModalOpen] = React.useState(false);
   const [nextColor, setNextColor] = React.useState(lastCardPlayed.color);
-  const [canPlaceCard, setCanPlaceCard] = React.useState();
-
 
   useEffect(() => {
     if (gameObject !== undefined) {
@@ -575,9 +544,6 @@ function PlayScreen(props) {
             </CardButton>
           </div>
         </Center>
-        <CallUnoButton>
-          CALL UNO
-        </CallUnoButton>
       </PlayScreenMain>
       <Modal open={colorPickerOpen} setOpen={setColorPickerOpen} setNextColor={setNextColor} ModalComponent={ColorPicker} />
       <Modal open={endingModalOpen} setOpen={setEndingModalOpen} ModalComponent={EndingModal} isHost={host} restartGame={restartGame} />
