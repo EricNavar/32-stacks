@@ -4,12 +4,12 @@ import {
   Route,
   BrowserRouter
 } from "react-router-dom";
-import {v4 as uuid} from "uuid";
-import {Home} from './Home.js';
-import {GameRules} from './GameRules.js';
-import {PlayScreen} from './PlayScreen.js';
-import {ServerTest} from './ServerTest.js';
-import { SettingsButton } from './SettingsButton'; 
+import { v4 as uuid } from "uuid";
+import { Home } from './Home.js';
+import { GameRules } from './GameRules.js';
+import { PlayScreen } from './PlayScreen.js';
+import { ServerTest } from './ServerTest.js';
+import { SettingsButton } from './SettingsButton';
 
 const backgrounds = {
   "Black wood": "https://github.com/EricNavar/among-us-2-2/blob/master/Wood.png?raw=true",
@@ -23,13 +23,13 @@ function App() {
   const [selectedBackground, setSelectedBackground] = useState("Black wood");
   return (
     <>
-      <SettingsButton selectedBackground={selectedBackground} setSelectedBackground={setSelectedBackground} backgrounds={backgrounds}/>
+      <SettingsButton selectedBackground={selectedBackground} setSelectedBackground={setSelectedBackground} backgrounds={backgrounds} />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home setName={setName} />} />
           <Route path="/rules" element={<GameRules />} />
-          <Route path="/play" element={<PlayScreen selectedBackground={selectedBackground} backgrounds={backgrounds}/>} />
-          <Route path="/play/:room" element={<PlayScreen name={name} playerID={playerID} selectedBackground={selectedBackground} backgrounds={backgrounds}/>} />
+          <Route path="/play" element={<PlayScreen selectedBackground={selectedBackground} backgrounds={backgrounds} />} />
+          <Route path="/play/:room" element={<PlayScreen name={name} playerID={playerID} selectedBackground={selectedBackground} backgrounds={backgrounds} />} />
           <Route path="/server-test/:room" element={<ServerTest />} />
         </Routes>
       </BrowserRouter>

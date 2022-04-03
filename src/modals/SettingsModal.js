@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { MusicPlayer } from '../MusicPlayer';
-import CoolMusic from '../assets/shockwave_looped.mp3';
+import Shockwave from '../assets/shockwave_looped.mp3';
+import Tetris99 from '../assets/tetris99.m4a';
+import Good4U from '../assets/good4u.m4a';
 
 const Title = styled.h2`
   width: 100%;
@@ -76,10 +78,31 @@ const MenuButtons = styled.button`
     transform: translate(12px, 12px)
   }
 `
+
+const songs = [
+  { name: "Shockwave", file: Shockwave },
+  { name: "Tetris 99", file: Tetris99 },
+  { name: "Good 4 U", file: Good4U }
+]
+
 export function SettingsModal(props) {
   const onClick = (backgroundName) => {
     props.setSelectedBackground(backgroundName);
   };
+
+  const [songIndex, setSongIndex] = React.useState(0);
+
+  const onClickBefore = () => {
+    let newSongIndex = songIndex - 1;
+    if (newSongIndex === -1) {
+      newSongIndex += songs.length;
+    }
+    setSongIndex(newSongIndex);
+  }
+
+  const onClickNext = () => {
+    setSongIndex((songIndex + 1) % songs.length);
+  }
 
   return (
     <>
@@ -98,7 +121,10 @@ export function SettingsModal(props) {
       </CardMenu>
       <CardMenu>
         <h2>Play Music</h2>
-        <MusicPlayer url={CoolMusic} />
+        <p>{songs[songIndex].name}</p>
+        <MusicPlayer url={songs[songIndex].file} />
+        <button onClick={onClickBefore}>before</button>
+        <button onClick={onClickNext}>next</button>
       </CardMenu>
 
     </>
