@@ -45,7 +45,8 @@ const ModalPaper = styled.div`
 `;
 
 const ModalPaperDiv = styled.div`
-  display: flex-root;
+  display: flex;
+  flex-wrap: wrap;
   border-radius: 24px;
   background-color: black;
   height: 98%;
@@ -53,6 +54,7 @@ const ModalPaperDiv = styled.div`
   margin: 1%;
   padding: 12px;
   box-sizing: border-box;
+  align-content: baseline;
 `;
 
 export function Modal(props) {
