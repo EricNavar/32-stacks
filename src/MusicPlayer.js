@@ -46,7 +46,7 @@ const MenuButtons = styled.button`
 // https://stackoverflow.com/questions/47686345/playing-sound-in-react-js
 
 const useAudio = url => {
-  const [audio] = useState(new Audio(url));
+  const [audio, setAudio] = useState(new Audio(url));
   const [playing, setPlaying] = useState(false);
 
   const toggle = () => setPlaying(!playing);
@@ -63,6 +63,15 @@ const useAudio = url => {
       audio.removeEventListener('ended', () => setPlaying(false));
     };
   }, []);
+
+  useEffect(() => {
+    let newAudio = audio;
+    newAudio.src = url;
+    newAudio.play();
+    setAudio(audio);
+    console.log(url);
+    console.log(audio);
+  }, [url]);
 
   return [playing, toggle];
 };
