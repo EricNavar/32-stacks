@@ -35,13 +35,14 @@ const StartGameButton = styled(Button)`
 `
 
 export function LobbyModal(props) {
-  const { isHost, players } = props;
+  const { isHost, players, room } = props;
   if (players !== undefined && players[0]) {
     return (
       <>
         <ModalTitle>
           {players[0]}&apos;s lobby
         </ModalTitle>
+        <ModalTitle style={{ fontSize: "120%", margin: "0px" }}>Room Code: {room}</ModalTitle>
         <PlayersContainer id="hello">
           {players.map((player, index) =>
             <PlayerCardWrapper key={index}>
@@ -66,5 +67,6 @@ export function LobbyModal(props) {
 LobbyModal.propTypes = {
   isHost: PropTypes.bool.isRequired,
   players: PropTypes.array,
-  startGame: PropTypes.func.isRequired
+  startGame: PropTypes.func.isRequired,
+  room: PropTypes.string,
 };
