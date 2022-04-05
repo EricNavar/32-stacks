@@ -15,7 +15,7 @@ const Title = styled.h2`
 `;
 
 
-const CardMenu = styled.div`
+const ChangeBoardCard = styled.div`
   text-align: center;
   display: grid;
   
@@ -37,7 +37,33 @@ const CardMenu = styled.div`
     rgb(255, 85, 85) 40px -40px
 `
 
+const ChangePlayMusicCard = styled.div`
+  text-align: center;
+  display: grid;
+  
+  height: 50%;
+  padding: 16px;
+  background: rgba(0,0,0,.9);
+  width: 100px;
+  margin: auto;
+  margin-top: auto;
+  border-radius: 8px;
+  margin-top: 50px;
+  margin-right: 4rem;
+  
+  box-shadow: 
+    blue 0px 0px 0px 2px inset, 
+    rgb(0, 0, 0) 10px -10px 0px -3px, 
+    rgb(31, 193, 27) 10px -10px, rgb(0, 0, 0) 20px -20px 0px -3px, 
+    rgb(255, 217, 19) 20px -20px, rgb(0, 0, 0) 30px -30px 0px -3px, 
+    rgb(255, 156, 85) 30px -30px, rgb(0, 0, 0) 40px -40px 0px -3px, 
+    rgb(255, 85, 85) 40px -40px
+`
 
+const CurrentSong = styled.p`
+  text-align: center;
+  margin: 4px;
+`
 const MenuButtons = styled.button`
   width: 94%;
   padding: 4px;
@@ -98,10 +124,12 @@ export function SettingsModal(props) {
       newSongIndex += songs.length;
     }
     setSongIndex(newSongIndex);
+    console.log(newSongIndex);
   }
 
   const onClickNext = () => {
     setSongIndex((songIndex + 1) % songs.length);
+    console.log(songIndex);
   }
 
   return (
@@ -109,7 +137,7 @@ export function SettingsModal(props) {
       <Title>
         Settings
       </Title>
-      <CardMenu>
+      <ChangeBoardCard>
 
         <h2>
           Change Board Map
@@ -118,14 +146,14 @@ export function SettingsModal(props) {
           <MenuButtons key={index} onClick={() => onClick(backgroundName)}>{backgroundName}</MenuButtons>
         )}
 
-      </CardMenu>
-      <CardMenu>
+      </ChangeBoardCard>
+      <ChangePlayMusicCard>
         <h2>Play Music</h2>
-        <p>{songs[songIndex].name}</p>
+        <CurrentSong>{songs[songIndex].name}</CurrentSong>
         <MusicPlayer url={songs[songIndex].file} />
-        <button onClick={onClickBefore}>before</button>
-        <button onClick={onClickNext}>next</button>
-      </CardMenu>
+        <MenuButtons onClick={onClickBefore}>before</MenuButtons>
+        <MenuButtons onClick={onClickNext}>next</MenuButtons>
+      </ChangePlayMusicCard>
 
     </>
   );
