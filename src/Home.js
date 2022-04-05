@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Logo from './assets/logo.png';
@@ -63,6 +62,7 @@ const JoinExistingGame = styled.button`
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   height: fit-content;
   text-decoration: none;
+  cursor: pointer;
   &:hover {
     color: cyan;
   }
@@ -151,14 +151,14 @@ function Home(props) {
             minLength="1"
             maxLength="15"
             size="10"
-            placeholder="name"
+            placeholder="Name"
           />
         </div>
 
         <LinksContainer>
           <CreateNewGame to={`/play/${generateRoomCode()}`}>Create a new game!</CreateNewGame>
 
-          <p style={{margin:12}}>
+          <p style={{ marginLeft: 12 }}>
             or
           </p>
 

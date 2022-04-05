@@ -13,30 +13,59 @@ const Background = styled.div`
 `
 
 const ModalPaper = styled.div`
-  border-radius: 8px;
-  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
-  background-color: white;
-  padding: 12px;
+ 
+  border-radius: 24px;
+  box-shadow: 0px 20px 30px -10px rgb(38, 57, 77);
   max-width: 90vh;
   max-height: 90vw;
-  width: 426px;
-  height: 446px;
-  z-index: 100;
+  width: 466px;
+  height: 466px;
   position: absolute;
   top: calc(50vh - 213px);
   left: calc(50vw - 223px);
-  color: black;
+  
+  color: white;
   text-align: center;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 1) 0%,
+    rgba(255, 154, 0, 1) 10%,
+    rgba(208, 222, 33, 1) 20%,
+    rgba(79, 220, 74, 1) 30%,
+    rgba(63, 218, 216, 1) 40%,
+    rgba(47, 201, 226, 1) 50%,
+    rgba(28, 127, 238, 1) 60%,
+    rgba(95, 21, 242, 1) 70%,
+    rgba(186, 12, 248, 1) 80%,
+    rgba(251, 7, 217, 1) 90%,
+    rgba(255, 0, 0, 1) 100%
+  );
+  overflow: hidden;
+
+`;
+
+const ModalPaperDiv = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 24px;
+  background-color: black;
+  height: 98%;
+  width: 98%;
+  margin: 1%;
+  padding: 12px;
+  box-sizing: border-box;
+  align-content: baseline;
 `;
 
 export function Modal(props) {
   const { open, ModalComponent, zIndex, ...otherProps } = props;
-  console.log(props);
   if (open) {
     return (
       <Background zIndex={zIndex}>
         <ModalPaper>
-          <ModalComponent {...otherProps} />
+          <ModalPaperDiv>
+            <ModalComponent {...otherProps} />
+          </ModalPaperDiv>
         </ModalPaper>
       </Background>
     );

@@ -1,12 +1,10 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import PropTypes, { string } from 'prop-types';
+import PropTypes from 'prop-types';
 import io from 'socket.io-client';
 import { useParams, useNavigate } from "react-router-dom";
 //import local stuff later
-import { placeCard, drawCard, calculateCanPlaceCard, checkHand, isValidFirstCard } from './logic/gameLogic';
-import { yourCards, otherPlayers, inPlayTemp } from './sampleData.js';
+import { placeCard, drawCard, calculateCanPlaceCard, checkHand, chooseRandomNumberCard } from './logic/gameLogic';
 import { ColorPicker } from './modals/ColorPicker';
 import { EndingModal } from './modals/EndingModal';
 import { LobbyModal } from './modals/LobbyModal.js';
@@ -62,13 +60,6 @@ const StyledCard = styled.div`
   box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
   box-sizing: border-box;
 `;
-
-//this is meant to be a button that wraps around a card
-const ButtonWrapper = styled.button`
-  margin: 0;
-  background: transparent;
-  border: 0;
-`
 
 // Drop cards here
 const CardDropper = styled(StyledCard)`
@@ -158,28 +149,8 @@ const TopPlayerUsername = styled(Username)`
   width: 100px;
 `;
 
-const CallUnoButton = styled.button`
-  padding: 12px;
-  border: 0;
-  background-color: #2949e6;
-  position: absolute;
-  bottom: 8px;
-  left: 8px;
-  color: white;
-  border-radius: 8px;
-  font-size: 1.2rem;
-`;
-
 function PlayScreen(props) {
   const playerID = props.playerID;
-  const myId = 0;
-  const [players, setPlayers] = React.useState(otherPlayers);
-  const otherPlayerIds = players.filter(player => player.id !== myId).map(player => player.playerId);
-  //TODO: fix the next 3 statements
-  const topPlayerId = otherPlayerIds[0];
-  const leftPlayerId = otherPlayerIds[1];
-  const rightPlayerId = otherPlayerIds[2];
-
   const [gameObject, setGameObject] = useState();
   const [gameObjectPlayerNames, setGameObjectPlayerNames] = useState([]);
   const [host, setHost] = useState(false);
@@ -201,18 +172,17 @@ function PlayScreen(props) {
     value: '3',
     gray: false
   });
-  const [hand, setHand] = React.useState(
-    yourCards.map(card => {
-      card.gray = !isValidFirstCard(card, lastCardPlayed);
-      return card;
-    })
-  );
+  const [hand, setHand] = React.useState(() => {
+    let newHand = [];
+    for (let i = 0; i < 8; i++) {
+      newHand.push(drawCard());
+    }
+    return checkHand(newHand, lastCardPlayed, inPlay, direction);
+  });
 
   const [colorPickerOpen, setColorPickerOpen] = React.useState(false);
   const [endingModalOpen, setEndingModalOpen] = React.useState(false);
   const [nextColor, setNextColor] = React.useState(lastCardPlayed.color);
-  const [canPlaceCard, setCanPlaceCard] = React.useState();
-
 
   useEffect(() => {
     if (gameObject !== undefined) {
@@ -230,13 +200,27 @@ function PlayScreen(props) {
   const startGame = () => {
     let temp = { ...gameObject };
     temp.gameStart = true;
-    setLobbyModalOpen(false);
+    temp.lastCardPlayed = chooseRandomNumberCard();
+    updateGame(temp);
   };
 
-  const setPlayerName = (start) => {
-    const players = gameObjectPlayerNames.filter(player => player !== props.name)
-    let player = players.length > start ? players[start] : "greg's dad";
-    return player
+  const randomizeHand = () => {
+    let newHand = [];
+    for (let i = 0; i < 8; i++) {
+      newHand.push(drawCard());
+    }
+    const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
+    setHand(checkHand(newHand, lastCard, inPlay, direction));
+  }
+
+  const restartGame = () => {
+    let newGameObject = { ...gameObject };
+    newGameObject.winner = 'restart';
+    randomizeHand();
+    for (let i = 0; i < gameObjectPlayerNames.length; i++) {
+      newGameObject.playerList[i].cardCount = 8;
+    }
+    updateGame(newGameObject);
   }
 
   //Socket.io --------------------------------------------------------------------
@@ -292,6 +276,12 @@ function PlayScreen(props) {
     }
   };
 
+  useEffect(() => {
+    if (!endingModalOpen) {
+      randomizeHand();
+    }
+  }, [endingModalOpen])
+
   //Check if game object updates
   useEffect(() => {
     //Check if game object is undefinded
@@ -300,13 +290,34 @@ function PlayScreen(props) {
     }
     //Check if game is over
     if (gameObject.winner !== 0) {
-      console.log("Game is over!")
-      setCenterText(`Winner: ${gameObject.winner[0].name}!`);
+      if (gameObject.winner === 'restart') {
+        let temp = { ...gameObject }
+        temp.winner = 0;
+        setEndingModalOpen(false);
+        setCenterText(`Player ${turn}'s turn: ${gameObjectPlayerNames[turn - 1]}`);
+        updateGame(temp)
+      }
+      else {
+        console.log("Game is over!")
+        setCenterText(`Winner: ${gameObject.winner[0].name}!`);
+        setEndingModalOpen(true);
+      }
     }
-    //Check if it is your turn and set turn
+    //Check if it is your turn and set turn, then check if draw cards were played
+    if (turn === gameObject.turn && gameObject.lastCardPlayed !== 'empty') { setHand(checkHand(hand, gameObject.lastCardPlayed, [], direction)); }
     setTurn(gameObject.turn)
     if (gameObject.turn === gameObject.playerList.findIndex(player => playerID === player.id) + 1) {
       setMyTurn(true);
+      if (gameObject.lastCardPlayed.value === 'draw2') {
+        let newHand = [...hand];
+        for (let i = 0; i < 2; i++) { newHand.push(drawCard()); }
+        setHand(checkHand(newHand, gameObject.lastCardPlayed, [], gameObject.direction))
+      }
+      if (gameObject.lastCardPlayed.value === 'draw4') {
+        let newHand = [...hand];
+        for (let i = 0; i < 4; i++) { newHand.push(drawCard()); }
+        setHand(checkHand(newHand, gameObject.lastCardPlayed, [], gameObject.direction))
+      }
     }
     else {
       setMyTurn(false);
@@ -330,10 +341,8 @@ function PlayScreen(props) {
 
   //check hand when the turn changes
   useEffect(() => {
-    setHand(checkHand(hand, lastCardPlayed, inPlay, direction, setDirection));
-    if (gameObject !== undefined && gameObject.winner === 0) {
-      setCenterText(`Player ${turn}'s turn: ${gameObjectPlayerNames[turn-1]}`);
-    }
+    setCenterText(`Player ${turn}'s turn: ${gameObjectPlayerNames[turn - 1]}`);
+    setHand(checkHand(hand, lastCardPlayed, inPlay, direction));
   }, [turn]);
 
   const myHandOffset = (hand.length * 70) / 2;
@@ -341,19 +350,36 @@ function PlayScreen(props) {
   const onClickDrawPile = () => {
     // you can only draw a card if you have no available cards, it's your turn,
     // and you haven't placed a first card
-    if (!canPlaceCard(hand, lastCardPlayed, inPlay) || turn !== myId || inPlay.length !== 0) {
-      return;
+    if (!calculateCanPlaceCard(hand) && inPlay.length === 0 && myTurn) {
+      let newHand = [...hand];
+      newHand.push(drawCard())
+      const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
+      setHand(checkHand(newHand, lastCard, inPlay, direction))
     }
-    hand.push(drawCard());
   };
 
-  const onClickCardButton = (card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection) => {
+  const onClickCardButton = (card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction) => {
     placeCard(card, hand, setHand, inPlay, setInPlay, setTopOfStack);
     // If no cards have been placed, consider the last card on the discard pile.
     // Otherwise, the last card in this temporary stack
     const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
-    const checkedHand = checkHand(hand, lastCard, inPlay, direction, setDirection);
-    console.log(checkedHand);
+
+    //Check direction if at least one card has been placed
+    let newDirection = direction;
+    if (inPlay.length > 1) {
+      const previousStackCard = inPlay[inPlay.length - 2];
+      if (!isNaN(previousStackCard.value) && !isNaN(card.value) && direction === 'none') {
+        if (Number(previousStackCard.value) < Number(card.value) || (Number(previousStackCard.value) == 9 && Number(card.value) == 0)) {
+          newDirection = "increasing"
+        }
+        else if (Number(previousStackCard.value) > Number(card.value) || (Number(previousStackCard.value) == 0 && Number(card.value) == 9)) {
+          newDirection = "decreasing"
+        }
+      }
+      setDirection(newDirection)
+    }
+
+    const checkedHand = checkHand(hand, lastCard, inPlay, newDirection);
     setHand(checkedHand);
     if (card.color === "rainbow") {
       setColorPickerOpen(true);
@@ -363,12 +389,8 @@ function PlayScreen(props) {
   //Place card stack, end turn, and update game object
   const onClickPlaceCards = () => {
     setTopOfStack(inPlay[inPlay.size - 1]);
-    setInPlay([]);
 
     let newGameObject = { ...gameObject };
-    //Updates turn
-    newGameObject.turn += 1;
-    if (newGameObject.turn > gameObjectPlayerNames.length) {newGameObject.turn = 1}
     //Sends last card played
     newGameObject.lastCardPlayed = inPlay.slice(-1).pop();
     if (newGameObject.lastCardPlayed.color === 'rainbow') {
@@ -377,27 +399,110 @@ function PlayScreen(props) {
     //Check if no more cards are in player's hand and they win
     if (hand.length === 0) {
       newGameObject.winner = newGameObject.playerList.filter(player => player.id === playerID);
+      newGameObject.direction = false;
+      newGameObject.turn = 1;
+      newGameObject.lastCardPlayed = chooseRandomNumberCard();
+    }
+    //Check if reverse card
+    else {
+      if (newGameObject.lastCardPlayed.value === "reverse") {
+        newGameObject.direction = !newGameObject.direction;
+      }
+      //Updates turn and check skip
+      if (newGameObject.direction) {
+        newGameObject.turn -= 1;
+        if (newGameObject.turn < 1) { newGameObject.turn = newGameObject.turn = gameObjectPlayerNames.length }
+        if (newGameObject.lastCardPlayed.value === 'skip') { newGameObject.turn -= 1; if (newGameObject.turn < 1) { newGameObject.turn = gameObjectPlayerNames.length } }
+      }
+      else {
+        newGameObject.turn += 1;
+        if (newGameObject.turn > gameObjectPlayerNames.length) { newGameObject.turn = 1 }
+        if (newGameObject.lastCardPlayed.value === 'skip') { newGameObject.turn += 1; if (newGameObject.turn > gameObjectPlayerNames.length) { newGameObject.turn = 1 } }
+      }
+    }
+    const thisPlayer = newGameObject.playerList.filter(player => player.id === playerID);
+    const playerIndex = (newGameObject.playerList.indexOf(thisPlayer[0]));
+    newGameObject.playerList[playerIndex].cardCount = hand.length;
+    if (newGameObject.lastCardPlayed.value === 'draw2') {
+      newGameObject.playerList[newGameObject.turn - 1].cardCount += 2;
+    }
+    else if (newGameObject.lastCardPlayed.value === 'draw4') {
+      newGameObject.playerList[newGameObject.turn - 1].cardCount += 4;
     }
 
+    setInPlay([]);
+    setDirection("none");
     updateGame(newGameObject);
   };
+
+  const getHandLength = (index) => {
+    if (gameObject === undefined) {
+      return 8;
+    }
+    let otherPlayers = [...gameObject.playerList];
+    while (otherPlayers[0].id !== playerID) {
+      let temp = otherPlayers.shift();
+      otherPlayers.push(temp);
+    }
+    otherPlayers.shift();
+
+    if (otherPlayers.length === 1) {
+      if (index === 1) {
+        return otherPlayers[0].cardCount;
+      }
+      return 0;
+    }
+
+    if (otherPlayers.length <= index) {
+      return 0;
+    }
+    else {
+      return otherPlayers[index].cardCount;
+    }
+  }
+
+  const setPlayerName = (index) => {
+    if (gameObject === undefined) {
+      return "";
+    }
+    let otherPlayers = [...gameObject.playerList];
+    while (otherPlayers[0].id !== playerID) {
+      let temp = otherPlayers.shift();
+      otherPlayers.push(temp);
+    }
+    otherPlayers.shift();
+
+    if (otherPlayers.length === 1) {
+      if (index === 1) {
+        return otherPlayers[0].name;
+      }
+      return "";
+    }
+
+    if (otherPlayers.length <= index) {
+      return "";
+    }
+    else {
+      return otherPlayers[index].name;
+    }
+  }
 
   return (
     <>
       <PlayScreenMain selectedBackground={props.backgrounds[props.selectedBackground]}>
-        <TopPlayerUsername >{setPlayerName(1)}</TopPlayerUsername>
+        <TopPlayerUsername hidden={setPlayerName(1) === 0}>{setPlayerName(1)}</TopPlayerUsername>
         <TopPlayerHandContainer>
-          <div style={{ display: 'max-content' }}>
-            {Array.apply(null, { length: players[topPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
+          <div hidden={setPlayerName(1) === 0} style={{ display: 'max-content' }}>
+            {Array.apply(null, { length: getHandLength(1) }).map((card, index) => <HiddenCard key={index} />)}
           </div>
         </TopPlayerHandContainer>
-        <LeftPlayerUsername >{setPlayerName(0)}</LeftPlayerUsername>
-        <LeftPlayerHandContainer style={{ width: 'min-content' }}>
-          {Array.apply(null, { length: players[leftPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
+        <LeftPlayerUsername hidden={setPlayerName(0) === 0}>{setPlayerName(0)}</LeftPlayerUsername>
+        <LeftPlayerHandContainer hidden={setPlayerName(0) === 0} style={{ width: 'min-content' }}>
+          {Array.apply(null, { length: getHandLength(0) }).map((card, index) => <HiddenCard key={index} />)}
         </LeftPlayerHandContainer>
-        <RightPlayerUsername >{setPlayerName(2)}</RightPlayerUsername>
-        <RightPlayerHandContainer style={{ width: 'min-content' }}>
-          {Array.apply(null, { length: players[rightPlayerId].cardCount }).map((card, index) => <HiddenCard key={index} />)}
+        <RightPlayerUsername hidden={setPlayerName(2) === 0}>{setPlayerName(2)}</RightPlayerUsername>
+        <RightPlayerHandContainer hidden={setPlayerName(2) === 0} style={{ width: 'min-content' }}>
+          {Array.apply(null, { length: getHandLength(2) }).map((card, index) => <HiddenCard key={index} />)}
         </RightPlayerHandContainer>
 
         {inPlay.length > 0 &&
@@ -422,7 +527,7 @@ function PlayScreen(props) {
                 id={`card-button-${index}`}
                 key={index}
                 onClick={() =>
-                  onClickCardButton(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction, setDirection)
+                  onClickCardButton(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction)
                 }
                 {...card}
                 myTurn={myTurn}
@@ -434,18 +539,15 @@ function PlayScreen(props) {
           <p>{centerText}</p>
           <div style={{ display: 'flex' }}>
             <Card id="discard-pile" color={lastCardPlayed.color} value={lastCardPlayed.value} />
-            <CardButton id="draw-pile" onClick={onClickDrawPile} color="wild" gray={false} value="DRAW" disabled={myId !== turn || canPlaceCard}>
+            <CardButton id="draw-pile" onClick={onClickDrawPile} color="rainbow" gray={false} value="wild" myTurn={true}>
               Draw
             </CardButton>
           </div>
         </Center>
-        <CallUnoButton>
-          CALL UNO
-        </CallUnoButton>
       </PlayScreenMain>
       <Modal open={colorPickerOpen} setOpen={setColorPickerOpen} setNextColor={setNextColor} ModalComponent={ColorPicker} />
-      <Modal open={endingModalOpen} setOpen={setEndingModalOpen} ModalComponent={EndingModal} />
-      <Modal open={lobbyModalOpen} setOpen={setLobbyModalOpen} ModalComponent={LobbyModal} players={gameObjectPlayerNames} isHost={host} startGame={startGame} />
+      <Modal open={endingModalOpen} setOpen={setEndingModalOpen} ModalComponent={EndingModal} isHost={host} restartGame={restartGame} />
+      <Modal open={lobbyModalOpen} setOpen={setLobbyModalOpen} ModalComponent={LobbyModal} players={gameObjectPlayerNames} isHost={host} startGame={startGame} room={room} />
     </>
   );
 }

@@ -2,12 +2,23 @@ import React from 'react';
 import styled from 'styled-components';
 
 const GameRulesMain = styled.main`
-  margin: 2.5rem;
   line-height: 1.5rem;
   border-radius: 8px;
-  background-color: #6b6b6b;
+  background-color: black;
+  box-shadow: blue 0px 0px 0px 2px inset, rgb(0, 0, 0) 10px -10px 0px -3px, rgb(31, 193, 27) 10px -10px, rgb(0, 0, 0) 20px -20px 0px -3px, rgb(255, 217, 19) 20px -20px, rgb(0, 0, 0) 30px -30px 0px -3px, rgb(255, 156, 85) 30px -30px, rgb(0, 0, 0) 40px -40px 0px -3px, rgb(255, 85, 85) 40px -40px;
   color: white;
-  padding: 12px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 30px;
+  padding-right: 30px;
+  max-width: 800px;
+  margin-top: 3rem;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1.2rem;
+  & li {
+    margin-bottom: 10px;
+  }
 `;
 
 const Title = styled.h1`
@@ -26,15 +37,21 @@ function GameRules() {
       </p>
       <ul>
         <li>
-          The card is the same number as the previous card you put down
+          The card is the same number as the previous card you put down.
         </li>
         <li>
-          You can create an streak of cards of increasing value or decreasing value. For example, if you put down 3, you can also put down 4,5,6... If you get to 0, you can roll back to 0 and keep increasing. Similarly, you could go from 4 to 3,2,1,0,9,8...
+          If you place a non-wild card, you can place additional cards to create an streak of cards of increasing value or decreasing value. For example, if you put down 3, you can then put down 4,5,6... or you can then put down 2,1,0...
+        </li>
+        <li>
+          Your streak can overflow and underflow. If you put down 2,1,0, then you can then put down 9 and continue with a decreasing streak. Similarly, another valid streak is 7,8,9,0,1,2...
+        </li>
+        <li>
+          Multiple Draw-2 cards cards can be used at once.
+        </li>
+        <li>
+          You win by putting down all your cards.
         </li>
       </ul>
-      <p>
-        multiple 2+ cards cards can be used at once
-      </p>
     </GameRulesMain>
   );
 }

@@ -22,7 +22,7 @@ const BlackBox = styled.div`
 
 const CardComponent = styled(StyledCard)`
   padding: 12px;
-  background: url("https://www.github.com/ericnavar/among-us-2-2/blob/master/${props=>`${props.value}_${props.color}`}.png?raw=true");
+  background: url("https://raw.githubusercontent.com/ericnavar/among-us-2-2/master/sand/${props => `${props.value}_${props.color}`}.jpg");
   background-size: cover;
 `;
 
@@ -36,7 +36,7 @@ const ButtonWrapper = styled.button`
 
 function Card(props) {
   const { color, value } = props;
-  return (<CardComponent color={color} value={value}/>);
+  return (<CardComponent color={color} value={value} />);
 }
 Card.propTypes = {
   color: PropTypes.string,

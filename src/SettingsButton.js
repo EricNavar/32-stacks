@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import styled from 'styled-components';
 import { PropTypes } from 'prop-types';
@@ -18,19 +17,12 @@ const SettingsIconButton = styled.button`
   z-index: 300
 `;
 
-function Test() {
-  return <div style={{ color: 'black' }}>HELLO</div>
-}
-
 function SettingsButton(props) {
   const [settingsModalOpen, setSettingsModalOpen] = React.useState(false);
 
   const onClickSettingsButton = () => {
     setSettingsModalOpen(!settingsModalOpen);
   };
-
-  console.log(SettingsModal);
-  console.log(settingsModalOpen);
 
   return (
     <>
