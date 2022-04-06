@@ -67,11 +67,9 @@ const useAudio = url => {
     };
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     let newAudio = audio;
     newAudio.src = url;
-    console.log(url);
-    console.log(audio);
   }, [url]);
 
   return [playing, toggle];

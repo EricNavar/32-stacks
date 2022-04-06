@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const GameRulesMain = styled.main`
   line-height: 1.5rem;
@@ -8,7 +9,7 @@ const GameRulesMain = styled.main`
   box-shadow: blue 0px 0px 0px 2px inset, rgb(0, 0, 0) 10px -10px 0px -3px, rgb(31, 193, 27) 10px -10px, rgb(0, 0, 0) 20px -20px 0px -3px, rgb(255, 217, 19) 20px -20px, rgb(0, 0, 0) 30px -30px 0px -3px, rgb(255, 156, 85) 30px -30px, rgb(0, 0, 0) 40px -40px 0px -3px, rgb(255, 85, 85) 40px -40px;
   color: white;
   padding-top: 12px;
-  padding-bottom: 12px;
+  padding-bottom: 22px;
   padding-left: 30px;
   padding-right: 30px;
   max-width: 800px;
@@ -25,6 +26,14 @@ const Title = styled.h1`
   font-weight: bold;
   text-align: center;
 `;
+
+const HomeLink = styled(Link)`
+  background: #464b54;
+  padding: 8px;
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+`
 
 function GameRules() {
   return (
@@ -52,6 +61,7 @@ function GameRules() {
           You win by putting down all your cards.
         </li>
       </ul>
+      <HomeLink to="/">Home</HomeLink>
     </GameRulesMain>
   );
 }
