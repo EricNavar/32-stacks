@@ -11,6 +11,8 @@ import { LobbyModal } from './modals/LobbyModal.js';
 import { Modal } from './modals/Modal.js';
 import Logo from './assets/logo.png';
 import { Card, CardButton } from './Cards';
+// Uncomment this to start game w/ sample cards:
+// import { yourCards } from './sampleData';
 
 const ENDPOINT = "https://myrpgstats.com";
 
@@ -177,6 +179,8 @@ function PlayScreen(props) {
     for (let i = 0; i < 8; i++) {
       newHand.push(drawCard());
     }
+
+    // let newHand = yourCards;              // Uncomment this line to start game w/ sample cards
     return checkHand(newHand, lastCardPlayed, inPlay, direction);
   });
 
@@ -310,12 +314,12 @@ function PlayScreen(props) {
       setMyTurn(true);
       if (gameObject.lastCardPlayed.value === 'draw2') {
         let newHand = [...hand];
-        for (let i = 0; i < 2; i++) { newHand.push(drawCard()); }
+        for (let i = 0; i < 2 * gameObject.lastPlaySize; i++) { newHand.push(drawCard()); }
         setHand(checkHand(newHand, gameObject.lastCardPlayed, [], gameObject.direction))
       }
       if (gameObject.lastCardPlayed.value === 'draw4') {
         let newHand = [...hand];
-        for (let i = 0; i < 4; i++) { newHand.push(drawCard()); }
+        for (let i = 0; i < 4 * gameObject.lastPlaySize; i++) { newHand.push(drawCard()); }
         setHand(checkHand(newHand, gameObject.lastCardPlayed, [], gameObject.direction))
       }
     }
@@ -391,6 +395,7 @@ function PlayScreen(props) {
     setTopOfStack(inPlay[inPlay.size - 1]);
 
     let newGameObject = { ...gameObject };
+    newGameObject.lastPlaySize = inPlay.length;               // Stores number of cards placed in the last play.
     //Sends last card played
     newGameObject.lastCardPlayed = inPlay.slice(-1).pop();
     if (newGameObject.lastCardPlayed.color === 'rainbow') {
@@ -406,28 +411,44 @@ function PlayScreen(props) {
     //Check if reverse card
     else {
       if (newGameObject.lastCardPlayed.value === "reverse") {
-        newGameObject.direction = !newGameObject.direction;
+        if (newGameObject.lastPlaySize % 2 === 1) {
+          newGameObject.direction = !newGameObject.direction;
+        }
       }
       //Updates turn and check skip
       if (newGameObject.direction) {
         newGameObject.turn -= 1;
-        if (newGameObject.turn < 1) { newGameObject.turn = newGameObject.turn = gameObjectPlayerNames.length }
-        if (newGameObject.lastCardPlayed.value === 'skip') { newGameObject.turn -= 1; if (newGameObject.turn < 1) { newGameObject.turn = gameObjectPlayerNames.length } }
+        if (newGameObject.turn < 1) {
+          newGameObject.turn = newGameObject.turn = gameObjectPlayerNames.length  // If turn underflows
+        }
+        if (newGameObject.lastCardPlayed.value === 'skip') {
+          newGameObject.turn -= newGameObject.lastPlaySize;
+          if (newGameObject.turn < 1) {
+            newGameObject.turn += gameObjectPlayerNames.length;
+          }
+        }
       }
       else {
         newGameObject.turn += 1;
-        if (newGameObject.turn > gameObjectPlayerNames.length) { newGameObject.turn = 1 }
-        if (newGameObject.lastCardPlayed.value === 'skip') { newGameObject.turn += 1; if (newGameObject.turn > gameObjectPlayerNames.length) { newGameObject.turn = 1 } }
+        if (newGameObject.turn > gameObjectPlayerNames.length) {  // If turn overflows
+          newGameObject.turn = 1
+        }
+        if (newGameObject.lastCardPlayed.value === 'skip') {
+          newGameObject.turn += newGameObject.lastPlaySize;
+          if (newGameObject.turn > gameObjectPlayerNames.length) {
+            newGameObject.turn -= gameObjectPlayerNames.length;
+          }
+        }
       }
     }
     const thisPlayer = newGameObject.playerList.filter(player => player.id === playerID);
     const playerIndex = (newGameObject.playerList.indexOf(thisPlayer[0]));
     newGameObject.playerList[playerIndex].cardCount = hand.length;
     if (newGameObject.lastCardPlayed.value === 'draw2') {
-      newGameObject.playerList[newGameObject.turn - 1].cardCount += 2;
+      newGameObject.playerList[newGameObject.turn - 1].cardCount += (2 * newGameObject.lastPlaySize);
     }
     else if (newGameObject.lastCardPlayed.value === 'draw4') {
-      newGameObject.playerList[newGameObject.turn - 1].cardCount += 4;
+      newGameObject.playerList[newGameObject.turn - 1].cardCount += (4 * newGameObject.lastPlaySize);
     }
 
     setInPlay([]);

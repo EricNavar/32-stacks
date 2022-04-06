@@ -14,7 +14,9 @@ export function checkHand(hand, lastCardPlayed, inPlay, direction) {
   for (let i = 0; i < hand.length; i++) {
     //if the last card put down is rainbow, you can't put down any new cards.
     // rainbow cards are put down solo. They can't be part of a streak.
-    if (inPlay.length > 0 && inPlay[inPlay.length - 1].color === "rainbow") {
+    // ^^^ Changing this so you can stack +4s. However, you still can't
+    // stack wild cards       - Yonas
+    if (inPlay.length > 0 && inPlay[inPlay.length - 1].value === "wild") {
       const toAdd = { color: hand[i].color, value: hand[i].value, gray: true }
       newHand.push(toAdd);
     }
@@ -67,7 +69,13 @@ export const isValidFirstCard = (toConsider, lastCard) => {
 // returns an array containing first if the additional card is valid, and second, the direction
 // in which it's increasing or decreasing
 export const isValidAdditionalCard = (toConsider, lastCard, direction) => {
-  if (isSpecialCard(toConsider)) {
+  if (isSpecialCard(toConsider) != isSpecialCard(lastCard)) {
+    return false;
+  }
+  if (isSpecialCard(toConsider) && (toConsider.value !== lastCard.value)) {
+    return false;
+  }
+  if (lastCard.value === "wild") {
     return false;
   }
   if (toConsider.value === lastCard.value) {
