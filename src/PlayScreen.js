@@ -11,6 +11,7 @@ import { LobbyModal } from './modals/LobbyModal.js';
 import { Modal } from './modals/Modal.js';
 import Logo from './assets/logo.png';
 import { Card, CardButton } from './Cards';
+import { SettingsButton } from './SettingsButton';
 
 const ENDPOINT = "https://myrpgstats.com";
 
@@ -22,7 +23,7 @@ let socket;
 const PlayScreenMain = styled.main`
   justify-content:center;
   display: grid;
-  background: url("${props => props.selectedBackground}");
+  background: url("${props => props.background}");
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -487,9 +488,18 @@ function PlayScreen(props) {
     }
   }
 
+  const backgrounds = {
+    "Black wood": "https://github.com/EricNavar/among-us-2-2/blob/master/Wood.png?raw=true",
+    "Among Us": "https://cdn1.epicgames.com/salesEvent/salesEvent/amoguslandscape_2560x1440-3fac17e8bb45d81ec9b2c24655758075",
+    "Sand": "https://images.unsplash.com/photo-1550684376-efcbd6e3f031?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTJ8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80",
+    "Dancing": "https://raw.githubusercontent.com/EricNavar/among-us-2-2/master/among-us.gif",
+    "SSD": "https://raw.githubusercontent.com/EricNavar/among-us-2-2/master/ssdpng.png",
+  }
+  const [selectedBackground, setSelectedBackground] = useState("Black wood");
+
   return (
     <>
-      <PlayScreenMain selectedBackground={props.backgrounds[props.selectedBackground]}>
+      <PlayScreenMain background={backgrounds[selectedBackground]}>
         <TopPlayerUsername hidden={setPlayerName(1) === 0}>{setPlayerName(1)}</TopPlayerUsername>
         <TopPlayerHandContainer>
           <div hidden={setPlayerName(1) === 0} style={{ display: 'max-content' }}>
@@ -547,15 +557,22 @@ function PlayScreen(props) {
       </PlayScreenMain>
       <Modal open={colorPickerOpen} setOpen={setColorPickerOpen} setNextColor={setNextColor} ModalComponent={ColorPicker} />
       <Modal open={endingModalOpen} setOpen={setEndingModalOpen} ModalComponent={EndingModal} isHost={host} restartGame={restartGame} />
-      <Modal open={lobbyModalOpen} setOpen={setLobbyModalOpen} ModalComponent={LobbyModal} players={gameObjectPlayerNames} isHost={host} startGame={startGame} room={room} />
+      <Modal
+        open={lobbyModalOpen}
+        setOpen={setLobbyModalOpen}
+        ModalComponent={LobbyModal}
+        players={gameObjectPlayerNames}
+        isHost={host}
+        startGame={startGame}
+        room={room}
+      />
+      <SettingsButton selectedBackground={selectedBackground} setSelectedBackground={setSelectedBackground} backgrounds={backgrounds} />
     </>
   );
 }
 PlayScreen.propTypes = {
   name: PropTypes.string,
-  playerID: PropTypes.string,
-  selectedBackground: PropTypes.string.isRequired,
-  backgrounds: PropTypes.object.isRequired
+  playerID: PropTypes.string
 };
 
 export { PlayScreen };

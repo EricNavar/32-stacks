@@ -112,9 +112,6 @@ const songs = [
 ]
 
 export function SettingsModal(props) {
-  const onClick = (backgroundName) => {
-    props.setSelectedBackground(backgroundName);
-  };
 
   const [songIndex, setSongIndex] = React.useState(0);
 
@@ -124,12 +121,10 @@ export function SettingsModal(props) {
       newSongIndex += songs.length;
     }
     setSongIndex(newSongIndex);
-    console.log(newSongIndex);
   }
 
   const onClickNext = () => {
     setSongIndex((songIndex + 1) % songs.length);
-    console.log(songIndex);
   }
 
   return (
@@ -143,7 +138,7 @@ export function SettingsModal(props) {
           Change Board Map
         </h2>
         {Object.keys(props.backgrounds).map((backgroundName, index) =>
-          <MenuButtons key={index} onClick={() => onClick(backgroundName)}>{backgroundName}</MenuButtons>
+          <MenuButtons key={index} onClick={() => props.setSelectedBackground(backgroundName)}>{backgroundName}</MenuButtons>
         )}
 
       </ChangeBoardCard>

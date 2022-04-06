@@ -76,6 +76,6 @@ export function Modal(props) {
 }
 Modal.propTypes = {
   open: PropTypes.bool.isRequired,
-  ModalComponent: PropTypes.node.isRequired,
+  ModalComponent: PropTypes.any.isRequired,
   zIndex: PropTypes.number
 };
