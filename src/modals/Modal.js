@@ -55,6 +55,7 @@ const ModalPaperDiv = styled.div`
   padding: 12px;
   box-sizing: border-box;
   align-content: baseline;
+  justify-content: center;
 `;
 
 export function Modal(props) {
