@@ -55,6 +55,7 @@ const ModalPaperDiv = styled.div`
   padding: 12px;
   box-sizing: border-box;
   align-content: baseline;
+  justify-content: center;
 `;
 
 export function Modal(props) {
@@ -76,6 +77,6 @@ export function Modal(props) {
 }
 Modal.propTypes = {
   open: PropTypes.bool.isRequired,
-  ModalComponent: PropTypes.node.isRequired,
+  ModalComponent: PropTypes.any.isRequired,
   zIndex: PropTypes.number
 };

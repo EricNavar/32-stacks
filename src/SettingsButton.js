@@ -35,7 +35,8 @@ function SettingsButton(props) {
 }
 SettingsButton.propTypes = {
   backgrounds: PropTypes.object.isRequired,
-  setSelectedBackground: PropTypes.func.isRequired
+  setSelectedBackground: PropTypes.func.isRequired,
+  selectedBackground: PropTypes.string.isRequired
 }
 
 export { SettingsButton };
