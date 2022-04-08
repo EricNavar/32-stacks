@@ -1,44 +1,10 @@
 export const yourCards = [
-  {
-    color:"red",
-    value:"9",
-    gray: false
-  },
-  {
-    color:"blue",
-    value:"1",
-    gray: false
-  },
-  {
-    color:"green",
-    value:"2",
-    gray: true
-  },
-  {
-    color:"yellow",
-    value:"7",
-    gray: true
-  },
-  {
-    color:"yellow",
-    value:"0",
-    gray: true
-  },
-  {
-    color:"yellow",
-    value:"0",
-    gray: true
-  },
-  {
-    color:"rainbow",
-    value:"wild",
-    gray: false
-  },
-  {
-    color:"rainbow",
-    value:"draw4",
-    gray: false
-  }
+  { color: "rainbow", value: "draw4", gray: false },
+  { color: "rainbow", value: "draw4", gray: false },
+  { color: "blue", value: 7, gray: true },
+  { color: "red", value: 7, gray: true },
+  { color: "yellow", value: 7, gray: true },
+  { color: "green", value: 7, gray: true }
 ];
 
 export const otherPlayers = [
@@ -66,8 +32,8 @@ export const otherPlayers = [
 
 export const inPlayTemp = [
   {
-    color:"red",
+    color: "red",
     gray: true,
-    value:"8"
+    value: "8"
   }
 ];
