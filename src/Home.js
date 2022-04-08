@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Logo from './assets/logo.png';
 
 const generateRoomCode = () => {
@@ -13,17 +13,64 @@ const generateRoomCode = () => {
   return result;
 };
 
+const expand = keyframes`
+  0% {
+    box-shadow: blue 0px 0px 0px 2px inset;
+  }
+  25% {
+    box-shadow: blue 0px 0px 0px 2px inset,
+                rgb(0, 0, 0) 10px -10px 0px -3px,
+                rgb(31, 193, 27) 10px -10px;
+  }
+  50% {
+    box-shadow: blue 0px 0px 0px 2px inset,
+                rgb(0, 0, 0) 10px -10px 0px -3px,
+                rgb(31, 193, 27) 10px -10px,
+                rgb(0, 0, 0) 20px -20px 0px -3px,
+                rgb(255, 217, 19) 20px -20px;
+  }
+  75% {
+    box-shadow: blue 0px 0px 0px 2px inset,
+                rgb(0, 0, 0) 10px -10px 0px -3px,
+                rgb(31, 193, 27) 10px -10px,
+                rgb(0, 0, 0) 20px -20px 0px -3px,
+                rgb(255, 217, 19) 20px -20px,
+                rgb(0, 0, 0) 30px -30px 0px -3px,
+                rgb(255, 156, 85) 30px -30px;
+  }
+  100% {
+    box-shadow: blue 0px 0px 0px 2px inset,
+                rgb(0, 0, 0) 10px -10px 0px -3px,
+                rgb(31, 193, 27) 10px -10px,
+                rgb(0, 0, 0) 20px -20px 0px -3px,
+                rgb(255, 217, 19) 20px -20px,
+                rgb(0, 0, 0) 30px -30px 0px -3px,
+                rgb(255, 156, 85) 30px -30px,
+                rgb(0, 0, 0) 40px -40px 0px -3px,
+                rgb(255, 85, 85) 40px -40px;
+  }
+`;
+
 const HomeMain = styled.main`
   text-align: center;
   justify-content: center;
   display: grid;
-  background: rgba(0,0,0,.9);
+  background: rgba(0,0,0);
   width: min-content;
   margin: auto;
   margin-top: auto;
   border-radius: 8px;
   margin-top: 50px;
-  box-shadow: blue 0px 0px 0px 2px inset, rgb(0, 0, 0) 10px -10px 0px -3px, rgb(31, 193, 27) 10px -10px, rgb(0, 0, 0) 20px -20px 0px -3px, rgb(255, 217, 19) 20px -20px, rgb(0, 0, 0) 30px -30px 0px -3px, rgb(255, 156, 85) 30px -30px, rgb(0, 0, 0) 40px -40px 0px -3px, rgb(255, 85, 85) 40px -40px
+
+  animation-name: ${expand};
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-delay: 0s;
+  animation-direction: normal;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  animation-timeline: ;
+}
 `
 
 const GamesRuledLink = styled(Link)`

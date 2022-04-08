@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -189,6 +190,21 @@ function PlayScreen(props) {
   const [endingModalOpen, setEndingModalOpen] = React.useState(false);
   const [nextColor, setNextColor] = React.useState(lastCardPlayed.color);
 
+  let [shouldTransition, setShouldTransition] = useState(true);
+  let [color, setColor] = useState('red');
+
+  function handleClick() {
+    setShouldTransition(false);
+    setColor('red');
+  }
+
+  useEffect(() => {
+    if (color === 'red') {
+      setShouldTransition(true);
+      setColor('black');
+    }
+  }, [color]);
+
   useEffect(() => {
     if (gameObject !== undefined) {
       setGameObjectPlayerNames(gameObject.playerList.map(player => player.name));
@@ -300,11 +316,13 @@ function PlayScreen(props) {
         temp.winner = 0;
         setEndingModalOpen(false);
         setCenterText(`Player ${turn}'s turn: ${gameObjectPlayerNames[turn - 1]}`);
+        setShouldTransition(false);
         updateGame(temp)
       }
       else {
         console.log("Game is over!")
         setCenterText(`Winner: ${gameObject.winner[0].name}!`);
+        setShouldTransition(false);
         setEndingModalOpen(true);
       }
     }
@@ -567,7 +585,10 @@ function PlayScreen(props) {
           </div>
         </HandContainer>
         <Center>
-          <p>{centerText}</p>
+          <p style={{
+            transition: shouldTransition ? "all 1s" : "",
+            backgroundColor: `${color}`,
+          }}>{centerText}</p>
           <div style={{ display: 'flex' }}>
             <Card id="discard-pile" color={lastCardPlayed.color} value={lastCardPlayed.value} />
             <CardButton id="draw-pile" onClick={onClickDrawPile} color="rainbow" gray={false} value="wild" myTurn={true}>
