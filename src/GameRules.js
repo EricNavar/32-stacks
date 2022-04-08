@@ -46,7 +46,7 @@ function GameRules() {
           Your streak can overflow and underflow. If you put down 2,1,0, then you can then put down 9 and continue with a decreasing streak. Similarly, another valid streak is 7,8,9,0,1,2...
         </li>
         <li>
-          You can create a streak of the following special cards: Draw 4, Draw 2, Skip, and Reverse. Put down as many as you like, but you can't mix special cards in a streak.
+          You can create a streak of the following special cards: Draw 4, Draw 2, Skip, and Reverse. Put down as many as you like, but you can&apos;t mix special cards in a streak.
         </li>
         <li>
           You win by putting down all your cards.
