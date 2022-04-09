@@ -9,7 +9,7 @@ import { placeCard, drawCard, calculateCanPlaceCard, checkHand, chooseRandomNumb
 import { ColorPicker } from './modals/ColorPicker';
 import { EndingModal } from './modals/EndingModal';
 import { LobbyModal } from './modals/LobbyModal.js';
-import { Modal } from './modals/Modal.js';
+import { DialogPaper } from './modals/DialogPaper.js';
 import Logo from './assets/logo.png';
 import { Card, CardButton } from './Cards';
 // Uncomment this to start game w/ sample cards:
@@ -607,18 +607,17 @@ function PlayScreen(props) {
           </CenterCardContainer>
         </Center>
       </PlayScreenMain>
-      <Modal open={colorPickerOpen} setOpen={setColorPickerOpen} setNextColor={setNextColor} ModalComponent={ColorPicker} />
-      <Modal open={endingModalOpen} setOpen={setEndingModalOpen} ModalComponent={EndingModal} isHost={host} restartGame={restartGame} />
-      <Modal
+      <EndingModal open={endingModalOpen} setOpen={setEndingModalOpen} isHost={host} restartGame={restartGame} />
+      <LobbyModal
         open={lobbyModalOpen}
         setOpen={setLobbyModalOpen}
-        ModalComponent={LobbyModal}
         players={gameObjectPlayerNames}
         isHost={host}
         startGame={startGame}
         room={room}
       />
       <SettingsButton selectedBackground={selectedBackground} setSelectedBackground={setSelectedBackground} backgrounds={backgrounds} />
+      <ColorPicker open={colorPickerOpen} setOpen={setColorPickerOpen} setNextColor={setNextColor} />
     </>
   );
 }
@@ -628,3 +627,19 @@ PlayScreen.propTypes = {
 };
 
 export { PlayScreen };
+
+
+/*
+  <Modal open={colorPickerOpen} setOpen={setColorPickerOpen} setNextColor={setNextColor} ModalComponent={ColorPicker} />
+  <Modal open={endingModalOpen} setOpen={setEndingModalOpen} ModalComponent={EndingModal} isHost={host} restartGame={restartGame} />
+  <Modal
+    open={lobbyModalOpen}
+    setOpen={setLobbyModalOpen}
+    ModalComponent={LobbyModal}
+    players={gameObjectPlayerNames}
+    isHost={host}
+    startGame={startGame}
+    room={room}
+  />
+  <SettingsButton selectedBackground={selectedBackground} setSelectedBackground={setSelectedBackground} backgrounds={backgrounds} />
+*/
