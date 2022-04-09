@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import {ModalTitle} from '../commonStyles';
+import Dialog from '@mui/material/Dialog';
+import { ModalTitle } from '../commonStyles';
+import {DialogPaper} from './DialogPaper';
 
 const ColorButton = styled.button`
   box-sizing: border-box;
@@ -23,13 +25,14 @@ export function ColorPicker(props) {
     props.setOpen(false);
   };
   return (
-    <>
+    <Dialog open={props.open} PaperComponent={DialogPaper}>
       <ModalTitle>Pick a color</ModalTitle>
       {colors.map(color => <ColorButton key={color} color={color} onClick={() => onClick(color)}></ColorButton>)}
-    </>
+    </Dialog>
   );
 }
 ColorPicker.propTypes = {
+  open: PropTypes.bool.isRequired,
   setNextColor: PropTypes.func.isRequired,
   setOpen: PropTypes.func.isRequired,
 };

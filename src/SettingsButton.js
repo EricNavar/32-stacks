@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { PropTypes } from 'prop-types';
 import { SettingsModal } from './modals/SettingsModal';
 import SettingsIcon from './assets/settings-icon';
-import { Modal } from './modals/Modal';
 
 const SettingsIconButton = styled.button`
   background: white;
@@ -14,7 +13,7 @@ const SettingsIconButton = styled.button`
   width: 40px;
   border-radius: 20px;
   border-style: none;
-  z-index: 300
+  z-index: 9999
 `;
 
 function SettingsButton(props) {
@@ -29,7 +28,7 @@ function SettingsButton(props) {
       <SettingsIconButton onClick={onClickSettingsButton}>
         <SettingsIcon />
       </SettingsIconButton>
-      <Modal open={settingsModalOpen} ModalComponent={SettingsModal} zIndex={200} backgrounds={props.backgrounds} setSelectedBackground={props.setSelectedBackground} />
+      <SettingsModal open={settingsModalOpen} zIndex={200} backgrounds={props.backgrounds} setSelectedBackground={props.setSelectedBackground} />
     </>
   );
 }
