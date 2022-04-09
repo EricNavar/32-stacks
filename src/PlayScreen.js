@@ -23,6 +23,14 @@ const ENDPOINT = "https://myrpgstats.com";
 
 let socket;
 
+const backgrounds = {
+  "Black wood": "https://github.com/EricNavar/among-us-2-2/blob/master/Wood.png?raw=true",
+  "Among Us": "https://cdn1.epicgames.com/salesEvent/salesEvent/amoguslandscape_2560x1440-3fac17e8bb45d81ec9b2c24655758075",
+  "Sand": "https://images.unsplash.com/photo-1550684376-efcbd6e3f031?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTJ8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80",
+  "Dancing": "https://raw.githubusercontent.com/EricNavar/among-us-2-2/master/among-us.gif",
+  "SSD": "https://raw.githubusercontent.com/EricNavar/among-us-2-2/master/ssdpng.png",
+}
+
 const PlayScreenMain = styled.main`
   justify-content:center;
   display: grid;
@@ -152,6 +160,15 @@ const TopPlayerUsername = styled(Username)`
   left: calc(50% - 50px);
   width: 100px;
 `;
+
+const CenterText = styled.p`
+  padding: 8px;
+`
+
+const CenterCardContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`
 
 function PlayScreen(props) {
   const playerID = props.playerID;
@@ -527,13 +544,6 @@ function PlayScreen(props) {
     }
   }
 
-  const backgrounds = {
-    "Black wood": "https://github.com/EricNavar/among-us-2-2/blob/master/Wood.png?raw=true",
-    "Among Us": "https://cdn1.epicgames.com/salesEvent/salesEvent/amoguslandscape_2560x1440-3fac17e8bb45d81ec9b2c24655758075",
-    "Sand": "https://images.unsplash.com/photo-1550684376-efcbd6e3f031?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTJ8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80",
-    "Dancing": "https://raw.githubusercontent.com/EricNavar/among-us-2-2/master/among-us.gif",
-    "SSD": "https://raw.githubusercontent.com/EricNavar/among-us-2-2/master/ssdpng.png",
-  }
   const [selectedBackground, setSelectedBackground] = useState("Black wood");
 
   return (
@@ -585,16 +595,16 @@ function PlayScreen(props) {
           </div>
         </HandContainer>
         <Center>
-          <p style={{
+          <CenterText style={{
             transition: shouldTransition ? "all 1s" : "",
             backgroundColor: `${color}`,
-          }}>{centerText}</p>
-          <div style={{ display: 'flex' }}>
+          }}>{centerText}</CenterText>
+          <CenterCardContainer>
             <Card id="discard-pile" color={lastCardPlayed.color} value={lastCardPlayed.value} />
             <CardButton id="draw-pile" onClick={onClickDrawPile} color="rainbow" gray={false} value="wild" myTurn={true}>
               Draw
             </CardButton>
-          </div>
+          </CenterCardContainer>
         </Center>
       </PlayScreenMain>
       <Modal open={colorPickerOpen} setOpen={setColorPickerOpen} setNextColor={setNextColor} ModalComponent={ColorPicker} />
