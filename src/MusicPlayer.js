@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import PlayIcon from "./assets/play-solid";
+import PauseIcon from "./assets/pause-solid";
 
 const MenuButtons = styled.button`
   width: 94%;
@@ -80,7 +82,7 @@ const MusicPlayer = ({ url }) => {
 
   return (
     <div>
-      <MenuButtons onClick={toggle}>{playing ? "Pause" : "Play"}</MenuButtons>
+      <MenuButtons onClick={toggle}>{playing ? <PauseIcon /> : <PlayIcon />}</MenuButtons>
     </div>
   );
 };
