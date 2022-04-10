@@ -87,20 +87,24 @@ const CardDropper = styled(StyledCard)`
 const HandContainer = styled.div`
   border-width: 1px;
   border-radius: 8px;
-  bottom: 2px;
-  height: 90px;
+  height: 120px;
   padding-top: 12px;
   padding-bottom: 12px;
-  padding-right: 12px;
-  padding-left: 12px;
-  justify-content: center;
-  display: grid;
   margin-left: auto;
   margin-right: auto;
   margin-top: auto;
   background: rgba(255,255,255,.2);
-  minWidth: 72px;
+  min-width: 72px;
+  width: 100vw;
+  overflow-x: scroll;
 `;
+
+const HandContainerInner = styled.div`
+  width: max-content;
+  display: flex;
+  flex-wrap: nowrap;
+  margin: auto;
+`
 
 const TopPlayerHandContainer = styled.div`
   margin-top: 8px;
@@ -579,8 +583,8 @@ function PlayScreen(props) {
           </>
         }
 
-        <HandContainer style={{ left: `calc(50% - ${myHandOffset}px` }}>
-          <div style={{ width: 'max-content' }}>
+        <HandContainer id='hand-container'>
+          <HandContainerInner>
             {hand.map((card, index) => {
               return <CardButton
                 id={`card-button-${index}`}
@@ -592,7 +596,7 @@ function PlayScreen(props) {
                 myTurn={myTurn}
               />;
             })}
-          </div>
+          </HandContainerInner>
         </HandContainer>
         <Center>
           <CenterText style={{

@@ -3,13 +3,12 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 const GameRulesMain = styled.main`
-  line-height: 1.5rem;
   border-radius: 8px;
   background-color: black;
   box-shadow: blue 0px 0px 0px 2px inset, rgb(0, 0, 0) 10px -10px 0px -3px, rgb(31, 193, 27) 10px -10px, rgb(0, 0, 0) 20px -20px 0px -3px, rgb(255, 217, 19) 20px -20px, rgb(0, 0, 0) 30px -30px 0px -3px, rgb(255, 156, 85) 30px -30px, rgb(0, 0, 0) 40px -40px 0px -3px, rgb(255, 85, 85) 40px -40px;
   color: white;
   padding-top: 12px;
-  padding-bottom: 22px;
+  padding-bottom: 40px;
   padding-left: 30px;
   padding-right: 30px;
   max-width: 800px;
@@ -19,6 +18,14 @@ const GameRulesMain = styled.main`
   font-size: 1.2rem;
   & li {
     margin-bottom: 10px;
+  }
+  @media (max-width: 600px) {
+    padding: 16px;
+    padding-bottom: 40px;
+    margin: 16px;
+    border-radius: 8px;
+    border: solid 1px white;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;    
   }
 `;
 
@@ -33,6 +40,11 @@ const HomeLink = styled(Link)`
   border-radius: 8px;
   color: white;
   text-decoration: none;
+  @media (max-width: 600px) {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+  }
 `
 
 function GameRules() {
