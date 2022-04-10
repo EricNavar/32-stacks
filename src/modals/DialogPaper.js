@@ -2,20 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
+//DialogPaper is a styled div that will be the contain the dialog content.
+
 const ModalPaper = styled.div`
   border-radius: 24px;
   box-shadow: 0px 20px 30px -10px rgb(38, 57, 77);
   max-width: 90vh;
-  max-height: 90vw;
+  max-height: 90vh;
   max-width: calc(100% - 32px);
-  width: 466px;
-  height: 466px;
   position: absolute;
-  top: calc(50vh - 213px);
-  left: calc(50vw - 193px);
-  
   color: white;
   text-align: center;
+  overflow: hidden;
   background: linear-gradient(
     90deg,
     rgba(255, 0, 0, 1) 0%,
@@ -30,7 +28,6 @@ const ModalPaper = styled.div`
     rgba(251, 7, 217, 1) 90%,
     rgba(255, 0, 0, 1) 100%
   );
-  overflow: hidden;
 `;
 
 const ModalPaperDiv = styled.div`
