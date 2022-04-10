@@ -5,6 +5,8 @@ import { MusicPlayer } from '../MusicPlayer';
 import Shockwave from '../assets/shockwave_looped.mp3';
 import Tetris99 from '../assets/tetris99.m4a';
 import Good4U from '../assets/good4u.m4a';
+import Dialog from '@mui/material/Dialog';
+import {DialogPaper} from './DialogPaper';
 
 const Title = styled.h2`
   width: 100%;
@@ -105,7 +107,7 @@ export function SettingsModal(props) {
   }
 
   return (
-    <>
+    <Dialog open={props.open} PaperComponent={DialogPaper}>
       <Title>
         Settings
       </Title>
@@ -124,11 +126,11 @@ export function SettingsModal(props) {
         <MenuButtons onClick={onClickBefore}>before</MenuButtons>
         <MenuButtons onClick={onClickNext}>next</MenuButtons>
       </Card>
-
-    </>
+    </Dialog>
   );
 }
 SettingsModal.propTypes = {
+  open: PropTypes.bool.isRequired,
   backgrounds: PropTypes.object.isRequired,
   setSelectedBackground: PropTypes.func
 };

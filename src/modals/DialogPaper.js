@@ -2,27 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-const Background = styled.div`
-  height: 100vh;
-  width: 100vw;
-  background: rgba(0,0,0,.5);
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  z-index: ${props => props.zIndex};
-`
-
 const ModalPaper = styled.div`
- 
   border-radius: 24px;
   box-shadow: 0px 20px 30px -10px rgb(38, 57, 77);
   max-width: 90vh;
   max-height: 90vw;
+  max-width: calc(100% - 32px);
   width: 466px;
   height: 466px;
   position: absolute;
   top: calc(50vh - 213px);
-  left: calc(50vw - 223px);
+  left: calc(50vw - 193px);
   
   color: white;
   text-align: center;
@@ -41,7 +31,6 @@ const ModalPaper = styled.div`
     rgba(255, 0, 0, 1) 100%
   );
   overflow: hidden;
-
 `;
 
 const ModalPaperDiv = styled.div`
@@ -49,34 +38,25 @@ const ModalPaperDiv = styled.div`
   flex-wrap: wrap;
   border-radius: 24px;
   background-color: black;
-  height: 98%;
-  width: 98%;
-  margin: 1%;
+  height: calc(100% - 16px);
+  width: calc(100% - 16px);
+  margin: 8px;
   padding: 12px;
   box-sizing: border-box;
   align-content: baseline;
   justify-content: center;
 `;
 
-export function Modal(props) {
-  const { open, ModalComponent, zIndex, ...otherProps } = props;
-  if (open) {
-    return (
-      <Background zIndex={zIndex}>
-        <ModalPaper>
-          <ModalPaperDiv>
-            <ModalComponent {...otherProps} />
-          </ModalPaperDiv>
-        </ModalPaper>
-      </Background>
-    );
-  }
-  else {
-    return <></>;
-  }
+export function DialogPaper(props) {
+  const { children } = props;
+  return (
+    <ModalPaper>
+      <ModalPaperDiv>
+        {children}
+      </ModalPaperDiv>
+    </ModalPaper>
+  );
 }
-Modal.propTypes = {
-  open: PropTypes.bool.isRequired,
-  ModalComponent: PropTypes.any.isRequired,
-  zIndex: PropTypes.number
-};
+DialogPaper.propTypes = {
+  children: PropTypes.any
+}

@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Button, ModalTitle } from '../commonStyles';
+import Dialog from '@mui/material/Dialog';
+import { DialogPaper } from './DialogPaper';
 
 const PlayerCard = styled.div`
   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
@@ -35,10 +37,10 @@ const StartGameButton = styled(Button)`
 `
 
 export function LobbyModal(props) {
-  const { isHost, players, room } = props;
+  const { isHost, players, room, open } = props;
   if (players !== undefined && players[0]) {
     return (
-      <>
+      <Dialog open={open} PaperComponent={DialogPaper}>
         <ModalTitle>
           {players[0]}&apos;s lobby
         </ModalTitle>
@@ -57,14 +59,15 @@ export function LobbyModal(props) {
             START GAME
           </StartGameButton>
         }
-      </>
+      </Dialog>
     );
   }
   else {
-    return <>No players in lobby</>;
+    return <Dialog open={open}>No players in lobby</Dialog>;
   }
 }
 LobbyModal.propTypes = {
+  open: PropTypes.bool.isRequired,
   isHost: PropTypes.bool.isRequired,
   players: PropTypes.array,
   startGame: PropTypes.func.isRequired,
