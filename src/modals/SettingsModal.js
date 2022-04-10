@@ -26,7 +26,6 @@ const Card = styled.div`
   margin: auto;
   margin-top: auto;
   border-radius: 8px;
-  margin-top: 50px;
   margin-right: 40px;
   
   box-shadow: 
