@@ -25,7 +25,7 @@ const BlackBox = styled.div`
 
 const CardComponent = styled(StyledCard)`
   padding: 12px;
-  background: url("https://raw.githubusercontent.com/ericnavar/among-us-2-2/master/sand/${props => `${props.value}_${props.color}`}.jpg");
+  background: url("https://raw.githubusercontent.com/ericnavar/among-us-2-2/master/sand/${props => `${props.value}_${props.color === "rainbow" ? "rainbow" : "red"}`}.jpg");
   background-size: cover;
 `;
 
@@ -37,9 +37,32 @@ const ButtonWrapper = styled.button`
   position: relative;
 `
 
+const RedCard = styled(CardComponent)`
+  
+`;
+
+const YellowCard = styled(CardComponent)`
+  filter: hue-rotate(65deg) brightness(1.5);
+`;
+
+const GreenCard = styled(CardComponent)`
+filter: hue-rotate(145deg);
+`;
+
+const BlueCard = styled(CardComponent)`
+  filter: hue-rotate(235deg);
+`;
+
 function Card(props) {
   const { color, value } = props;
-  return (<CardComponent color={color} value={value} />);
+
+  let ColoredCardComponent = CardComponent;
+  if (color === "red") { ColoredCardComponent = RedCard; }
+  else if (color === "yellow") { ColoredCardComponent = YellowCard; }
+  else if (color === "green") { ColoredCardComponent = GreenCard; }
+  else if (color === "blue") { ColoredCardComponent = BlueCard; }
+
+  return (<ColoredCardComponent color={color} value={value} />);
 }
 Card.propTypes = {
   color: PropTypes.string,

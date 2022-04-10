@@ -51,7 +51,6 @@ const HomeLink = styled(Link)`
 function GameRules() {
   return (
     <>
-
       <GameRulesMain>
         <Title>
           32Stacks Game Rules
@@ -76,6 +75,7 @@ function GameRules() {
             You win by putting down all your cards.
           </li>
         </ul>
+        <HomeLink to="/">HOME</HomeLink>
       </GameRulesMain>
       <Background />
     </>
