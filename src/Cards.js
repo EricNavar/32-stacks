@@ -25,7 +25,7 @@ const BlackBox = styled.div`
 
 const CardComponent = styled(StyledCard)`
   padding: 12px;
-  background: url("https://raw.githubusercontent.com/ericnavar/among-us-2-2/master/sand/${props => `${props.value}_${props.color === "rainbow" ? "rainbow" : "red"}`}.jpg");
+  background: url("https://raw.githubusercontent.com/ericnavar/among-us-2-2/master/${props => `${props.selectedDeck}/${props.value}_${props.color === "rainbow" ? "rainbow" : "red"}`}.jpg");
   background-size: cover;
 `;
 
@@ -54,7 +54,7 @@ const BlueCard = styled(CardComponent)`
 `;
 
 function Card(props) {
-  const { color, value } = props;
+  const { color, value, selectedDeck } = props;
 
   let ColoredCardComponent = CardComponent;
   if (color === "red") { ColoredCardComponent = RedCard; }
@@ -62,20 +62,21 @@ function Card(props) {
   else if (color === "green") { ColoredCardComponent = GreenCard; }
   else if (color === "blue") { ColoredCardComponent = BlueCard; }
 
-  return (<ColoredCardComponent color={color} value={value} />);
+  return (<ColoredCardComponent color={color} value={value} selectedDeck={selectedDeck} />);
 }
 Card.propTypes = {
   color: PropTypes.string,
-  value: PropTypes.string
+  value: PropTypes.string,
+  selectedDeck: PropTypes.string.isRequired
 };
 
 export { Card };
 
 function CardButton(props) {
-  const { color, value, gray, myTurn, onClick } = props;
+  const { color, value, gray, myTurn, onClick, selectedDeck } = props;
   return (
     <ButtonWrapper onClick={onClick} disabled={!myTurn || gray}>
-      <Card color={color} value={value} />
+      <Card color={color} value={value} selectedDeck={selectedDeck} />
       <BlackBox gray={gray}></BlackBox>
     </ButtonWrapper>
   );
@@ -86,6 +87,7 @@ CardButton.propTypes = {
   gray: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
   myTurn: PropTypes.bool,
+  selectedDeck: PropTypes.string.isRequired
 };
 
 export { CardButton };

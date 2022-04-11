@@ -30,11 +30,10 @@ const Card = styled.div`
   
   box-shadow: 
     blue 0px 0px 0px 2px inset, 
-    rgb(0, 0, 0) 10px -10px 0px -3px, 
-    rgb(31, 193, 27) 10px -10px, rgb(0, 0, 0) 20px -20px 0px -3px, 
-    rgb(255, 217, 19) 20px -20px, rgb(0, 0, 0) 30px -30px 0px -3px, 
-    rgb(255, 156, 85) 30px -30px, rgb(0, 0, 0) 40px -40px 0px -3px, 
-    rgb(255, 85, 85) 40px -40px;
+    rgb(0, 0, 0) 5px -5px 0px -1px, rgb(31, 193, 27) 5px -5px,
+    rgb(0, 0, 0) 10px -10px 0px -1px, rgb(255, 217, 19) 10px -10px,
+    rgb(0, 0, 0) 15px -15px 0px -1px, rgb(255, 156, 85) 15px -15px,
+    rgb(0, 0, 0) 20px -20px 0px -1px, rgb(255, 85, 85) 20px -20px;
   @media (max-width: 600px) {
     width: 100%;
     border: solid 1px blue;
@@ -87,8 +86,6 @@ const MenuButtons = styled.button`
   }
 `
 
-
-
 const songs = [
   { name: "Shockwave", file: Shockwave },
   { name: "Tetris 99", file: Tetris99 },
@@ -117,26 +114,32 @@ export function SettingsModal(props) {
         Settings
       </Title>
       <Card>
-        <h2>
+        <h3>
           Change Board Map
-        </h2>
+        </h3>
         {Object.keys(props.backgrounds).map((backgroundName, index) =>
           <MenuButtons key={index} onClick={() => props.setSelectedBackground(backgroundName)}>{backgroundName}</MenuButtons>
         )}
       </Card>
       <Card>
-        <h2>Play Music</h2>
+        <h3>Play Music</h3>
         <CurrentSong>{songs[songIndex].name}</CurrentSong>
         <MusicPlayer url={songs[songIndex].file} />
         <MenuButtons onClick={onClickBefore}>before</MenuButtons>
         <MenuButtons onClick={onClickNext}>next</MenuButtons>
       </Card>
-    </Dialog>
+      <Card>
+        <h3>Change Board Map</h3>
+        <MenuButtons onClick={() => props.setSelectedDeck("sand")}>Sand</MenuButtons>
+        <MenuButtons onClick={() => props.setSelectedDeck("old_cards")}>RGB</MenuButtons>
+      </Card>
+    </Dialog >
   );
 }
 SettingsModal.propTypes = {
   open: PropTypes.bool.isRequired,
   backgrounds: PropTypes.object.isRequired,
-  setSelectedBackground: PropTypes.func
+  setSelectedBackground: PropTypes.func.isRequired,
+  setSelectedDeck: PropTypes.func.isRequired
 };
 

@@ -28,14 +28,15 @@ function SettingsButton(props) {
       <SettingsIconButton onClick={onClickSettingsButton}>
         <SettingsIcon />
       </SettingsIconButton>
-      <SettingsModal open={settingsModalOpen} zIndex={200} backgrounds={props.backgrounds} setSelectedBackground={props.setSelectedBackground} />
+      <SettingsModal open={settingsModalOpen} zIndex={200} backgrounds={props.backgrounds} setSelectedBackground={props.setSelectedBackground} setSelectedDeck={props.setSelectedDeck} />
     </>
   );
 }
 SettingsButton.propTypes = {
   backgrounds: PropTypes.object.isRequired,
   setSelectedBackground: PropTypes.func.isRequired,
-  selectedBackground: PropTypes.string.isRequired
+  selectedBackground: PropTypes.string.isRequired,
+  setSelectedDeck: PropTypes.func.isRequired
 }
 
 export { SettingsButton };
