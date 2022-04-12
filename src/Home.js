@@ -52,6 +52,7 @@ const expand = keyframes`
 `;
 
 const HomeMain = styled.main`
+  max-width: 100%;
   text-align: center;
   justify-content: center;
   display: grid;
@@ -73,7 +74,7 @@ const HomeMain = styled.main`
 }
 `
 
-const GamesRuledLink = styled(Link)`
+const GamesRulesLink = styled(Link)`
   color: white;
   font-size: xx-large;
   text-decoration: none;
@@ -83,7 +84,8 @@ const GamesRuledLink = styled(Link)`
 `
 
 const CreateNewGame = styled(Link)`
-  width: 250px;
+  width: 256px;
+  max-width: 100%;
   padding: 12px;
   background-color: #383838;
   color: white;
@@ -99,7 +101,8 @@ const CreateNewGame = styled(Link)`
 `
 
 const JoinExistingGame = styled.button`
-  width: 250px;
+  width: 280px;
+  max-width: 100%;
   padding: 12px;
   background-color: #383838;
   color: white;
@@ -147,6 +150,9 @@ const LinksContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 12px;
+  @media (max-width: 600px) {
+    display: grid;
+  }
 `
 
 const RoomCodeInputContainer = styled.div`
@@ -205,11 +211,9 @@ function Home(props) {
         <LinksContainer>
           <CreateNewGame to={`/play/${generateRoomCode()}`}>Create a new game!</CreateNewGame>
 
-          <p style={{ marginLeft: 12 }}>
-            or
-          </p>
+          <p style={{ margin: 12 }}>or</p>
 
-          <div>
+          <div style={{ width: 'min-content' }}>
             <JoinExistingGame onClick={onClickJoin}>Join an existing game!</JoinExistingGame>
             <RoomCodeInputContainer visible={roomCodeOpen}>
               <TextInput type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())} />
@@ -221,7 +225,8 @@ function Home(props) {
         </LinksContainer>
 
         <GameRulesLinkContainer>
-          <GamesRuledLink style={{ fontSize: 24 }} to="/rules">Game Rules!</GamesRuledLink>
+          <GamesRulesLink style={{ fontSize: 24 }} to="/rules">Game Rules!</GamesRulesLink><br />
+          <GamesRulesLink style={{ fontSize: 24 }} to="/credits">Credits</GamesRulesLink>
         </GameRulesLinkContainer>
       </div>
     </HomeMain>

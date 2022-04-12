@@ -6,7 +6,7 @@ import Shockwave from '../assets/shockwave_looped.mp3';
 import Tetris99 from '../assets/tetris99.m4a';
 import Good4U from '../assets/good4u.m4a';
 import Dialog from '@mui/material/Dialog';
-import {DialogPaper} from './DialogPaper';
+import { DialogPaper } from './DialogPaper';
 
 const Title = styled.h2`
   width: 100%;
@@ -27,7 +27,7 @@ const Card = styled.div`
   margin-top: auto;
   border-radius: 8px;
   margin-top: 50px;
-  margin-right: 4rem;
+  margin-right: 40px;
   
   box-shadow: 
     blue 0px 0px 0px 2px inset, 
@@ -35,7 +35,13 @@ const Card = styled.div`
     rgb(31, 193, 27) 10px -10px, rgb(0, 0, 0) 20px -20px 0px -3px, 
     rgb(255, 217, 19) 20px -20px, rgb(0, 0, 0) 30px -30px 0px -3px, 
     rgb(255, 156, 85) 30px -30px, rgb(0, 0, 0) 40px -40px 0px -3px, 
-    rgb(255, 85, 85) 40px -40px
+    rgb(255, 85, 85) 40px -40px;
+  @media (max-width: 600px) {
+    width: 100%;
+    border: solid 1px blue;
+    box-shadow: none;
+    margin-right: 0;
+  }
 `
 
 const CurrentSong = styled.p`
