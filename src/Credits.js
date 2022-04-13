@@ -33,7 +33,7 @@ export function Credits() {
   return (
     <>
       <CreditsPage>
-        <h1>Eric Navar Eric Navar Eric Navar Eric Navar Eric Navar Eric Navar Eric Navar Eric Navar Eric Navar Eric Navar Eric Navar Eric Navar</h1>
+        <h1>Eric Navar Cainan Conway Eric Navar Cainan Conway Eric Navar Cainan Conway Eric Navar Cainan Conway Eric Navar Cainan Conway Eric Navar Cainan Conway</h1>
         <SussyBoiImg src={SussyBoi} />
         <iframe width="350" height="703" src="https://www.youtube.com/embed/9bZkp7q19f0" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
       </CreditsPage>
