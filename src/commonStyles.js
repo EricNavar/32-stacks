@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import BackgroundTransparent from './assets/backgroundTransparent.png';
 
 export const Button = styled.button`
   padding: 10px;
@@ -18,3 +19,24 @@ export const ModalTitle = styled.h2`
   color: white;
   height: fit-content;
 `;
+
+const rainbowAnim = keyframes`
+  from {
+    filter: hue-rotate(0deg);
+  }
+  to {
+    filter: hue-rotate(360deg);
+  }
+  `;
+
+export const Background = styled.div`
+  background-image: url(${BackgroundTransparent});
+  background-color: black;
+  background-size: 1000px;
+  height: 100vh;
+  width: 100vw;
+  animation: ${rainbowAnim} 8s infinite linear;
+  position: absolute;
+  top: 0;
+  z-index: -1;
+`

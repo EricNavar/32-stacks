@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
 import Logo from './assets/logo.png';
+import { Background } from './commonStyles';
 
 const generateRoomCode = () => {
   let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -187,49 +188,52 @@ function Home(props) {
   }
 
   return (
-    <HomeMain id="home">
-      <LogoComponent id="logo" src={Logo} alt="logo" />
+    <>
+      <HomeMain id="home">
+        <LogoComponent id="logo" src={Logo} alt="logo" />
 
-      <p><i>This is literally the best card game that there is.</i></p>
-      <div style={{ margin: "2.5rem" }}>
+        <p><i>This is literally the best card game that there is.</i></p>
+        <div style={{ margin: "2.5rem" }}>
 
-        {/* Username input */}
-        <div id="child1">
-          <label style={{ textSize: "large" }} htmlFor="name">Set name: </label>
-          <TextInput
-            onChange={(e) => props.setName(e.target.value)}
-            type="text"
-            id="name"
-            name="name"
-            minLength="1"
-            maxLength="15"
-            size="10"
-            placeholder="Name"
-          />
-        </div>
-
-        <LinksContainer>
-          <CreateNewGame to={`/play/${generateRoomCode()}`}>Create a new game!</CreateNewGame>
-
-          <p style={{ margin: 12 }}>or</p>
-
-          <div style={{ width: 'min-content' }}>
-            <JoinExistingGame onClick={onClickJoin}>Join an existing game!</JoinExistingGame>
-            <RoomCodeInputContainer visible={roomCodeOpen}>
-              <TextInput type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())} />
-              <SubmitLink to={`/play/${roomCode}`}>
-                Submit
-              </SubmitLink>
-            </RoomCodeInputContainer>
+          {/* Username input */}
+          <div id="child1">
+            <label style={{ textSize: "large" }} htmlFor="name">Set name: </label>
+            <TextInput
+              onChange={(e) => props.setName(e.target.value)}
+              type="text"
+              id="name"
+              name="name"
+              minLength="1"
+              maxLength="15"
+              size="10"
+              placeholder="Name"
+            />
           </div>
-        </LinksContainer>
 
-        <GameRulesLinkContainer>
-          <GamesRulesLink style={{ fontSize: 24 }} to="/rules">Game Rules!</GamesRulesLink><br />
-          <GamesRulesLink style={{ fontSize: 24 }} to="/credits">Credits</GamesRulesLink>
-        </GameRulesLinkContainer>
-      </div>
-    </HomeMain>
+          <LinksContainer>
+            <CreateNewGame to={`/play/${generateRoomCode()}`}>Create a new game!</CreateNewGame>
+
+            <p style={{ margin: 12 }}>or</p>
+
+            <div style={{ width: 'min-content' }}>
+              <JoinExistingGame onClick={onClickJoin}>Join an existing game!</JoinExistingGame>
+              <RoomCodeInputContainer visible={roomCodeOpen}>
+                <TextInput type="text" id="link" name="link" placeholder="Enter room code here" size="10" onChange={(e) => setRoomCode(e.target.value.toUpperCase())} />
+                <SubmitLink to={`/play/${roomCode}`}>
+                  Submit
+                </SubmitLink>
+              </RoomCodeInputContainer>
+            </div>
+          </LinksContainer>
+
+          <GameRulesLinkContainer>
+            <GamesRulesLink style={{ fontSize: 24 }} to="/rules">Game Rules!</GamesRulesLink><br />
+            <GamesRulesLink style={{ fontSize: 24 }} to="/credits">Credits</GamesRulesLink>
+          </GameRulesLinkContainer>
+        </div>
+      </HomeMain>
+      <Background />
+    </>
   );
 }
 Home.propTypes = {
