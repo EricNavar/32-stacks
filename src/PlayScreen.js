@@ -633,19 +633,3 @@ PlayScreen.propTypes = {
 };
 
 export { PlayScreen };
-
-
-/*
-  <Modal open={colorPickerOpen} setOpen={setColorPickerOpen} setNextColor={setNextColor} ModalComponent={ColorPicker} />
-  <Modal open={endingModalOpen} setOpen={setEndingModalOpen} ModalComponent={EndingModal} isHost={host} restartGame={restartGame} />
-  <Modal
-    open={lobbyModalOpen}
-    setOpen={setLobbyModalOpen}
-    ModalComponent={LobbyModal}
-    players={gameObjectPlayerNames}
-    isHost={host}
-    startGame={startGame}
-    room={room}
-  />
-  <SettingsButton selectedBackground={selectedBackground} setSelectedBackground={setSelectedBackground} backgrounds={backgrounds} />
-*/
