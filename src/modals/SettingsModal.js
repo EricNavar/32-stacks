@@ -129,7 +129,7 @@ export function SettingsModal(props) {
         <MenuButtons onClick={onClickNext}>next</MenuButtons>
       </Card>
       <Card>
-        <h3>Change Board Map</h3>
+        <h3>Change Card Designs</h3>
         <MenuButtons onClick={() => props.setSelectedDeck("sand")}>Sand</MenuButtons>
         <MenuButtons onClick={() => props.setSelectedDeck("old_cards")}>RGB</MenuButtons>
       </Card>
