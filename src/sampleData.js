@@ -6,6 +6,7 @@ export const yourCards = [
   { color: "yellow", value: 7, gray: true },
   { color: "green", value: 7, gray: true }
 ];
+//
 
 export const otherPlayers = [
   {

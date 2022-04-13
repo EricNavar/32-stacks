@@ -15,7 +15,7 @@ const StyledCard = styled.div`
 
 const BlackBox = styled.div`
   position: absolute;
-  width: 100%;
+  width: 95%;
   height: 100%;
   opacity: ${props => props.gray ? "75%" : "0%"};
   background-color: black;
@@ -35,7 +35,14 @@ const ButtonWrapper = styled.button`
   background: transparent;
   border: 0;
   position: relative;
+  &:hover{
+    filter: ${props => props.disabled ? "brightness(1)" : "brightness(1.5)"};
+  }
+  &:active{
+    box-shadow: ${props => props.disabled ? "brightness(1)" : "inset 0px 0px 15px 1px " + ((props.color === "rainbow") ? "whitesmoke" : props.color) + ", 0px 0px 25px 1px " + ((props.color === "rainbow") ? "whitesmoke" : props.color)};
+  }
 `
+//  box-shadow: 0px 0px 25px 1px ${props => ((props.color === "rainbow") ? "white" : props.color)};
 
 const RedCard = styled(CardComponent)`
   
@@ -75,7 +82,7 @@ export { Card };
 function CardButton(props) {
   const { color, value, gray, myTurn, onClick, selectedDeck } = props;
   return (
-    <ButtonWrapper onClick={onClick} disabled={!myTurn || gray}>
+    <ButtonWrapper onClick={onClick} disabled={!myTurn || gray} color={color}>
       <Card color={color} value={value} selectedDeck={selectedDeck} />
       <BlackBox gray={gray}></BlackBox>
     </ButtonWrapper>
