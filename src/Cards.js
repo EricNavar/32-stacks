@@ -82,7 +82,7 @@ export { Card };
 function CardButton(props) {
   const { color, value, gray, myTurn, onClick, selectedDeck } = props;
   return (
-    <ButtonWrapper onClick={onClick} disabled={!myTurn || gray}>
+    <ButtonWrapper onClick={onClick} disabled={!myTurn || gray} color={color}>
       <Card color={color} value={value} selectedDeck={selectedDeck} />
       <BlackBox gray={gray}></BlackBox>
     </ButtonWrapper>
