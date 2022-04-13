@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { Background } from './commonStyles';
 
 const GameRulesMain = styled.main`
   border-radius: 8px;
@@ -49,32 +50,35 @@ const HomeLink = styled(Link)`
 
 function GameRules() {
   return (
-    <GameRulesMain>
-      <Title>
-        32Stacks Game Rules
-      </Title>
-      <p>
-        This is like a cooler version of Uno. When your turn starts, you play your first card according to regular Uno rules. After that, you can play keep playing additional cards. Each additional card must follow one of the following rules:
-      </p>
-      <ul>
-        <li>
-          The card is the same number as the previous card you put down.
-        </li>
-        <li>
-          If you place a non-wild card, you can place additional cards to create an streak of cards of increasing value or decreasing value. For example, if you put down 3, you can then put down 4,5,6... or you can then put down 2,1,0...
-        </li>
-        <li>
-          Your streak can overflow and underflow. If you put down 2,1,0, then you can then put down 9 and continue with a decreasing streak. Similarly, another valid streak is 7,8,9,0,1,2...
-        </li>
-        <li>
-          You can create a streak of the following special cards: Draw 4, Draw 2, Skip, and Reverse. Put down as many as you like, but you can&apos;t mix special cards in a streak.
-        </li>
-        <li>
-          You win by putting down all your cards.
-        </li>
-      </ul>
-      <HomeLink to="/">Home</HomeLink>
-    </GameRulesMain>
+    <>
+      <GameRulesMain>
+        <Title>
+          32Stacks Game Rules
+        </Title>
+        <p>
+          This is like a cooler version of Uno. When your turn starts, you play your first card according to regular Uno rules. After that, you can play keep playing additional cards. Each additional card must follow one of the following rules:
+        </p>
+        <ul>
+          <li>
+            The card is the same number as the previous card you put down.
+          </li>
+          <li>
+            If you place a non-wild card, you can place additional cards to create an streak of cards of increasing value or decreasing value. For example, if you put down 3, you can then put down 4,5,6... or you can then put down 2,1,0...
+          </li>
+          <li>
+            Your streak can overflow and underflow. If you put down 2,1,0, then you can then put down 9 and continue with a decreasing streak. Similarly, another valid streak is 7,8,9,0,1,2...
+          </li>
+          <li>
+            You can create a streak of the following special cards: Draw 4, Draw 2, Skip, and Reverse. Put down as many as you like, but you can&apos;t mix special cards in a streak.
+          </li>
+          <li>
+            You win by putting down all your cards.
+          </li>
+        </ul>
+        <HomeLink to="/">HOME</HomeLink>
+      </GameRulesMain>
+      <Background />
+    </>
   );
 }
 

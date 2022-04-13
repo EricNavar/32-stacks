@@ -549,6 +549,7 @@ function PlayScreen(props) {
   }
 
   const [selectedBackground, setSelectedBackground] = useState("Black wood");
+  const [selectedDeck, setSelectedDeck] = useState("sand");
 
   return (
     <>
@@ -573,7 +574,7 @@ function PlayScreen(props) {
             <CardDropper>
               <div style={{ width: 'max-content' }}>
                 {topOfStack &&
-                  <CardButton onClick={() => { console.log("click"); }} {...topOfStack} />
+                  <CardButton onClick={() => { console.log("click"); }} {...topOfStack} selectedDeck={selectedDeck} />
                 }
               </div>
             </CardDropper>
@@ -594,6 +595,7 @@ function PlayScreen(props) {
                 }
                 {...card}
                 myTurn={myTurn}
+                selectedDeck={selectedDeck}
               />;
             })}
           </HandContainerInner>
@@ -604,8 +606,8 @@ function PlayScreen(props) {
             backgroundColor: `${color}`,
           }}>{centerText}</CenterText>
           <CenterCardContainer>
-            <Card id="discard-pile" color={lastCardPlayed.color} value={lastCardPlayed.value} />
-            <CardButton id="draw-pile" onClick={onClickDrawPile} color="rainbow" gray={false} value="wild" myTurn={true}>
+            <Card id="discard-pile" color={lastCardPlayed.color} value={lastCardPlayed.value} selectedDeck={selectedDeck} />
+            <CardButton id="draw-pile" onClick={onClickDrawPile} color="rainbow" gray={false} value="wild" myTurn={true} selectedDeck={selectedDeck}>
               Draw
             </CardButton>
           </CenterCardContainer>
@@ -620,7 +622,7 @@ function PlayScreen(props) {
         startGame={startGame}
         room={room}
       />
-      <SettingsButton selectedBackground={selectedBackground} setSelectedBackground={setSelectedBackground} backgrounds={backgrounds} />
+      <SettingsButton selectedBackground={selectedBackground} setSelectedBackground={setSelectedBackground} backgrounds={backgrounds} setSelectedDeck={setSelectedDeck} />
       <ColorPicker open={colorPickerOpen} setOpen={setColorPickerOpen} setNextColor={setNextColor} />
     </>
   );
@@ -631,19 +633,3 @@ PlayScreen.propTypes = {
 };
 
 export { PlayScreen };
-
-
-/*
-  <Modal open={colorPickerOpen} setOpen={setColorPickerOpen} setNextColor={setNextColor} ModalComponent={ColorPicker} />
-  <Modal open={endingModalOpen} setOpen={setEndingModalOpen} ModalComponent={EndingModal} isHost={host} restartGame={restartGame} />
-  <Modal
-    open={lobbyModalOpen}
-    setOpen={setLobbyModalOpen}
-    ModalComponent={LobbyModal}
-    players={gameObjectPlayerNames}
-    isHost={host}
-    startGame={startGame}
-    room={room}
-  />
-  <SettingsButton selectedBackground={selectedBackground} setSelectedBackground={setSelectedBackground} backgrounds={backgrounds} />
-*/
