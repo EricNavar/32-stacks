@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import BackgroundTransparent from './assets/backgroundTransparent.png';
+import defaultBackground from './assets/backgroundTransparent.png';
 
 export const Button = styled.button`
   padding: 10px;
@@ -30,9 +30,10 @@ const rainbowAnim = keyframes`
   `;
 
 export const Background = styled.div`
-  background-image: url(${BackgroundTransparent});
+  background-image: url(${props => props.file});
   background-color: black;
-  background-size: 1000px;
+  /* background-size: 1000px; */
+  background-size: ${props => props.file === defaultBackground ? "1000px" : "100%"};
   height: 100vh;
   width: 100vw;
   animation: ${rainbowAnim} 8s infinite linear;
