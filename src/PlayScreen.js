@@ -15,6 +15,9 @@ import { Card, CardButton } from './Cards';
 // Uncomment this to start game w/ sample cards:
 // import { yourCards } from './sampleData';
 import { SettingsButton } from './SettingsButton';
+import defaultBackground from './assets/backgroundTransparent.png';
+import lavaLampBackground from './assets/speck_background_rainbow_dim.png';
+import { Background } from './commonStyles';
 
 const ENDPOINT = "https://myrpgstats.com";
 
@@ -24,6 +27,8 @@ const ENDPOINT = "https://myrpgstats.com";
 let socket;
 
 const backgrounds = {
+  "\"Default\"": defaultBackground,
+  "Lava Lamp": lavaLampBackground,
   "Black wood": "https://github.com/EricNavar/among-us-2-2/blob/master/Wood.png?raw=true",
   "Among Us": "https://cdn1.epicgames.com/salesEvent/salesEvent/amoguslandscape_2560x1440-3fac17e8bb45d81ec9b2c24655758075",
   "Sand": "https://images.unsplash.com/photo-1550684376-efcbd6e3f031?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTJ8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80",
@@ -34,9 +39,11 @@ const backgrounds = {
 const PlayScreenMain = styled.main`
   justify-content:center;
   display: grid;
+  /*
   background: url("${props => props.background}");
   background-size: cover;
   background-position: center;
+  */
   height: 100vh;
 `;
 
@@ -554,6 +561,7 @@ function PlayScreen(props) {
   return (
     <>
       <PlayScreenMain background={backgrounds[selectedBackground]}>
+        <Background file={backgrounds[selectedBackground]} />
         <TopPlayerUsername hidden={setPlayerName(1) === 0}>{setPlayerName(1)}</TopPlayerUsername>
         <TopPlayerHandContainer>
           <div hidden={setPlayerName(1) === 0} style={{ display: 'max-content' }}>

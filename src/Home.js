@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
 import Logo from './assets/logo.png';
 import { Background } from './commonStyles';
+import defaultBackground from './assets/backgroundTransparent.png';
 
 const generateRoomCode = () => {
   let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -232,7 +233,7 @@ function Home(props) {
           </GameRulesLinkContainer>
         </div>
       </HomeMain>
-      <Background />
+      <Background file={defaultBackground} />
     </>
   );
 }

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { MusicPlayer } from '../MusicPlayer';
 import Shockwave from '../assets/shockwave_looped.mp3';
+import Overdrive from '../assets/overdrive_wip.mp3'
 import Tetris99 from '../assets/tetris99.m4a';
 import Good4U from '../assets/good4u.m4a';
 import Dialog from '@mui/material/Dialog';
@@ -88,6 +89,7 @@ const MenuButtons = styled.button`
 
 const songs = [
   { name: "Shockwave", file: Shockwave },
+  { name: "Overdrive", file: Overdrive },
   { name: "Tetris 99", file: Tetris99 },
   { name: "Good 4 U", file: Good4U }
 ]
