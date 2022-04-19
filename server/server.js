@@ -14,8 +14,12 @@ const io = socketIO(httpServer);
 const playerList = [];
 
 const addPlayer = (id, playerID, name, room) => {
-    const player = {id, playerID, name, room};
-    playerList.push(player);
+
+    const player = { id, playerID, name, room };
+    if (playerList.length < 4) {
+        playerList.push(player);
+    }
+
     return player;
 };
 
