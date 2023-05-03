@@ -1,12 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
 
 const StyledCard = styled.div`
   display: inline-flex;
   width: 64px;
   height: 90px;
-  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
+    rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
+    rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
   box-sizing: border-box;
   @media (max-width: 600px) {
     width: 60px;
@@ -17,7 +19,7 @@ const BlackBox = styled.div`
   position: absolute;
   width: 95%;
   height: 100%;
-  opacity: ${props => props.gray ? "75%" : "0%"};
+  opacity: ${(props) => (props.gray ? "75%" : "0%")};
   background-color: black;
   top: 0;
   left: 0;
@@ -25,7 +27,12 @@ const BlackBox = styled.div`
 
 const CardComponent = styled(StyledCard)`
   padding: 12px;
-  background: url("https://raw.githubusercontent.com/ericnavar/among-us-2-2/master/${props => `${props.selectedDeck}/${props.value}_${props.color === "rainbow" ? "rainbow" : "red"}`}.jpg");
+  background: url("https://raw.githubusercontent.com/ericnavar/32-stacks-assets/master/${(
+    props
+  ) =>
+    `${props.selectedDeck}/${props.value}_${
+      props.color === "rainbow" ? "rainbow" : "red"
+    }`}.jpg");
   background-size: cover;
 `;
 
@@ -35,25 +42,30 @@ const ButtonWrapper = styled.button`
   background: transparent;
   border: 0;
   position: relative;
-  &:hover{
-    filter: ${props => props.disabled ? "brightness(1)" : "brightness(1.5)"};
+  &:hover {
+    filter: ${(props) =>
+      props.disabled ? "brightness(1)" : "brightness(1.5)"};
   }
-  &:active{
-    box-shadow: ${props => props.disabled ? "brightness(1)" : "inset 0px 0px 15px 1px " + ((props.color === "rainbow") ? "whitesmoke" : props.color) + ", 0px 0px 25px 1px " + ((props.color === "rainbow") ? "whitesmoke" : props.color)};
+  &:active {
+    box-shadow: ${(props) =>
+      props.disabled
+        ? "brightness(1)"
+        : "inset 0px 0px 15px 1px " +
+          (props.color === "rainbow" ? "whitesmoke" : props.color) +
+          ", 0px 0px 25px 1px " +
+          (props.color === "rainbow" ? "whitesmoke" : props.color)};
   }
-`
+`;
 //  box-shadow: 0px 0px 25px 1px ${props => ((props.color === "rainbow") ? "white" : props.color)};
 
-const RedCard = styled(CardComponent)`
-  
-`;
+const RedCard = styled(CardComponent)``;
 
 const YellowCard = styled(CardComponent)`
   filter: hue-rotate(65deg) brightness(1.5);
 `;
 
 const GreenCard = styled(CardComponent)`
-filter: hue-rotate(145deg);
+  filter: hue-rotate(145deg);
 `;
 
 const BlueCard = styled(CardComponent)`
@@ -64,17 +76,28 @@ function Card(props) {
   const { color, value, selectedDeck } = props;
 
   let ColoredCardComponent = CardComponent;
-  if (color === "red") { ColoredCardComponent = RedCard; }
-  else if (color === "yellow") { ColoredCardComponent = YellowCard; }
-  else if (color === "green") { ColoredCardComponent = GreenCard; }
-  else if (color === "blue") { ColoredCardComponent = BlueCard; }
+  if (color === "red") {
+    ColoredCardComponent = RedCard;
+  } else if (color === "yellow") {
+    ColoredCardComponent = YellowCard;
+  } else if (color === "green") {
+    ColoredCardComponent = GreenCard;
+  } else if (color === "blue") {
+    ColoredCardComponent = BlueCard;
+  }
 
-  return (<ColoredCardComponent color={color} value={value} selectedDeck={selectedDeck} />);
+  return (
+    <ColoredCardComponent
+      color={color}
+      value={value}
+      selectedDeck={selectedDeck}
+    />
+  );
 }
 Card.propTypes = {
   color: PropTypes.string,
   value: PropTypes.string,
-  selectedDeck: PropTypes.string.isRequired
+  selectedDeck: PropTypes.string.isRequired,
 };
 
 export { Card };
@@ -94,7 +117,7 @@ CardButton.propTypes = {
   gray: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
   myTurn: PropTypes.bool,
-  selectedDeck: PropTypes.string.isRequired
+  selectedDeck: PropTypes.string.isRequired,
 };
 
 export { CardButton };

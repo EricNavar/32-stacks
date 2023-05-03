@@ -1,23 +1,29 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import io from 'socket.io-client';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import PropTypes from "prop-types";
+import io from "socket.io-client";
 import { useParams, useNavigate } from "react-router-dom";
 //import local stuff later
-import { placeCard, drawCard, calculateCanPlaceCard, checkHand, chooseRandomNumberCard } from './logic/gameLogic';
-import { ColorPicker } from './modals/ColorPicker';
-import { EndingModal } from './modals/EndingModal';
-import { LobbyModal } from './modals/LobbyModal.js';
-import { DialogPaper } from './modals/DialogPaper.js';
-import Logo from './assets/logo.png';
-import { Card, CardButton } from './Cards';
+import {
+  placeCard,
+  drawCard,
+  calculateCanPlaceCard,
+  checkHand,
+  chooseRandomNumberCard,
+} from "./logic/gameLogic";
+import { ColorPicker } from "./modals/ColorPicker";
+import { EndingModal } from "./modals/EndingModal";
+import { LobbyModal } from "./modals/LobbyModal.js";
+import { DialogPaper } from "./modals/DialogPaper.js";
+import Logo from "./assets/logo.png";
+import { Card, CardButton } from "./Cards";
 // Uncomment this to start game w/ sample cards:
 // import { yourCards } from './sampleData';
-import { SettingsButton } from './SettingsButton';
-import defaultBackground from './assets/backgroundTransparent.png';
-import lavaLampBackground from './assets/speck_background_rainbow_dim.png';
-import { Background } from './commonStyles';
+import { SettingsButton } from "./SettingsButton";
+import defaultBackground from "./assets/backgroundTransparent.png";
+import lavaLampBackground from "./assets/speck_background_rainbow_dim.png";
+import { Background } from "./commonStyles";
 
 const ENDPOINT = "https://myrpgstats.com";
 
@@ -27,20 +33,23 @@ const ENDPOINT = "https://myrpgstats.com";
 let socket;
 
 const backgrounds = {
-  "\"Default\"": defaultBackground,
+  '"Default"': defaultBackground,
   "Lava Lamp": lavaLampBackground,
-  "Black wood": "https://github.com/EricNavar/among-us-2-2/blob/master/Wood.png?raw=true",
-  "Among Us": "https://cdn1.epicgames.com/salesEvent/salesEvent/amoguslandscape_2560x1440-3fac17e8bb45d81ec9b2c24655758075",
-  "Sand": "https://images.unsplash.com/photo-1550684376-efcbd6e3f031?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTJ8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80",
-  "Dancing": "https://raw.githubusercontent.com/EricNavar/among-us-2-2/master/among-us.gif",
-  "SSD": "https://raw.githubusercontent.com/EricNavar/among-us-2-2/master/ssdpng.png",
-}
+  "Black wood":
+    "https://github.com/EricNavar/32-stacks-assets/blob/master/Wood.png?raw=true",
+  "Among Us":
+    "https://cdn1.epicgames.com/salesEvent/salesEvent/amoguslandscape_2560x1440-3fac17e8bb45d81ec9b2c24655758075",
+  Sand: "https://images.unsplash.com/photo-1550684376-efcbd6e3f031?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTJ8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80",
+  Dancing:
+    "https://raw.githubusercontent.com/EricNavar/32-stacks-assets/master/among-us.gif",
+  SSD: "https://raw.githubusercontent.com/EricNavar/32-stacks-assets/master/ssdpng.png",
+};
 
 const PlayScreenMain = styled.main`
-  justify-content:center;
+  justify-content: center;
   display: grid;
   /*
-  background: url("${props => props.background}");
+  background: url("${(props) => props.background}");
   background-size: cover;
   background-position: center;
   */
@@ -76,7 +85,9 @@ const StyledCard = styled.div`
   display: inline-flex;
   width: 64px;
   height: 90px;
-  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
+    rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
+    rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
   box-sizing: border-box;
 `;
 
@@ -100,7 +111,7 @@ const HandContainer = styled.div`
   margin-left: auto;
   margin-right: auto;
   margin-top: auto;
-  background: rgba(255,255,255,.2);
+  background: rgba(255, 255, 255, 0.2);
   min-width: 72px;
   width: 100vw;
   overflow-x: scroll;
@@ -111,11 +122,11 @@ const HandContainerInner = styled.div`
   display: flex;
   flex-wrap: nowrap;
   margin: auto;
-`
+`;
 
 const TopPlayerHandContainer = styled.div`
   margin-top: 8px;
-  display:grid;
+  display: grid;
   justify-content: center;
 `;
 
@@ -174,12 +185,12 @@ const TopPlayerUsername = styled(Username)`
 
 const CenterText = styled.p`
   padding: 8px;
-`
+`;
 
 const CenterCardContainer = styled.div`
   display: flex;
   justify-content: center;
-`
+`;
 
 function PlayScreen(props) {
   const playerID = props.playerID;
@@ -201,8 +212,8 @@ function PlayScreen(props) {
 
   const [lastCardPlayed, setLastCardPlayed] = React.useState({
     color: "red",
-    value: '3',
-    gray: false
+    value: "3",
+    gray: false,
   });
   const [hand, setHand] = React.useState(() => {
     let newHand = [];
@@ -219,23 +230,25 @@ function PlayScreen(props) {
   const [nextColor, setNextColor] = React.useState(lastCardPlayed.color);
 
   let [shouldTransition, setShouldTransition] = useState(true);
-  let [color, setColor] = useState('red');
+  let [color, setColor] = useState("red");
 
   function handleClick() {
     setShouldTransition(false);
-    setColor('red');
+    setColor("red");
   }
 
   useEffect(() => {
-    if (color === 'red') {
+    if (color === "red") {
       setShouldTransition(true);
-      setColor('black');
+      setColor("black");
     }
   }, [color]);
 
   useEffect(() => {
     if (gameObject !== undefined) {
-      setGameObjectPlayerNames(gameObject.playerList.map(player => player.name));
+      setGameObjectPlayerNames(
+        gameObject.playerList.map((player) => player.name)
+      );
       if (host === false && gameObject.playerList[0].id === playerID) {
         console.log("I am the host!");
         setHost(true);
@@ -258,19 +271,20 @@ function PlayScreen(props) {
     for (let i = 0; i < 8; i++) {
       newHand.push(drawCard());
     }
-    const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
+    const lastCard =
+      inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
     setHand(checkHand(newHand, lastCard, inPlay, direction));
-  }
+  };
 
   const restartGame = () => {
     let newGameObject = { ...gameObject };
-    newGameObject.winner = 'restart';
+    newGameObject.winner = "restart";
     randomizeHand();
     for (let i = 0; i < gameObjectPlayerNames.length; i++) {
       newGameObject.playerList[i].cardCount = 8;
     }
     updateGame(newGameObject);
-  }
+  };
 
   //Socket.io --------------------------------------------------------------------
   const { room } = useParams();
@@ -279,22 +293,25 @@ function PlayScreen(props) {
   //Initial Socket Connection
   useEffect(() => {
     const connectionOptions = {
-      "forceNew": true,
-      "reconnectionAttempts": "Infinity",
-      "timeout": 10000,
-      "transports": ["websocket"],
+      forceNew: true,
+      reconnectionAttempts: "Infinity",
+      timeout: 10000,
+      transports: ["websocket"],
     };
     socket = io.connect(ENDPOINT, connectionOptions);
 
-    socket.emit('join', { room: room, name: props.name, playerID: playerID }, (error) => {
-      if (error) {
-        console.log("error");
-        navigate('/');
+    socket.emit(
+      "join",
+      { room: room, name: props.name, playerID: playerID },
+      (error) => {
+        if (error) {
+          console.log("error");
+          navigate("/");
+        } else {
+          console.log("Successfully connected to room");
+        }
       }
-      else {
-        console.log("Successfully connected to room");
-      }
-    });
+    );
   }, []);
 
   //Receiving Messages from Socket Server
@@ -308,9 +325,11 @@ function PlayScreen(props) {
     });
 
     socket.on("playerLeft", (newLobby) => {
-      setGameObject(previousGameObject => {
+      setGameObject((previousGameObject) => {
         const newGameObject = { ...previousGameObject };
-        const newList = previousGameObject.playerList.filter(player => player.id !== newLobby.leftPlayer);
+        const newList = previousGameObject.playerList.filter(
+          (player) => player.id !== newLobby.leftPlayer
+        );
         newGameObject.playerList = newList;
         return newGameObject;
       });
@@ -321,7 +340,7 @@ function PlayScreen(props) {
   //Updating Game Object with Game Actions
   const updateGame = (newGameObject) => {
     if (newGameObject !== undefined) {
-      socket.emit('updateGame', newGameObject);
+      socket.emit("updateGame", newGameObject);
     }
   };
 
@@ -329,7 +348,7 @@ function PlayScreen(props) {
     if (!endingModalOpen) {
       randomizeHand();
     }
-  }, [endingModalOpen])
+  }, [endingModalOpen]);
 
   //Check if game object updates
   useEffect(() => {
@@ -339,45 +358,68 @@ function PlayScreen(props) {
     }
     //Check if game is over
     if (gameObject.winner !== 0) {
-      if (gameObject.winner === 'restart') {
-        let temp = { ...gameObject }
+      if (gameObject.winner === "restart") {
+        let temp = { ...gameObject };
         temp.winner = 0;
         setEndingModalOpen(false);
-        setCenterText(`Player ${turn}'s turn: ${gameObjectPlayerNames[turn - 1]}`);
+        setCenterText(
+          `Player ${turn}'s turn: ${gameObjectPlayerNames[turn - 1]}`
+        );
         setShouldTransition(false);
-        updateGame(temp)
-      }
-      else {
-        console.log("Game is over!")
+        updateGame(temp);
+      } else {
+        console.log("Game is over!");
         setCenterText(`Winner: ${gameObject.winner[0].name}!`);
         setShouldTransition(false);
         setEndingModalOpen(true);
       }
     }
     //Check if it is your turn and set turn, then check if draw cards were played
-    if (turn === gameObject.turn && gameObject.lastCardPlayed !== 'empty') { setHand(checkHand(hand, gameObject.lastCardPlayed, [], direction)); }
-    setTurn(gameObject.turn)
-    if (gameObject.turn === gameObject.playerList.findIndex(player => playerID === player.id) + 1) {
-      setMyTurn(true);
-      if (gameObject.lastCardPlayed.value === 'draw2') {
-        let newHand = [...hand];
-        for (let i = 0; i < 2 * gameObject.lastPlaySize; i++) { newHand.push(drawCard()); }
-        setHand(checkHand(newHand, gameObject.lastCardPlayed, [], gameObject.direction))
-      }
-      if (gameObject.lastCardPlayed.value === 'draw4') {
-        let newHand = [...hand];
-        for (let i = 0; i < 4 * gameObject.lastPlaySize; i++) { newHand.push(drawCard()); }
-        setHand(checkHand(newHand, gameObject.lastCardPlayed, [], gameObject.direction))
-      }
+    if (turn === gameObject.turn && gameObject.lastCardPlayed !== "empty") {
+      setHand(checkHand(hand, gameObject.lastCardPlayed, [], direction));
     }
-    else {
+    setTurn(gameObject.turn);
+    if (
+      gameObject.turn ===
+      gameObject.playerList.findIndex((player) => playerID === player.id) + 1
+    ) {
+      setMyTurn(true);
+      if (gameObject.lastCardPlayed.value === "draw2") {
+        let newHand = [...hand];
+        for (let i = 0; i < 2 * gameObject.lastPlaySize; i++) {
+          newHand.push(drawCard());
+        }
+        setHand(
+          checkHand(
+            newHand,
+            gameObject.lastCardPlayed,
+            [],
+            gameObject.direction
+          )
+        );
+      }
+      if (gameObject.lastCardPlayed.value === "draw4") {
+        let newHand = [...hand];
+        for (let i = 0; i < 4 * gameObject.lastPlaySize; i++) {
+          newHand.push(drawCard());
+        }
+        setHand(
+          checkHand(
+            newHand,
+            gameObject.lastCardPlayed,
+            [],
+            gameObject.direction
+          )
+        );
+      }
+    } else {
       setMyTurn(false);
     }
     //Check last card played
     if (gameObject.lastCardPlayed !== "empty") {
       setLastCardPlayed(gameObject.lastCardPlayed);
     }
-  }, [gameObject])
+  }, [gameObject]);
 
   //When host starts the game by closing the lobby modal
   const [lobbyModalOpen, setLobbyModalOpen] = useState(true);
@@ -403,31 +445,51 @@ function PlayScreen(props) {
     // and you haven't placed a first card
     if (!calculateCanPlaceCard(hand) && inPlay.length === 0 && myTurn) {
       let newHand = [...hand];
-      newHand.push(drawCard())
-      const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
-      setHand(checkHand(newHand, lastCard, inPlay, direction))
+      newHand.push(drawCard());
+      const lastCard =
+        inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
+      setHand(checkHand(newHand, lastCard, inPlay, direction));
     }
   };
 
-  const onClickCardButton = (card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction) => {
+  const onClickCardButton = (
+    card,
+    hand,
+    setHand,
+    inPlay,
+    setInPlay,
+    setTopOfStack,
+    lastCardPlayed,
+    direction
+  ) => {
     placeCard(card, hand, setHand, inPlay, setInPlay, setTopOfStack);
     // If no cards have been placed, consider the last card on the discard pile.
     // Otherwise, the last card in this temporary stack
-    const lastCard = inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
+    const lastCard =
+      inPlay.length === 0 ? lastCardPlayed : inPlay[inPlay.length - 1];
 
     //Check direction if at least one card has been placed
     let newDirection = direction;
     if (inPlay.length > 1) {
       const previousStackCard = inPlay[inPlay.length - 2];
-      if (!isNaN(previousStackCard.value) && !isNaN(card.value) && direction === 'none') {
-        if (Number(previousStackCard.value) < Number(card.value) || (Number(previousStackCard.value) == 9 && Number(card.value) == 0)) {
-          newDirection = "increasing"
-        }
-        else if (Number(previousStackCard.value) > Number(card.value) || (Number(previousStackCard.value) == 0 && Number(card.value) == 9)) {
-          newDirection = "decreasing"
+      if (
+        !isNaN(previousStackCard.value) &&
+        !isNaN(card.value) &&
+        direction === "none"
+      ) {
+        if (
+          Number(previousStackCard.value) < Number(card.value) ||
+          (Number(previousStackCard.value) == 9 && Number(card.value) == 0)
+        ) {
+          newDirection = "increasing";
+        } else if (
+          Number(previousStackCard.value) > Number(card.value) ||
+          (Number(previousStackCard.value) == 0 && Number(card.value) == 9)
+        ) {
+          newDirection = "decreasing";
         }
       }
-      setDirection(newDirection)
+      setDirection(newDirection);
     }
 
     const checkedHand = checkHand(hand, lastCard, inPlay, newDirection);
@@ -435,22 +497,24 @@ function PlayScreen(props) {
     if (card.color === "rainbow") {
       setColorPickerOpen(true);
     }
-  }
+  };
 
   //Place card stack, end turn, and update game object
   const onClickPlaceCards = () => {
     setTopOfStack(inPlay[inPlay.size - 1]);
 
     let newGameObject = { ...gameObject };
-    newGameObject.lastPlaySize = inPlay.length;               // Stores number of cards placed in the last play.
+    newGameObject.lastPlaySize = inPlay.length; // Stores number of cards placed in the last play.
     //Sends last card played
     newGameObject.lastCardPlayed = inPlay.slice(-1).pop();
-    if (newGameObject.lastCardPlayed.color === 'rainbow') {
+    if (newGameObject.lastCardPlayed.color === "rainbow") {
       newGameObject.lastCardPlayed.color = nextColor;
     }
     //Check if no more cards are in player's hand and they win
     if (hand.length === 0) {
-      newGameObject.winner = newGameObject.playerList.filter(player => player.id === playerID);
+      newGameObject.winner = newGameObject.playerList.filter(
+        (player) => player.id === playerID
+      );
       newGameObject.direction = false;
       newGameObject.turn = 1;
       newGameObject.lastCardPlayed = chooseRandomNumberCard();
@@ -466,21 +530,22 @@ function PlayScreen(props) {
       if (newGameObject.direction) {
         newGameObject.turn -= 1;
         if (newGameObject.turn < 1) {
-          newGameObject.turn = newGameObject.turn = gameObjectPlayerNames.length  // If turn underflows
+          newGameObject.turn = newGameObject.turn =
+            gameObjectPlayerNames.length; // If turn underflows
         }
-        if (newGameObject.lastCardPlayed.value === 'skip') {
+        if (newGameObject.lastCardPlayed.value === "skip") {
           newGameObject.turn -= newGameObject.lastPlaySize;
           if (newGameObject.turn < 1) {
             newGameObject.turn += gameObjectPlayerNames.length;
           }
         }
-      }
-      else {
+      } else {
         newGameObject.turn += 1;
-        if (newGameObject.turn > gameObjectPlayerNames.length) {  // If turn overflows
-          newGameObject.turn = 1
+        if (newGameObject.turn > gameObjectPlayerNames.length) {
+          // If turn overflows
+          newGameObject.turn = 1;
         }
-        if (newGameObject.lastCardPlayed.value === 'skip') {
+        if (newGameObject.lastCardPlayed.value === "skip") {
           newGameObject.turn += newGameObject.lastPlaySize;
           if (newGameObject.turn > gameObjectPlayerNames.length) {
             newGameObject.turn -= gameObjectPlayerNames.length;
@@ -488,14 +553,17 @@ function PlayScreen(props) {
         }
       }
     }
-    const thisPlayer = newGameObject.playerList.filter(player => player.id === playerID);
-    const playerIndex = (newGameObject.playerList.indexOf(thisPlayer[0]));
+    const thisPlayer = newGameObject.playerList.filter(
+      (player) => player.id === playerID
+    );
+    const playerIndex = newGameObject.playerList.indexOf(thisPlayer[0]);
     newGameObject.playerList[playerIndex].cardCount = hand.length;
-    if (newGameObject.lastCardPlayed.value === 'draw2') {
-      newGameObject.playerList[newGameObject.turn - 1].cardCount += (2 * newGameObject.lastPlaySize);
-    }
-    else if (newGameObject.lastCardPlayed.value === 'draw4') {
-      newGameObject.playerList[newGameObject.turn - 1].cardCount += (4 * newGameObject.lastPlaySize);
+    if (newGameObject.lastCardPlayed.value === "draw2") {
+      newGameObject.playerList[newGameObject.turn - 1].cardCount +=
+        2 * newGameObject.lastPlaySize;
+    } else if (newGameObject.lastCardPlayed.value === "draw4") {
+      newGameObject.playerList[newGameObject.turn - 1].cardCount +=
+        4 * newGameObject.lastPlaySize;
     }
 
     setInPlay([]);
@@ -523,11 +591,10 @@ function PlayScreen(props) {
 
     if (otherPlayers.length <= index) {
       return 0;
-    }
-    else {
+    } else {
       return otherPlayers[index].cardCount;
     }
-  }
+  };
 
   const setPlayerName = (index) => {
     if (gameObject === undefined) {
@@ -549,11 +616,10 @@ function PlayScreen(props) {
 
     if (otherPlayers.length <= index) {
       return "";
-    }
-    else {
+    } else {
       return otherPlayers[index].name;
     }
-  }
+  };
 
   const [selectedBackground, setSelectedBackground] = useState("Black wood");
   const [selectedDeck, setSelectedDeck] = useState("sand");
@@ -562,66 +628,130 @@ function PlayScreen(props) {
     <>
       <PlayScreenMain background={backgrounds[selectedBackground]}>
         <Background file={backgrounds[selectedBackground]} />
-        <TopPlayerUsername hidden={setPlayerName(1) === 0}>{setPlayerName(1)}</TopPlayerUsername>
+        <TopPlayerUsername hidden={setPlayerName(1) === 0}>
+          {setPlayerName(1)}
+        </TopPlayerUsername>
         <TopPlayerHandContainer>
-          <div hidden={setPlayerName(1) === 0} style={{ display: 'max-content' }}>
-            {Array.apply(null, { length: getHandLength(1) }).map((card, index) => <HiddenCard key={index} />)}
+          <div
+            hidden={setPlayerName(1) === 0}
+            style={{ display: "max-content" }}
+          >
+            {Array.apply(null, { length: getHandLength(1) }).map(
+              (card, index) => (
+                <HiddenCard key={index} />
+              )
+            )}
           </div>
         </TopPlayerHandContainer>
-        <LeftPlayerUsername hidden={setPlayerName(0) === 0}>{setPlayerName(0)}</LeftPlayerUsername>
-        <LeftPlayerHandContainer hidden={setPlayerName(0) === 0} style={{ width: 'min-content' }}>
-          {Array.apply(null, { length: getHandLength(0) }).map((card, index) => <HiddenCard key={index} />)}
+        <LeftPlayerUsername hidden={setPlayerName(0) === 0}>
+          {setPlayerName(0)}
+        </LeftPlayerUsername>
+        <LeftPlayerHandContainer
+          hidden={setPlayerName(0) === 0}
+          style={{ width: "min-content" }}
+        >
+          {Array.apply(null, { length: getHandLength(0) }).map(
+            (card, index) => (
+              <HiddenCard key={index} />
+            )
+          )}
         </LeftPlayerHandContainer>
-        <RightPlayerUsername hidden={setPlayerName(2) === 0}>{setPlayerName(2)}</RightPlayerUsername>
-        <RightPlayerHandContainer hidden={setPlayerName(2) === 0} style={{ width: 'min-content' }}>
-          {Array.apply(null, { length: getHandLength(2) }).map((card, index) => <HiddenCard key={index} />)}
+        <RightPlayerUsername hidden={setPlayerName(2) === 0}>
+          {setPlayerName(2)}
+        </RightPlayerUsername>
+        <RightPlayerHandContainer
+          hidden={setPlayerName(2) === 0}
+          style={{ width: "min-content" }}
+        >
+          {Array.apply(null, { length: getHandLength(2) }).map(
+            (card, index) => (
+              <HiddenCard key={index} />
+            )
+          )}
         </RightPlayerHandContainer>
 
-        {inPlay.length > 0 &&
+        {inPlay.length > 0 && (
           <>
             <CardDropper>
-              <div style={{ width: 'max-content' }}>
-                {topOfStack &&
-                  <CardButton onClick={() => { console.log("click"); }} {...topOfStack} selectedDeck={selectedDeck} />
-                }
+              <div style={{ width: "max-content" }}>
+                {topOfStack && (
+                  <CardButton
+                    onClick={() => {
+                      console.log("click");
+                    }}
+                    {...topOfStack}
+                    selectedDeck={selectedDeck}
+                  />
+                )}
               </div>
             </CardDropper>
-            <PlaceCards onClick={onClickPlaceCards}>
-              Place Cards!
-            </PlaceCards>
+            <PlaceCards onClick={onClickPlaceCards}>Place Cards!</PlaceCards>
           </>
-        }
+        )}
 
-        <HandContainer id='hand-container'>
+        <HandContainer id="hand-container">
           <HandContainerInner>
             {hand.map((card, index) => {
-              return <CardButton
-                id={`card-button-${index}`}
-                key={index}
-                onClick={() =>
-                  onClickCardButton(card, hand, setHand, inPlay, setInPlay, setTopOfStack, lastCardPlayed, direction)
-                }
-                {...card}
-                myTurn={myTurn}
-                selectedDeck={selectedDeck}
-              />;
+              return (
+                <CardButton
+                  id={`card-button-${index}`}
+                  key={index}
+                  onClick={() =>
+                    onClickCardButton(
+                      card,
+                      hand,
+                      setHand,
+                      inPlay,
+                      setInPlay,
+                      setTopOfStack,
+                      lastCardPlayed,
+                      direction
+                    )
+                  }
+                  {...card}
+                  myTurn={myTurn}
+                  selectedDeck={selectedDeck}
+                />
+              );
             })}
           </HandContainerInner>
         </HandContainer>
         <Center>
-          <CenterText style={{
-            transition: shouldTransition ? "all 1s" : "",
-            backgroundColor: `${color}`,
-          }}>{centerText}</CenterText>
+          <CenterText
+            style={{
+              transition: shouldTransition ? "all 1s" : "",
+              backgroundColor: `${color}`,
+            }}
+          >
+            {centerText}
+          </CenterText>
           <CenterCardContainer>
-            <Card id="discard-pile" color={lastCardPlayed.color} value={lastCardPlayed.value} selectedDeck={selectedDeck} />
-            <CardButton id="draw-pile" onClick={onClickDrawPile} color="rainbow" gray={false} value="wild" myTurn={true} selectedDeck={selectedDeck}>
+            <Card
+              id="discard-pile"
+              color={lastCardPlayed.color}
+              value={lastCardPlayed.value}
+              selectedDeck={selectedDeck}
+            />
+            <CardButton
+              id="draw-pile"
+              onClick={onClickDrawPile}
+              color="rainbow"
+              gray={false}
+              value="wild"
+              myTurn={true}
+              selectedDeck={selectedDeck}
+            >
               Draw
             </CardButton>
           </CenterCardContainer>
         </Center>
       </PlayScreenMain>
-      <EndingModal open={endingModalOpen} setOpen={setEndingModalOpen} isHost={host} restartGame={restartGame} />
+      <EndingModal
+        open={endingModalOpen}
+        setOpen={setEndingModalOpen}
+        isHost={host}
+        restartGame={restartGame}
+      />
       <LobbyModal
         open={lobbyModalOpen}
         setOpen={setLobbyModalOpen}
@@ -630,14 +760,23 @@ function PlayScreen(props) {
         startGame={startGame}
         room={room}
       />
-      <SettingsButton selectedBackground={selectedBackground} setSelectedBackground={setSelectedBackground} backgrounds={backgrounds} setSelectedDeck={setSelectedDeck} />
-      <ColorPicker open={colorPickerOpen} setOpen={setColorPickerOpen} setNextColor={setNextColor} />
+      <SettingsButton
+        selectedBackground={selectedBackground}
+        setSelectedBackground={setSelectedBackground}
+        backgrounds={backgrounds}
+        setSelectedDeck={setSelectedDeck}
+      />
+      <ColorPicker
+        open={colorPickerOpen}
+        setOpen={setColorPickerOpen}
+        setNextColor={setNextColor}
+      />
     </>
   );
 }
 PlayScreen.propTypes = {
   name: PropTypes.string,
-  playerID: PropTypes.string
+  playerID: PropTypes.string,
 };
 
 export { PlayScreen };
